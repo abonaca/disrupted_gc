@@ -1,0 +1,130 @@
+\documentclass[twocolumn]{aastex63}
+
+% typography
+\usepackage[T1]{fontenc}
+
+\setlength{\parindent}{1.\baselineskip}
+\newcommand{\acronym}[1]{{\small{#1}}}
+\newcommand{\package}[1]{\textsl{#1}}
+\newcommand{\gaia}{\textsl{Gaia}}
+% \newcommand{\hst}{\textsl{HST}}
+% \newcommand{\pans}{\textsl{Pan-STARRS}}
+
+% \newcommand{\deg}{\ensuremath{\textrm{deg}}}
+\newcommand{\kpc}{\ensuremath{\textrm{kpc}}}
+\newcommand{\kms}{\ensuremath{\textrm{km}\,\textrm{s}^{-1}}}
+\newcommand{\masyr}{\ensuremath{\textrm{mas}\,\textrm{yr}^{-1}}}
+\newcommand{\feh}{\ensuremath{\textrm{[Fe/H]}}}
+\newcommand{\afe}{\ensuremath{\textrm{[$\alpha$/Fe]}}}
+\newcommand{\changes}[1]{{\textbf{#1}}}
+
+% aastex parameters
+% \received{not yet; THIS IS A DRAFT}
+%\revised{not yet}
+%\accepted{not yet}
+% % Adds "Submitted to " the argument.
+% \submitjournal{ApJ}
+\shorttitle{}
+\shortauthors{bonaca \& kruijssen}
+
+%@arxiver{}
+\usepackage{amsmath}
+
+\begin{document}\sloppy\sloppypar\raggedbottom\frenchspacing % trust me
+
+\title{}
+
+\correspondingauthor{Ana~Bonaca}
+\email{ana.bonaca@cfa.harvard.edu}
+
+\author[0000-0002-7846-9787]{Ana~Bonaca}
+\affil{Center for Astrophysics | Harvard \& Smithsonian, 60 Garden Street, Cambridge, MA 02138, USA}
+
+\author[0000-0002-8804-0212]{Diederik~J.~M.~Kruijssen}
+\affiliation{Astronomisches Rechen-Institut, Zentrum f\" ur Astronomie der Universit\" at Heidelberg, M\" onchhofstra\ss e 12-14, D-69120 Heidelberg, Germany}
+
+
+
+\begin{abstract}\noindent % trust me
+Numerous stellar streams that have been discovered in the Milky Way as evaporated globular clusters show signs of dynamical perturbation.
+N-body models that can illuminate the origin of these perturbations require the cluster's initial mass as a fundamental input parameter.
+Here we present orbits and masses of 20 dissolved globular clusters in the Milky Way.
+We constrained the streams' orbits by fitting the 3D positions of a stream's endpoints from ground-based photometry and its proper motions from Gaia.
+Assuming a dissolution time of 10\,Gyr, we use orbital apocenters and eccentricities to estimate the clusters' initial mass.
+Disrupted globular clusters have preferentially lower masses than the surviving population, with the median mass being an order of magnitude smaller.
+The overall distribution of apocenters and eccentricities is similar for the disrupted and surviving clusters, however, at a fixed mass disrupted clusters have smaller apocenters and larger eccentricities.
+The progenitors of tidal streams observed at the present are a specific, low-mass subset of the initial globular cluster population.
+This has implications for establishing the role of internal dynamics in sculpting the observed tidal debris, and the amount of external perturbation, e.g., from dark-matter subhalos, that these streams experienced.
+% modeling how much the tidal streams were shaped by nature versus nurture.
+% 
+% - globular clusters individually: birth sites of binary black holes, some of the oldest stars in the universe
+% - collectively: tracers of dark matter halo mass, accretion history
+% - mass basic property, but have biased view, bc some tidally disrupted
+% - implications for: gc formation mechanisms? 
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+
+\section{Stream Orbits}
+\label{sec:orbits}
+Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit.
+Here we measure orbital parameters of globular clusters dissolved in the Milky Way by fitting orbits to sky positions and distances of 51 thin stellar streams.
+
+- for all streams we have sky positions (stream track) and an average distance
+- sky positions are known extremely precisely, and for orbit fitting we assume uncertain to the width, typically $\lesssim0.5^\circ$
+- distances are more uncertain because mainly from matched filter, typically $\approx20\,\%$
+- sample the stream at $0.5^\circ$, these shown as crosses in figure, colored by distance
+
+- assumed gravitational potential
+- orbit represented as a 6D point, initialized xdeg from the end of the stream, at the average distance, with the velocity vector pointing to the opposite end of the stream
+- final free parameter: orbital length
+- priors: flat (physical -- distance positive, velocity lower than 600km/s?), stream length to match data to xdeg
+- preliminary solution w minimize
+- start ball there, sample w emcee, 64 walkers advanced for x steps, discard first y steps as burn-in
+- convergence test: just no motion in median, dispersion?
+
+- results in figure: lines samples from the posterior, also colored by distance
+- zoom in: track fit very well, orbit fits expect some distance gradients, can be improved in the future w better selected members
+- orbit xGyr in the future, on average y orbital periods, that we use to measure apocenter $R_{apo}$, eccentricity, $e=(R_{apo} - R_{peri})/(R_{apo} + R_{peri})$
+- within one orbit peri/apo precisely measured (fractional precision x), across samples, median/90 percentile fractional uncertainty for apocenter, eccentricity
+- two examples: different kinds of orbits, same precision?
+
+
+\section{Masses of Disrupted Globular Clusters}
+\label{sec:disrupted}
+
+
+\section{Discussion}
+\label{sec:discussion}
+- summary
+
+- caveats:
+-- orbit fits -> compare to published ones; 5d fits predictive, don't change much w 6d (ibata)
+-- 10 Gyr disruption time for estimating the mass
+
+% - check how sensitive the inferred rapo is on the details of the stream track used
+% - for streams w published
+
+- compare to mass estimates in the detect part of the stream -> are they mostly detected or are they extending past the currently detected endpoints?
+
+- lower mass -> implications for epicycles
+
+\vspace{0.5cm}
+It is a pleasure to thank:
+
+\software{
+\package{Astropy} \citep{astropy, astropy:2018},
+\package{gala} \citep{gala},
+\package{IPython} \citep{ipython},
+\package{matplotlib} \citep{mpl},
+\package{numpy} \citep{numpy},
+\package{scipy} \citep{scipy}
+}
+
+\bibliographystyle{aasjournal}
+\bibliography{disrupted_gc}
+
+
+\end{document}
