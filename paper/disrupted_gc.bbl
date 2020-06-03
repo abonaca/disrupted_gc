@@ -1,0 +1,115 @@
+\begin{thebibliography}{}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\providecommand{\url}[1]{\href{#1}{#1}}
+\providecommand{\dodoi}[1]{doi:~\href{http://doi.org/#1}{\nolinkurl{#1}}}
+\providecommand{\doeprint}[1]{\href{http://ascl.net/#1}{\nolinkurl{http://ascl.net/#1}}}
+\providecommand{\doarXiv}[1]{\href{https://arxiv.org/abs/#1}{\nolinkurl{https://arxiv.org/abs/#1}}}
+
+\bibitem[{{Astropy Collaboration} {et~al.}(2013){Astropy Collaboration},
+  {Robitaille}, {Tollerud}, {Greenfield}, {Droettboom}, {Bray}, {Aldcroft},
+  {Davis}, {Ginsburg}, {Price-Whelan}, {Kerzendorf}, {Conley}, {Crighton},
+  {Barbary}, {Muna}, {Ferguson}, {Grollier}, {Parikh}, {Nair}, {Unther},
+  {Deil}, {Woillez}, {Conseil}, {Kramer}, {Turner}, {Singer}, {Fox}, {Weaver},
+  {Zabalza}, {Edwards}, {Azalee Bostroem}, {Burke}, {Casey}, {Crawford},
+  {Dencheva}, {Ely}, {Jenness}, {Labrie}, {Lim}, {Pierfederici}, {Pontzen},
+  {Ptak}, {Refsdal}, {Servillat}, \& {Streicher}}]{astropy}
+{Astropy Collaboration}, {Robitaille}, T.~P., {Tollerud}, E.~J., {et~al.} 2013,
+  \aap, 558, A33, \dodoi{10.1051/0004-6361/201322068}
+
+\bibitem[{{Baumgardt} \& {Makino}(2003)}]{baumgardt03}
+{Baumgardt}, H., \& {Makino}, J. 2003, \mnras, 340, 227,
+  \dodoi{10.1046/j.1365-8711.2003.06286.x}
+
+\bibitem[{{Gieles} {et~al.}(2006){Gieles}, {Portegies Zwart}, {Baumgardt},
+  {Athanassoula}, {Lamers}, {Sipior}, \& {Leenaarts}}]{gieles06}
+{Gieles}, M., {Portegies Zwart}, S.~F., {Baumgardt}, H., {et~al.} 2006, \mnras,
+  371, 793, \dodoi{10.1111/j.1365-2966.2006.10711.x}
+
+\bibitem[{{Hunter}(2007)}]{mpl}
+{Hunter}, J.~D. 2007, Computing in Science and Engineering, 9, 90,
+  \dodoi{10.1109/MCSE.2007.55}
+
+\bibitem[{Jones {et~al.}(2001--)Jones, Oliphant, Peterson, {et~al.}}]{scipy}
+Jones, E., Oliphant, T., Peterson, P., {et~al.} 2001--, {SciPy}: Open source
+  scientific tools for {Python}.
+\newblock \url{http://www.scipy.org/}
+
+\bibitem[{{Kroupa}(2001)}]{kroupa01}
+{Kroupa}, P. 2001, \mnras, 322, 231
+
+\bibitem[{{Kruijssen}(2015)}]{kruijssen15b}
+{Kruijssen}, J.~M.~D. 2015, \mnras, 454, 1658, \dodoi{10.1093/mnras/stv2026}
+
+\bibitem[{{Kruijssen} \& {Lamers}(2008)}]{kruijssen08}
+{Kruijssen}, J.~M.~D., \& {Lamers}, H.~J.~G.~L.~M. 2008, \aap, 490, 151,
+  \dodoi{10.1051/0004-6361:200810167}
+
+\bibitem[{{Kruijssen} \& {Mieske}(2009)}]{kruijssen09}
+{Kruijssen}, J.~M.~D., \& {Mieske}, S. 2009, \aap, 500, 785,
+  \dodoi{10.1051/0004-6361/200811453}
+
+\bibitem[{{Kruijssen} {et~al.}(2011){Kruijssen}, {Pelupessy}, {Lamers},
+  {Portegies Zwart}, \& {Icke}}]{kruijssen11}
+{Kruijssen}, J.~M.~D., {Pelupessy}, F.~I., {Lamers}, H.~J.~G.~L.~M., {Portegies
+  Zwart}, S.~F., \& {Icke}, V. 2011, \mnras, 414, 1339,
+  \dodoi{10.1111/j.1365-2966.2011.18467.x}
+
+\bibitem[{{Kruijssen} {et~al.}(2019){Kruijssen}, {Pfeffer}, {Reina-Campos},
+  {Crain}, \& {Bastian}}]{kruijssen19e}
+{Kruijssen}, J.~M.~D., {Pfeffer}, J.~L., {Reina-Campos}, M., {Crain}, R.~A., \&
+  {Bastian}, N. 2019, \mnras, 486, 3180
+
+\bibitem[{{Lamers} {et~al.}(2005){Lamers}, {Gieles}, {Bastian}, {Baumgardt},
+  {Kharchenko}, \& {Portegies Zwart}}]{lamers05}
+{Lamers}, H.~J.~G.~L.~M., {Gieles}, M., {Bastian}, N., {et~al.} 2005, \aap,
+  441, 117, \dodoi{10.1051/0004-6361:20042241}
+
+\bibitem[{{Miholics} {et~al.}(2017){Miholics}, {Kruijssen}, \&
+  {Sills}}]{miholics17}
+{Miholics}, M., {Kruijssen}, J.~M.~D., \& {Sills}, A. 2017, \mnras, 470, 1421,
+  \dodoi{10.1093/mnras/stx1312}
+
+\bibitem[{P\'erez \& Granger(2007)}]{ipython}
+P\'erez, F., \& Granger, B.~E. 2007, Computing in Science and Engineering, 9,
+  21, \dodoi{10.1109/MCSE.2007.53}
+
+\bibitem[{{Pfeffer} {et~al.}(2018){Pfeffer}, {Kruijssen}, {Crain}, \&
+  {Bastian}}]{pfeffer18}
+{Pfeffer}, J., {Kruijssen}, J.~M.~D., {Crain}, R.~A., \& {Bastian}, N. 2018,
+  \mnras, 475, 4309, \dodoi{10.1093/mnras/stx3124}
+
+\bibitem[{{Price-Whelan}(2017)}]{gala}
+{Price-Whelan}, A.~M. 2017, The Journal of Open Source Software, 2, 388,
+  \dodoi{10.21105/joss.00388}
+
+\bibitem[{{Price-Whelan} {et~al.}(2018){Price-Whelan}, {Sip{\'{o}}cz},
+  {G{\"u}nther}, {Lim}, {Crawford}, {Conseil}, {Shupe}, {Craig}, {Dencheva},
+  {Ginsburg}, {VanderPlas}, {Bradley}, {P{\'e}rez-Su{\'a}rez}, {de Val-Borro},
+  {Paper Contributors}, {Aldcroft}, {Cruz}, {Robitaille}, {Tollerud},
+  {Coordination Committee}, {Ardelean}, {Babej}, {Bach}, {Bachetti}, {Bakanov},
+  {Bamford}, {Barentsen}, {Barmby}, {Baumbach}, {Berry}, {Biscani}, {Boquien},
+  {Bostroem}, {Bouma}, {Brammer}, {Bray}, {Breytenbach}, {Buddelmeijer},
+  {Burke}, {Calderone}, {Cano Rodr{\'\i}guez}, {Cara}, {Cardoso}, {Cheedella},
+  {Copin}, {Corrales}, {Crichton}, {D{\textquoteright}Avella}, {Deil},
+  {Depagne}, {Dietrich}, {Donath}, {Droettboom}, {Earl}, {Erben}, {Fabbro},
+  {Ferreira}, {Finethy}, {Fox}, {Garrison}, {Gibbons}, {Goldstein}, {Gommers},
+  {Greco}, {Greenfield}, {Groener}, {Grollier}, {Hagen}, {Hirst}, {Homeier},
+  {Horton}, {Hosseinzadeh}, {Hu}, {Hunkeler}, {Ivezi{\'c}}, {Jain}, {Jenness},
+  {Kanarek}, {Kendrew}, {Kern}, {Kerzendorf}, {Khvalko}, {King}, {Kirkby},
+  {Kulkarni}, {Kumar}, {Lee}, {Lenz}, {Littlefair}, {Ma}, {Macleod},
+  {Mastropietro}, {McCully}, {Montagnac}, {Morris}, {Mueller}, {Mumford},
+  {Muna}, {Murphy}, {Nelson}, {Nguyen}, {Ninan}, {N{\"o}the}, {Ogaz}, {Oh},
+  {Parejko}, {Parley}, {Pascual}, {Patil}, {Patil}, {Plunkett}, {Prochaska},
+  {Rastogi}, {Reddy Janga}, {Sabater}, {Sakurikar}, {Seifert}, {Sherbert},
+  {Sherwood-Taylor}, {Shih}, {Sick}, {Silbiger}, {Singanamalla}, {Singer},
+  {Sladen}, {Sooley}, {Sornarajah}, {Streicher}, {Teuben}, {Thomas},
+  {Tremblay}, {Turner}, {Terr{\'o}n}, {van Kerkwijk}, {de la Vega}, {Watkins},
+  {Weaver}, {Whitmore}, {Woillez}, {Zabalza}, \& {Contributors}}]{astropy:2018}
+{Price-Whelan}, A.~M., {Sip{\'{o}}cz}, B.~M., {G{\"u}nther}, H.~M., {et~al.}
+  2018, \aj, 156, 123, \dodoi{10.3847/1538-3881/aabc4f}
+
+\bibitem[{Walt {et~al.}(2011)Walt, Colbert, \& Varoquaux}]{numpy}
+Walt, S. v.~d., Colbert, S.~C., \& Varoquaux, G. 2011, Computing in Science and
+  Engg., 13, 22, \dodoi{10.1109/MCSE.2011.37}
+
+\end{thebibliography}
