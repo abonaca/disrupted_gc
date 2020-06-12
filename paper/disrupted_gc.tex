@@ -11,12 +11,16 @@
 % \newcommand{\pans}{\textsl{Pan-STARRS}}
 
 % \newcommand{\deg}{\ensuremath{\textrm{deg}}}
+\newcommand{\msun}{\ensuremath{\textrm{M}_\odot}}
+\newcommand{\myr}{\ensuremath{\textrm{Myr}}}
+\newcommand{\gyr}{\ensuremath{\textrm{Gyr}}}
 \newcommand{\kpc}{\ensuremath{\textrm{kpc}}}
 \newcommand{\kms}{\ensuremath{\textrm{km}\,\textrm{s}^{-1}}}
 \newcommand{\masyr}{\ensuremath{\textrm{mas}\,\textrm{yr}^{-1}}}
 \newcommand{\feh}{\ensuremath{\textrm{[Fe/H]}}}
 \newcommand{\afe}{\ensuremath{\textrm{[$\alpha$/Fe]}}}
 \newcommand{\changes}[1]{{\textbf{#1}}}
+\hyphenation{kruijs-sen}
 
 % aastex parameters
 % \received{not yet; THIS IS A DRAFT}
@@ -46,18 +50,18 @@
 
 
 \begin{abstract}\noindent % trust me
-Numerous stellar streams that have been discovered in the Milky Way as evaporated globular clusters show signs of dynamical perturbation.
+Numerous stellar streams that have been discovered in the Milky Way as evaporated globular clusters (GCs) show signs of dynamical perturbation.
 N-body models that can illuminate the origin of these perturbations require the cluster's initial mass as a fundamental input parameter.
-Here we present orbits and masses of 20 dissolved globular clusters in the Milky Way.
+Here we present orbits and masses of 20 dissolved GCs in the Milky Way.
 We constrained the streams' orbits by fitting the 3D positions of a stream's endpoints from ground-based photometry and its proper motions from Gaia.
 Assuming a dissolution time of 10\,Gyr, we use orbital apocenters and eccentricities to estimate the clusters' initial mass.
-Disrupted globular clusters have preferentially lower masses than the surviving population, with the median mass being an order of magnitude smaller.
+Disrupted GCs have preferentially lower masses than the surviving population, with the median mass being an order of magnitude smaller.
 The overall distribution of apocenters and eccentricities is similar for the disrupted and surviving clusters, however, at a fixed mass disrupted clusters have smaller apocenters and larger eccentricities.
-The progenitors of tidal streams observed at the present are a specific, low-mass subset of the initial globular cluster population.
+The progenitors of tidal streams observed at the present are a specific, low-mass subset of the initial GC population.
 This has implications for establishing the role of internal dynamics in sculpting the observed tidal debris, and the amount of external perturbation, e.g., from dark-matter subhalos, that these streams experienced.
 % modeling how much the tidal streams were shaped by nature versus nurture.
 % 
-% - globular clusters individually: birth sites of binary black holes, some of the oldest stars in the universe
+% - GCs individually: birth sites of binary black holes, some of the oldest stars in the universe
 % - collectively: tracers of dark matter halo mass, accretion history
 % - mass basic property, but have biased view, bc some tidally disrupted
 % - implications for: gc formation mechanisms? 
@@ -69,8 +73,8 @@ This has implications for establishing the role of internal dynamics in sculptin
 
 \section{Stream Orbits}
 \label{sec:orbits}
-Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit.
-Here we measure orbital parameters of globular clusters dissolved in the Milky Way by fitting orbits to sky positions and distances of 51 thin stellar streams.
+Tidal debris from evaporating GCs nearly delineates the progenitor's orbit.
+Here we measure orbital parameters of GCs dissolved in the Milky Way by fitting orbits to sky positions and distances of 51 thin stellar streams.
 
 - for all streams we have sky positions (stream track) and an average distance
 - sky positions are known extremely precisely, and for orbit fitting we assume uncertain to the width, typically $\lesssim0.5^\circ$
@@ -92,8 +96,45 @@ Here we measure orbital parameters of globular clusters dissolved in the Milky W
 - two examples: different kinds of orbits, same precision?
 
 
-\section{Masses of Disrupted Globular Clusters}
+\section{Masses of Disrupted GCs}
 \label{sec:disrupted}
+
+We estimate the masses of the GCs producing the streams using a simple analytic GC disruption model \citep{lamers05}, which reproduces direct $N$-body simulations of GCs undergoing tidal evaporation in a static background potential \citep{baumgardt03}. Specifically, we obtain a `pre-evaporation' GC mass $M_0$ by estimating the total mass loss due to stellar evolution and tidal evaporation for a cluster on the inferred orbit over some timescale $t$. We refrain from deriving an `initial' GC mass, because tidal evaporation in the host galaxy halo is not the only mass loss mechanism experienced by GCs over the course of their history. Prior to being deposited into the halo, GCs were disrupted by tidal shocks due to gravitational perturbations from overdensities in the interstellar medium of their natal galaxy \citep[e.g.][]{gieles06,kruijssen11,miholics17,pfeffer18}. Integrated over the history of GCs, tidal shocks are thought to dominate the total dynamical mass loss \citep[e.g.][]{kruijssen15b}. Therefore, the quantity $M_0$ refers strictly to the `pre-evaporation' GC mass -- after the first phase of disruption tidal shocks, but before the second phase of disruption by tidal evaporation. We also include the total amount of mass lost by stellar evolution, so that only the mass loss by tidal shocks is unaccounted for.
+
+We relate $M_0$ to the orbit of the stellar stream by assuming a present-day GC mass of zero (consistent with the fact that only a fossil stream remains) and writing eq.~7 of \citet{lamers05} as
+\begin{equation}
+\label{eq:m0}
+M_{\rm 0}=\frac{1}{\mu_{\rm ev}(t)}\left(\frac{\gamma t}{t_0}\right)^{1/\gamma} .
+\end{equation}
+In this expression, $\mu_{\rm ev}(t)$ is the fraction of the initial GC mass lost by stellar evolution, provided by \citet{lamers05} as
+\begin{equation}
+\label{eq:muev}
+\mu_{\rm ev}(t)=1-q_{\rm ev} ,
+\end{equation}
+with
+\begin{equation}
+\label{eq:qev}
+\log_{10}{q_{\rm ev}}(t) = [\log_{10}(t/{\rm yr})-a_{\rm ev}]^{b_{\rm ev}}+c_{\rm ev} ,
+\end{equation}
+and $a_{\rm ev} = 6.93$, $b_{\rm ev} = 0.255$, and $c_{\rm ev} = -1.682$, appropriate for a GC-like metallicity of $0.02{\rm Z}_\odot$ and a \citet{kroupa01} stellar initial mass function \citep{kruijssen08}. The variables $\gamma$ and $t_0$ represent the exponent and proportionality factor, respectively, of the Lamers cluster disruption law:
+\begin{equation}
+\label{eq:lamers}
+\tau_{\rm dis}=t_0\left(\frac{M}{\msun}\right)^\gamma ,
+\end{equation}
+where $\tau_{\rm dis}$ is the cluster disruption timescale. We follow \citet{kruijssen09} in adopting $\gamma=0.7$ and relating $t_0$ to the orbital parameters as
+\begin{equation}
+\label{eq:t0}
+t_0 = t_{0,\odot}\left(\frac{R_{\rm a}}{8.5~\kpc}\right)\left(\frac{v_{\rm c}}{220~\kms}\right)^{-1}(1-e) ,
+\end{equation}
+with $t_{0,\odot}=10.7~\myr$ and $R_{\rm a}$, $v_{\rm c}$, and $e$ denoting the orbital apocenter radius, circular velocity, and orbital eccentricity, respectively. Finally, we assume that the time spent by each GC orbiting the Milky Way prior to dissolving into a fossil stream is $t=10~\gyr$. This is motivated by the typical ages of GCs in the Galactic halo \citep[$\sim12~\gyr$, e.g.][]{kruijssen19e} and by recent results showing that fossil stream lifetimes are much shorter than GC ages (!!REF), such that the progenitors of fossil streams must have disrupted in the past few Gyr. Our results are robust to this choice -- an error of 0.3~dex (i.e.\ a factor of 2) in $t$ translates into an error of just 0.2~dex in the pre-evaporation mass $M_0$.
+
+\begin{figure*}
+\includegraphics[width=\hsize]{figures/distributions_mc.pdf}%
+\caption{
+\label{fig:hist}
+Caption text.}
+\end{figure*}	
+We propagate the uncertainties on the fossil streams' orbital parameters into those on the pre-evaporation masses by applying eq.~(\ref{eq:m0}) to the entire sample of MCMC solutions. The resulting distributions of all apocenter radii, eccentricities, and pre-evaporation masses of the fossil streams in the MCMC sample are shown in \autoref{fig:hist}, where we also include the population statistics of Galactic GCs that have survived till the present day. For these surviving GCs, we also include an estimate of their pre-evaporation masses.
 
 
 \section{Discussion}
@@ -128,3 +169,5 @@ It is a pleasure to thank:
 
 
 \end{document}
+
+
