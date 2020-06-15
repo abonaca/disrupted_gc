@@ -73,13 +73,18 @@ This has implications for establishing the role of internal dynamics in sculptin
 
 \section{Stream Orbits}
 \label{sec:orbits}
-Tidal debris from evaporating GCs nearly delineates the progenitor's orbit.
-Here we measure orbital parameters of GCs dissolved in the Milky Way by fitting orbits to sky positions and distances of 51 thin stellar streams.
+A total of x thin stellar streams, likely disrupted globular clusters, have been reported in the Milky Way \citep[an up-to-date list is available in the \package{galstreams} package,][]{mateu:2018}.
+Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}, however, kinematic information is essential for accurate stream modeling \citep{bh:2018}.
+Here we analyze a subset of y stellar streams with published proper motions (Table~\ref{table:streams}).
 
-- for all streams we have sky positions (stream track) and an average distance
-- sky positions are known extremely precisely, and for orbit fitting we assume uncertain to the width, typically $\lesssim0.5^\circ$
-- distances are more uncertain because mainly from matched filter, typically $\approx20\,\%$
-- sample the stream at $0.5^\circ$, these shown as crosses in figure, colored by distance
+We measure orbital parameters for a population of dissolved globular clusters by fitting orbits to sky positions, distances, and proper motions of stream end-points.
+Due to limited observational data on some streams, we decided to fit only the stream end-points to ensure a homogeneous treatment of the entire sample.
+\citet{riley:2020} demonstrated that the 3D positions of stream end-points robustly constrain their orbital poles, while \citet{ibata:2019} found that the absence of radial velocities produces no significant biases in orbit determination for streams with proper motion data.
+Therefore, we expect our strategy of recovering orbits from 5D positions of stream end-points to perform well.
+In Section~\ref{sec:discussion} we discuss how orbital constraints change for streams where additional data is available.
+The end-point sky positions and distances \citep{riley:2020}, and proper motions \citep[][as noted]{ibata:2019, shipp:2019} are listed in Table~\ref{table:streams}, along with the associated uncertainties.
+Figure~\ref{fig:streams} shows these data for three representative streams as large black points (top to bottom: x, y, z).
+
 
 - assumed gravitational potential
 - orbit represented as a 6D point, initialized xdeg from the end of the stream, at the average distance, with the velocity vector pointing to the opposite end of the stream
@@ -143,6 +148,7 @@ We propagate the uncertainties on the fossil streams' orbital parameters into th
 
 - caveats:
 -- orbit fits -> compare to published ones; 5d fits predictive, don't change much w 6d (ibata)
+-- stream ne orbit
 -- 10 Gyr disruption time for estimating the mass
 
 % - check how sensitive the inferred rapo is on the details of the stream track used
