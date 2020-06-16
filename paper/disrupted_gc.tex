@@ -36,7 +36,7 @@
 
 \begin{document}\sloppy\sloppypar\raggedbottom\frenchspacing % trust me
 
-\title{}
+\title{The low masses of globular clusters dissolved in the Milky Way}
 
 \correspondingauthor{Ana~Bonaca}
 \email{ana.bonaca@cfa.harvard.edu}
@@ -50,14 +50,14 @@
 
 
 \begin{abstract}\noindent % trust me
-Numerous stellar streams that have been discovered in the Milky Way as evaporated globular clusters (GCs) show signs of dynamical perturbation.
+Numerous stellar streams that have been discovered in the Milky Way as evaporated globular clusters show signs of dynamical perturbation.
 N-body models that can illuminate the origin of these perturbations require the cluster's initial mass as a fundamental input parameter.
-Here we present orbits and masses of 20 dissolved GCs in the Milky Way.
+Here we present orbits and masses of 20 dissolved globular clusters in the Milky Way.
 We constrained the streams' orbits by fitting the 3D positions of a stream's endpoints from ground-based photometry and its proper motions from Gaia.
 Assuming a dissolution time of 10\,Gyr, we use orbital apocenters and eccentricities to estimate the clusters' initial mass.
-Disrupted GCs have preferentially lower masses than the surviving population, with the median mass being an order of magnitude smaller.
+Disrupted globular clusters have preferentially lower masses than the surviving population, with the median mass being an order of magnitude smaller.
 The overall distribution of apocenters and eccentricities is similar for the disrupted and surviving clusters, however, at a fixed mass disrupted clusters have smaller apocenters and larger eccentricities.
-The progenitors of tidal streams observed at the present are a specific, low-mass subset of the initial GC population.
+The progenitors of tidal streams observed at the present are a specific, low-mass subset of the initial globular cluster population.
 This has implications for establishing the role of internal dynamics in sculpting the observed tidal debris, and the amount of external perturbation, e.g., from dark-matter subhalos, that these streams experienced.
 % modeling how much the tidal streams were shaped by nature versus nurture.
 % 
@@ -77,22 +77,26 @@ A total of x thin stellar streams, likely disrupted globular clusters, have been
 Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}, however, kinematic information is essential for accurate stream modeling \citep{bh:2018}.
 Here we analyze a subset of y stellar streams with published proper motions (Table~\ref{table:streams}).
 
-We measure orbital parameters for a population of dissolved globular clusters by fitting orbits to sky positions, distances, and proper motions of stream end-points.
-Due to limited observational data on some streams, we decided to fit only the stream end-points to ensure a homogeneous treatment of the entire sample.
+We measure orbital parameters for a population of dissolved globular clusters by fitting orbits to sky positions, distances, and proper motions of stream endpoints.
+Due to limited observational data on some streams, we decided to fit only the stream endpoints to ensure a homogeneous treatment of the entire sample.
 \citet{riley:2020} demonstrated that the 3D positions of stream end-points robustly constrain their orbital poles, while \citet{ibata:2019} found that the absence of radial velocities produces no significant biases in orbit determination for streams with proper motion data.
-Therefore, we expect our strategy of recovering orbits from 5D positions of stream end-points to perform well.
+Therefore, we expect our strategy of recovering orbits from 5D positions of stream endpoints to perform well.
 In Section~\ref{sec:discussion} we discuss how orbital constraints change for streams where additional data is available.
-The end-point sky positions and distances \citep{riley:2020}, and proper motions \citep[][as noted]{ibata:2019, shipp:2019} are listed in Table~\ref{table:streams}, along with the associated uncertainties.
+The endpoint sky positions and distances \citep{riley:2020}, and proper motions \citep[][as noted]{ibata:2019, shipp:2019} are listed in Table~\ref{table:streams}, along with the associated uncertainties.
 Figure~\ref{fig:streams} shows these data for three representative streams as large black points (top to bottom: x, y, z).
 
+We fit stream orbits in a three-component model of the Milky Way gravitational potential implemented in the \package{gala} package \citep{gala} and featuring a \citet{mn:1975} disk (mass: $5.5\times10^{10}\rm\, M_\odot$, scale-length: 3\,kpc, scale-height: 28\,pc), a \citet{hernquist:1990} bulge (mass: $4\times10^9\rm\, M_\odot$, scale-radius: 1\,kpc), and a \citet{nfw:1997} halo (scale-mass: $7\times10^{11}\rm\, M_\odot$, scale-radius: 15.62\,kpc, $z$-axis flattening: 0.95).
+Similar to the orbit-fitting procedure of \citet{pwb}, we represent the orbit as a 6D location in phase-space, fixing its right ascension, R.A., and solving for the remaining 5D coordinates (declination, distance, radial velocity, two proper motion components).
+At the R.A. of the stream endpoints, we evaluate the orbital declinations, distances and proper motions against the observations, assuming Gaussian uncertainties.
+The orbits are initialized at one of the stream endpoints, with a radial velocity such that the total velocity vector equals the circular velocity at that Galactocentric distance and points to the other endpoint.
+We employ only minimal priors by requiring a bound orbit and the absolute radial velocity lower than 500\,\kms.
 
-- assumed gravitational potential
-- orbit represented as a 6D point, initialized xdeg from the end of the stream, at the average distance, with the velocity vector pointing to the opposite end of the stream
-- final free parameter: orbital length
-- priors: flat (physical -- distance positive, velocity lower than 600km/s?), stream length to match data to xdeg
 - preliminary solution w minimize
-- start ball there, sample w emcee, 64 walkers advanced for x steps, discard first y steps as burn-in
+- start ball there, sample w emcee
+- 64 walkers advanced for 512 steps, discard first 256 steps as burn-in
 - convergence test: just no motion in median, dispersion?
+- median + 16 - 84 percentiles reported in Table
+- in addition, we stored 1000 random posterior samples \footnote{available at the project repository \url{https://github.com/abonaca/disrupted_gc}}, and used them to propagate covariances into orbital parameters and cluster masses
 
 - results in figure: lines samples from the posterior, also colored by distance
 - zoom in: track fit very well, orbit fits expect some distance gradients, can be improved in the future w better selected members
