@@ -91,18 +91,23 @@ At the R.A. of the stream endpoints, we evaluate the orbital declinations, dista
 The orbits are initialized at one of the stream endpoints, with a radial velocity such that the total velocity vector equals the circular velocity at that Galactocentric distance and points to the other endpoint.
 We employ only minimal priors by requiring a bound orbit and the absolute radial velocity lower than 500\,\kms.
 
-- preliminary solution w minimize
-- start ball there, sample w emcee
-- 64 walkers advanced for 512 steps, discard first 256 steps as burn-in
-- convergence test: just no motion in median, dispersion?
-- median + 16 - 84 percentiles reported in Table
-- in addition, we stored 1000 random posterior samples \footnote{available at the project repository \url{https://github.com/abonaca/disrupted_gc}}, and used them to propagate covariances into orbital parameters and cluster masses
-
+We begin the search for well-fitting stream orbits by maximizing the likelihood of orbits passing through the observed endpoints using the \package{scipy} implementation of the BFGS algorithm.
+Starting with this best-fitting solution, we further sample the likelihood with an affine-invariant sampler \package{emcee} to estimate the posterior distribution of the orbital parameters.
+We advanced 64 walkers for 512 steps and kept the last 256 steps which converged to constant median and dispersion values for all model parameters.
+The median, 16th and 84th percentiles of the constrained 5D coordinates are reported for each stream's orbit in Table~\ref{table:constraints}.
 - results in figure: lines samples from the posterior, also colored by distance
 - zoom in: track fit very well, orbit fits expect some distance gradients, can be improved in the future w better selected members
-- orbit xGyr in the future, on average y orbital periods, that we use to measure apocenter $R_{apo}$, eccentricity, $e=(R_{apo} - R_{peri})/(R_{apo} + R_{peri})$
-- within one orbit peri/apo precisely measured (fractional precision x), across samples, median/90 percentile fractional uncertainty for apocenter, eccentricity
-- two examples: different kinds of orbits, same precision?
+
+- used these to integrate orbit x Gyr (on avg y periods) and estimate the orbital apocenter, $R_{apo}$, and eccentricity, $e=(R_{apo} - R_{peri})/(R_{apo} + R_{peri})$.
+- samples shown in next figure, spread in peri, apo
+- to account for these covariances, but keep runtime manageable, we calculated orbits using 1000 random samples from the posterior \footnote{available at the project repository \url{https://github.com/abonaca/disrupted_gc}}, and report the median, 16th and 84th percentiles of the orbital apocenter and eccentricity in Table~\ref{table:constraints}.
+
+% In addition, we stored 1000 random posterior samples \footnote{available at the project repository \url{https://github.com/abonaca/disrupted_gc}} and used them to estimate the orbital eccentricity, pericenter
+% estimate propagate parameter covariances into orbital parameters and cluster masses
+
+% - orbit xGyr in the future, on average y orbital periods, that we use to measure apocenter $R_{apo}$, eccentricity, $e=(R_{apo} - R_{peri})/(R_{apo} + R_{peri})$
+% - within one orbit peri/apo precisely measured (fractional precision x), across samples, median/90 percentile fractional uncertainty for apocenter, eccentricity
+% - two examples: different kinds of orbits, same precision?
 
 
 \section{Masses of Disrupted GCs}
