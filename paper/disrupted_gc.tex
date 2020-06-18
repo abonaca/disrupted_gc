@@ -92,15 +92,22 @@ The orbits are initialized at one of the stream endpoints, with a radial velocit
 We employ only minimal priors by requiring a bound orbit and the absolute radial velocity lower than 500\,\kms.
 
 We begin the search for well-fitting stream orbits by maximizing the likelihood of orbits passing through the observed endpoints using the \package{scipy} implementation of the BFGS algorithm.
-Starting with this best-fitting solution, we further sample the likelihood with an affine-invariant sampler \package{emcee} to estimate the posterior distribution of the orbital parameters.
+Focusing on this best-fitting solution, we further sample the likelihood with an affine-invariant sampler \package{emcee} to estimate the posterior distribution of the orbital parameters.
 We advanced 64 walkers for 512 steps and kept the last 256 steps which converged to constant median and dispersion values for all model parameters.
 The median, 16th and 84th percentiles of the constrained 5D coordinates are reported for each stream's orbit in Table~\ref{table:constraints}.
-- results in figure: lines samples from the posterior, also colored by distance
-- zoom in: track fit very well, orbit fits expect some distance gradients, can be improved in the future w better selected members
 
-- used these to integrate orbit x Gyr (on avg y periods) and estimate the orbital apocenter, $R_{apo}$, and eccentricity, $e=(R_{apo} - R_{peri})/(R_{apo} + R_{peri})$.
-- samples shown in next figure, spread in peri, apo
-- to account for these covariances, but keep runtime manageable, we calculated orbits using 1000 random samples from the posterior \footnote{available at the project repository \url{https://github.com/abonaca/disrupted_gc}}, and report the median, 16th and 84th percentiles of the orbital apocenter and eccentricity in Table~\ref{table:constraints}.
+To visualize and further explore the streams' orbits, we randomly sampled 1,000 points from the posterior distributions of every stream (available at the project repository\footnote{\url{https://github.com/abonaca/disrupted_gc}}).
+First, we integrated short orbital segments starting from these initial positions, and plot them as thin, black lines in the observable coordinates in Figure~\ref{fig:streams}.
+For all of the streams, we recovered a class of orbital solutions that fits the observed stream endpoints.
+The allowed spread in orbits is directly related to the observational uncertainties, so future improvements in distance and proper-motion measurements should further refine the orbital constraints.
+
+To estimate current constraints on the orbital apocenter, $r_{apo}$, and eccentricity, $e=(r_{apo} - r_{peri})/(r_{apo} + r_{peri})$, we additionally performed 5\,Gyr long orbit integrations starting from the same initial positions.
+These longer orbits are shown in cylindrical Galactocentric coordinates in the right panels of Figure~\ref{fig:streams} (different colors correspond to different samples from the posterior distribution).
+- comment on precision
+In Table~\ref{table:constraints} we report the median, 16th and 84th percentiles of the orbital apocenter and eccentricity, while in the next section we estimate the progenitor masses using the samples directly to fully account for correlations between these orbital parameters.
+
+% - samples shown in next figure, spread in peri, apo
+% - to account for these covariances, but keep runtime manageable, we calculated orbits using 1000 random samples from the posterior \footnote{available at the project repository \url{https://github.com/abonaca/disrupted_gc}}, and report the median, 16th and 84th percentiles of the orbital apocenter and eccentricity in Table~\ref{table:constraints}.
 
 % In addition, we stored 1000 random posterior samples \footnote{available at the project repository \url{https://github.com/abonaca/disrupted_gc}} and used them to estimate the orbital eccentricity, pericenter
 % estimate propagate parameter covariances into orbital parameters and cluster masses
