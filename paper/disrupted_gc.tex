@@ -93,7 +93,9 @@ Here we analyze a subset of y stellar streams with published proper motions (Tab
 \begin{center}
 \includegraphics[width=0.9\textwidth]{stream_fitting.pdf}
 \end{center}
-\caption{
+\caption{Orbital constraints for the Fj\"{o}rm stellar stream in the observed coordinates (left: panels from top to bottom show declination, distance, and proper motion components as a function of right ascension) and cylindrical Galactocentric coordinates (right: in and out of the Galactic plane for the top and bottom panels, respectively).
+Different shades of blue represent orbit samples from the posterior constrained by the stream endpoints (orange points).
+Current observations allow for a range of orbital apocenters and eccentricities.
 }
 \label{fig:streams}
 \end{figure*}
@@ -126,6 +128,10 @@ To estimate current constraints on the orbital apocenter, $r_{apo}$, and eccentr
 These longer orbits are shown in cylindrical Galactocentric coordinates in the right panels of Figure~\ref{fig:streams} (different colors correspond to different samples from the posterior distribution).
 - comment on precision
 In Table~\ref{table:constraints} we report the median, 16th and 84th percentiles of the orbital apocenter and eccentricity, while in the next section we estimate the progenitor masses using the samples directly to fully account for correlations between these orbital parameters.
+
+- caveats:
+-- orbit fits -> compare to published ones
+-- stream ne orbit
 
 
 \section{Masses of Disrupted GCs}
@@ -175,7 +181,7 @@ We propagate the uncertainties on the fossil streams' orbital parameters into th
 \caption{
 \label{fig:kde}
 Caption text.}
-\end{figure*}	
+\end{figure*}
 
 
 \section{Discussion}
@@ -186,24 +192,32 @@ Caption text.}
 \caption{
 \label{fig:mhost}
 Caption text.}
-\end{figure}	
+\end{figure}
 
-mass function slope -- do we understand why flat?
+* summary
 
-- summary
 
-- caveats:
--- progenitor: gc or dwarf?
--- orbit fits -> compare to published ones; 5d fits predictive, don't change much w 6d (ibata)
--- stream ne orbit
--- 10 Gyr disruption time for estimating the mass
+* caveats:
+-- progenitor: gc or dwarf? reasonably certain these are gc, but ideally to be confirmed w the presence of funky abundances (eg Hansen)
+-- 10 Gyr disruption time for estimating the mass + other systematics (estimate these sources of uncertainty)
 
-% - check how sensitive the inferred rapo is on the details of the stream track used
-% - for streams w published
-
+* implications for individual streams
 - compare to mass estimates in the detect part of the stream -> are they mostly detected or are they extending past the currently detected endpoints?
-
+- hyades tails discovered -> is there a mass gap -> more streams to be discovered?
 - lower mass -> implications for epicycles
+
+* population-level inference
+- mass function slope -- do we understand why flat?
+--> not interpretable at the moment, as the stream census incomplete; if it were complete, we could recover the ism-disruption stage mass-function
+--> useful for understanding star formation, especially in low-metallicity regime, relevant for reionization?
+- low mass, recently disrupted, would expect to detect w jwst?
+--> more numerous gc in the past, relation to clumpy disks at high z?
+--> if the total count used to estimate the halo mass at high z, would need to be calibrated?
+- low mass, but if mdf the same as host, those at low metallicity are a high fraction of the host galaxy mass
+--> window into the lowest mass, most dm dominated galaxies
+
+- many spec surveys coming online, potential to discover all streams (the ones in gaia less coherent than those discovered photometrically) and get their metallicities
+
 
 \vspace{0.5cm}
 It is a pleasure to thank:
