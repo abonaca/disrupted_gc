@@ -187,57 +187,103 @@ Two-dimensional demographics of fossil streams progenitors compared to those of 
 \section{Discussion}
 \label{sec:discussion}
 
-\begin{figure}
-\includegraphics[width=\hsize]{figures/mhost_fraction.pdf}%
-\caption{
-\label{fig:mhost}
-Mass fraction of the natal galaxy constituted by the progenitors of fossil streams and globular clusters (with ${\rm [Fe/H]}<-2$) as a function of the natal galaxy mass. The sample is restricted to fossil streams with known metallicities, which are converted to a natal galaxy mass using the galaxy mass-metallicity relation between $z=3$ and $z=6$. Error bars combine metallicity uncertainties with the evolution of the mass-metallicity relation across this redshift range. On average, fossil stream progenitors constituted a smaller fraction of their natal galaxy's mass than globular clusters, but the progenitors of the most metal-poor fossil streams likely represented a significant fraction of the lowest-mass galaxies ever to exist.}
-\end{figure}
-
 We determined orbits of 20 globular clusters disrupted in the Milky Way by fitting sky positions, distances, and proper motions of the remnant stellar streams.
 Assuming that the progenitor clusters dissolved recently, we integrated the orbit-dependent mass-loss rate to infer their pre-evaporation masses.
 The orbital distribution of disrupted globular clusters, in particular their apocenters and eccentricities, is similar to the orbital properties of the surviving population.
 However, the inferred masses of disrupted globular clusters peak at $10^4\,\msun$---significantly lower than the mass of a typical globular cluster in the Milky Way today.
 In this section we discuss this population of low-mass, disrupted globular clusters as tracers of both the Galactic gravitational potential and early star formation, and conclude with an outlook for future follow-up studies.
 
-- mass function slope
--- expected -1, means low-mass are missing
--- we recover a flat slope:
---> not interpretable at the moment, as the stream census incomplete; if it were complete, we could recover the ism-disruption stage mass-function
---> useful for understanding star formation, especially in low-metallicity regime, relevant for reionization?
-
-* implications for individual streams
-- lower mass -> more puffy? check in surviving clusters relation between mass and size
-- lower mass -> implications for epicycles: check andreas' paper
-
-future:
-- compare to mass estimates in the detect part of the stream -> are they mostly detected or are they extending past the currently detected endpoints?
-- hyades tails discovered -> is there a mass gap -> more streams to be discovered?
-
-* population-level inference
-- low mass, but if mdf the same as host, those at low metallicity are a high fraction of the host galaxy mass
---> window into the lowest mass, most dm dominated galaxies -> spatially non-uniform? (sims) fesc for reionization?
-
-- low mass, recently disrupted, would expect to detect w jwst?
---> more numerous gc in the past, relation to clumpy disks at high z?
---> if the total count used to estimate the halo mass at high z, would need to be calibrated?
-
-* future improvements:
-- progenitor: gc or dwarf? reasonably certain these are gc, but ideally to be confirmed w the presence of funky abundances (eg Hansen)
-- complete census
-% do it in section -- 10 Gyr disruption time for estimating the mass + other systematics (estimate these sources of uncertainty)
--- many spec surveys coming online, potential to discover all streams (the ones in gaia less coherent than those discovered photometrically) and get their metallicities
-
-- from charlie
-- radial distribution of streams: more closer to the center?
-- orbits same, just a function of mass
+- orbits similar to surviving clusters, disruption just a function of mass
 -- picture that many came on the same orbit (eg w ge, sgr, etc)
+-- the attrition is a function of orbit: more disruption at small radii expected, also where we expect more streams (hard to tell due to incompleteness)
+-- disruption as function of ecc -- not enhanced at low ecce -- maybe isn't observed as a stream
 
-- uncovering the disrupted population
--- what fraction do these streams constitute (large enough that plausible a complete stream census would recover all?)
+- disrupted globular clusters largely lower mass than surviving
+-- expected from models of globular cluster systems, however far from recovering the expected -1 slope of the mass function
+-- full accounting hard at the moment bc census incomplete, especially towards the bulge
+-- but even if we fix that, it's unlikely to recover all of the disrupted because also only see streams that disrupted recently, and the majority of clusters disrupt by tidal shocks early on in the disk, and not by evaporation (kruijssen2015b)
+
+- implications for individual streams
+- compare to mass estimates in the detect part of the stream -> are they mostly detected or are they extending past the currently detected endpoints? -- some were being connected -- is it dynamically plausible
+- lower mass -> implications for epicycles: check andreas' paper
+- make specific comments for individual streams (e.g., gd-1)
+
+\begin{figure}
+\includegraphics[width=\hsize]{figures/mhost_fraction.pdf}
+\caption{
+\label{fig:mhost}
+Mass fraction of the natal galaxy constituted by the progenitors of low-metallicity fossil streams (blue) and globular clusters (black) as a function of the natal galaxy mass.
+% The sample is restricted to fossil streams with known metallicities, which are converted to a natal galaxy mass using the galaxy mass-metallicity relation between $z=3$ and $z=6$.
+% Error bars combine metallicity uncertainties with the evolution of the mass-metallicity relation across this redshift range.
+On average, fossil stream progenitors constituted a smaller fraction of their natal galaxy's mass than globular clusters, but the progenitors of the most metal-poor fossil streams likely represented a significant fraction of the lowest-mass galaxies. % ever to exist.
+}
+\end{figure}
+
+- what were they in the context of the host galaxy
+- under the assumption that at birth they clusters had the same metallicity as the ambient galaxy, estimate its mass from mass-metallicity relation (cite).
+% The sample is restricted to fossil streams with known metallicities, which are converted to a natal galaxy mass using the galaxy mass-metallicity relation between $z=3$ and $z=6$.
+shown in figure~\ref{fig:mhost}: blue and black gc with metallicities (cite sources of metallicity)
+Error bars combine metallicity uncertainties with the evolution of the mass-metallicity relation across this redshift range.
+- don't expect bound clusters to be dominant mode of sf -- even the more massive gc only contribute 1\% to 30\%
+- the streams have lower mass, so most contribute even less
+- however: some streams lower metallicity, therefore originating from a lower mass galaxy
+- there it dominated the stellar mass budget, and might have had a profound impact on the early formation (keep the galaxy reionized for a while)
+- could be just stochasticity: extending this analysis to more streams will show how common this scenario is
+
+- after fig 4: make prediction for jwst
+- if jwst sees below mstar<~1e6Msun, you see bright knots -- not a surviving gc, but a stream progenitor
+-- explore puny mass range
 
 
+% - from charlie
+% - radial distribution of streams: more closer to the center?
 
+% - mass function slope
+% -- expected -1, means low-mass are missing
+% -- we recover a flat slope:
+% --> not interpretable at the moment, as the stream census incomplete; if it were complete, we could recover the ism-disruption stage mass-function
+% --> useful for understanding star formation, especially in low-metallicity regime, relevant for reionization?
+% - uncovering the disrupted population
+% -- what fraction do these streams constitute (large enough that plausible a complete stream census would recover all?)
+% 1) no bulge
+% 2) only see streams that disrupted recently
+% 3) bulk of the cluster disruption by tidal shocks and not evaporation (kruijssen2015b)
+
+% * implications for individual streams
+% % - lower mass -> more puffy? check in surviving clusters relation between mass and size
+% % -- disruption rate independent of cluster radius
+% - lower mass -> implications for epicycles: check andreas' paper
+% - make specific comments for individual streams (e.g., gd-1)
+
+% future:
+% - compare to mass estimates in the detect part of the stream -> are they mostly detected or are they extending past the currently detected endpoints?
+% - hyades tails discovered -> is there a mass gap -- probably not, but there should be an age gap, need massive clusters to survive for a hubble time, but not to survive for a Myr, upper mass limit decreases -> more streams to be discovered?
+% - the population we see is in the open cluster regime, but only now, probably not before tidal shocks, survived bc kicked out in the halo at high z, in the disk would have been disrupted
+
+% * population-level inference
+% - low mass, but if mdf the same as host, those at low metallicity are a high fraction of the host galaxy mass
+% --> window into the lowest mass, most dm dominated galaxies -> spatially non-uniform? (sims) fesc for reionization?
+% -> higher for clumpier medium
+% - for reionization most relevant clumpiness in the gas
+% - don't expect bound clusters to be dominant mode of sf -- sylgr might just be stochasticity -- sylgr helped keep the galaxy ionized, dominated at birth, integrated combined less
+% - what were they in context of their host galaxies
+% - need metallicity
+% - don't dominate the galaxy, sometimes they do
+
+
+% - low mass, recently disrupted, would expect to detect w jwst?
+% --> more numerous gc in the past, relation to clumpy disks at high z? -- more metal rich
+% --> if the total count used to estimate the halo mass at high z, would need to be calibrated?
+
+% - after fig 4: make prediction for jwst
+% - if jwst sees below mstar<~1e6Msun, you see bright knots -- not a surviving gc, but a stream progenitor
+% -- explore puny mass range
+
+% * future improvements:
+% - progenitor: gc or dwarf? reasonably certain these are gc, but ideally to be confirmed w the presence of funky abundances (eg Hansen)
+% - complete census
+% % do it in section -- 10 Gyr disruption time for estimating the mass + other systematics (estimate these sources of uncertainty)
+% -- many spec surveys coming online, potential to discover all streams (the ones in gaia less coherent than those discovered photometrically) and get their metallicities
 
 \vspace{0.5cm}
 It is a pleasure to thank:
