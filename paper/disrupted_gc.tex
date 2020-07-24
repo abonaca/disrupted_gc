@@ -93,15 +93,22 @@ Current observations allow for a range of orbital apocenters and eccentricities.
 \label{fig:streams}
 \end{figure*}
 
-\begin{deluxetable*}{l @{\hspace{0.5cm}} c c c c c c @{\hspace{0.8cm}} c c}
+\begin{deluxetable*}{l @{\hspace{0.5cm}} D D D D D D @{\hspace{0.8cm}} D D D}
 \tablehead{
-Name & R.A. & Dec & d & $\mu_\alpha$ & $\mu_\delta$ & $V_r$ & $r_{peri}$ & $r_{apo}$\\
-& deg & deg & kpc & mas/yr & mas/yr & km/s & kpc & kpc
-% \colhead{Name} & \colhead{$r_{peri}$} & \colhead{$r_{apo}$}
+Name & \multicolumn2c{R.A.} & \multicolumn2c{Dec} & \multicolumn2c{d} & \multicolumn2c{$\mu_\alpha$} & \multicolumn2c{$\mu_\delta$} & \multicolumn2c{$V_r$} & \multicolumn2c{$r_{peri}$} & \multicolumn2c{$r_{apo}$} & \multicolumn2c{$\log M_i/\rm\msun$}\\
+& \multicolumn2c{deg} & \multicolumn2c{deg} & \multicolumn2c{kpc} & \multicolumn2c{mas/yr} & \multicolumn2c{mas/yr} & \multicolumn2c{km/s} & \multicolumn2c{kpc} & \multicolumn2c{kpc} & \multicolumn2c{dex}
 }
+\decimals
+\setlength{\tabcolsep}{3pt}
 \startdata
 \input{table_properties.tex}
 \enddata
+\caption{Dynamical properties of stellar streams, with the stream name and the fiducial right ascension in the first two columns, respectively.
+Columns~$3-7$ are our estimates for the fiducial phase-space coordinates of the stream's orbit.
+The final three columns provide constraints on the orbital pericenter, apocenter, and the initial mass of the stream's progenitor.
+The quoted values are the medians, while the uncertainties reflect the $16-84$ percentiles of the posterior distributions.
+}
+\label{table:constraints}
 \end{deluxetable*}
 
 
