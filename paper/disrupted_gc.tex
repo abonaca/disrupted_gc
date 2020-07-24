@@ -82,13 +82,6 @@ Using data from the Gaia mission \citep{gdr2}, we determine stream orbits in Sec
 Since the streams are coherent, we assume the progenitor globular clusters disrupted recently \citep{helmi:2003}, and in Section~\ref{sec:disrupted} calculate their masses.
 We close by discussing the implications of the inferred low masses for dynamical studies of stellar streams, and place this population of disrupted globular clusters in the context of cluster and galaxy formation.
 
-
-\section{Stream Orbits}
-\label{sec:orbits}
-A total of x thin stellar streams, likely disrupted globular clusters, have been reported in the Milky Way \citep[an up-to-date list is available in the \package{galstreams} package,][]{mateu:2018}.
-Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}, however, kinematic information is essential for accurate stream modeling \citep{bh:2018}.
-Here we analyze a subset of y stellar streams with published proper motions (Table~\ref{table:streams}).
-
 \begin{figure*}
 \begin{center}
 \includegraphics[width=0.9\textwidth]{figures/stream_fitting.pdf}
@@ -99,6 +92,24 @@ Current observations allow for a range of orbital apocenters and eccentricities.
 }
 \label{fig:streams}
 \end{figure*}
+
+\begin{deluxetable*}{l c c c c c c c c}
+\tablehead{
+Name & R.A. & Dec & d & $\mu_\alpha$ & $\mu_\delta$ & $V_r$ & $r_{peri}$ & $r_{apo}$\\
+& deg & deg & kpc & mas/yr & mas/yr & km/s & kpc & kpc
+% \colhead{Name} & \colhead{$r_{peri}$} & \colhead{$r_{apo}$}
+}
+\startdata
+\input{table_properties.tex}
+\enddata
+\end{deluxetable*}
+
+
+\section{Stream Orbits}
+\label{sec:orbits}
+A total of x thin stellar streams, likely disrupted globular clusters, have been reported in the Milky Way \citep[an up-to-date list is available in the \package{galstreams} package,][]{mateu:2018}.
+Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}, however, kinematic information is essential for accurate stream modeling \citep{bh:2018}.
+Here we analyze a subset of y stellar streams with published proper motions (Table~\ref{table:streams}).
 
 We measure orbital parameters for a population of dissolved globular clusters by fitting orbits to sky positions, distances, and proper motions of stream endpoints.
 Due to limited observational data on some streams, we decided to fit only the stream endpoints to ensure a homogeneous treatment of the entire sample.
@@ -207,16 +218,6 @@ However, the combined distribution of pre-evaporation masses for stream progenit
 In part, the comparative dearth of low-mass clusters may be attributed to incompleteness in the stream sample, but it may also signify that evaporation is a subdominant cluster disruption mechanism.
 For example, \citet{kruijssen15b} proposed that most early-forming clusters were rapidly disrupted in the turbulent disks of their host galaxies, and that only a small fraction of the initial cluster population survives long enough to experience evaporation.
 A complete census of stellar streams could therefore inform on dynamical properties of star-forming galaxies at high redshift.
-
-% - starting to recover this population, however still far from the initial slope
-% - most expected to disrupt by tidal shocks in the disk early on (kruijssen2015b) -- wouldn't be observable as cold stellar streams today
-% - pre-evaporation mass function -- anything interesting to learn from?
-
-% - disrupted globular clusters largely lower mass than surviving
-% -- expected from models of globular cluster systems, however far from recovering the expected -1 slope of the mass function
-% -- full accounting hard at the moment bc census incomplete, especially towards the bulge
-% -- but even if we fix that, it's unlikely to recover all of the disrupted because also only see streams that disrupted recently, and the majority of clusters disrupt by tidal shocks early on in the disk, and not by evaporation (kruijssen2015b)
-
 
 - implications for individual streams
 - compare to mass estimates in the detect part of the stream -> are they mostly detected or are they extending past the currently detected endpoints? -- some were being connected -- is it dynamically plausible
