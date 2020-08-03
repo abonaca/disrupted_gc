@@ -116,14 +116,14 @@ The quoted values are the medians, while the uncertainties reflect the $16-84$ p
 \label{sec:orbits}
 A total of x thin stellar streams, likely disrupted globular clusters, have been reported in the Milky Way \citep[an up-to-date list is available in the \package{galstreams} package,][]{mateu:2018}.
 Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}, however, kinematic information is essential for accurate stream modeling \citep{bh:2018}.
-Here we analyze a subset of y stellar streams with published proper motions (Table~\ref{table:streams}).
+Here we analyze a subset of y stellar streams with published proper motions (Table~\ref{table:constraints}).
 
 We measure orbital parameters for a population of dissolved globular clusters by fitting orbits to sky positions, distances, and proper motions of stream endpoints.
 Due to limited observational data on some streams, we decided to fit only the stream endpoints to ensure a homogeneous treatment of the entire sample.
 \citet{riley:2020} demonstrated that the 3D positions of stream end-points robustly constrain their orbital poles, while \citet{ibata:2019} found that the absence of radial velocities produces no significant biases in orbit determination for streams with proper motion data.
 Therefore, we expect our strategy of recovering orbits from 5D positions of stream endpoints to perform well.
 In Section~\ref{sec:discussion} we discuss how orbital constraints change for streams where additional data is available.
-The endpoint sky positions and distances \citep{riley:2020}, and proper motions \citep[][as noted]{ibata:2019, shipp:2019} are listed in Table~\ref{table:streams}, along with the associated uncertainties.
+The endpoint sky positions and distances \citep{riley:2020}, and proper motions \citep[][as noted]{ibata:2019, shipp:2019} are listed in Table~\ref{table:constraints}, along with the associated uncertainties.
 Figure~\ref{fig:streams} shows these data for three representative streams as large black points (top to bottom: x, y, z).
 
 We fit stream orbits in a three-component model of the Milky Way gravitational potential implemented in the \package{gala} package \citep{gala} and featuring a \citet{mn:1975} disk (mass: $5.5\times10^{10}\rm\, M_\odot$, scale-length: 3\,kpc, scale-height: 28\,pc), a \citet{hernquist:1990} bulge (mass: $4\times10^9\rm\, M_\odot$, scale-radius: 1\,kpc), and a \citet{nfw:1997} halo (scale-mass: $7\times10^{11}\rm\, M_\odot$, scale-radius: 15.62\,kpc, $z$-axis flattening: 0.95).
@@ -155,7 +155,7 @@ In Table~\ref{table:constraints} we report the median, 16th and 84th percentiles
 \section{Masses of Disrupted globular clusters}
 \label{sec:disrupted}
 
-We estimate the masses of the globular clusters producing the streams using a simple analytic globular cluster disruption model \citep{lamers05}, which reproduces direct $N$-body simulations of globular clusters undergoing tidal evaporation in a static background potential \citep{baumgardt03}. Specifically, we obtain a `pre-evaporation' globular cluster mass $M_0$ by estimating the total mass loss due to stellar evolution and tidal evaporation for a cluster on the inferred orbit over some timescale $t$. We refrain from deriving an `initial' globular cluster mass, because tidal evaporation in the host galaxy halo is not the only mass loss mechanism experienced by globular clusters over the course of their history. Prior to being deposited into the halo, globular clusters were disrupted by tidal shocks due to gravitational perturbations from overdensities in the interstellar medium of their natal galaxy \citep[e.g.][]{gieles06,kruijssen11,miholics17,pfeffer18}. Integrated over the history of globular clusters, tidal shocks are thought to dominate the total dynamical mass loss \citep[e.g.][]{kruijssen15b}. Therefore, the quantity $M_0$ refers strictly to the `pre-evaporation' globular cluster mass -- after the first phase of disruption tidal shocks, but before the second phase of disruption by tidal evaporation. We also include the total amount of mass lost by stellar evolution, so that only the mass loss by tidal shocks is unaccounted for.
+We estimate the masses of the globular clusters producing the streams using a simple analytic globular cluster disruption model \citep{lamers05}, which reproduces direct $N$-body simulations of globular clusters undergoing tidal evaporation in a static background potential \citep{baumgardt03}. Specifically, we obtain a `pre-evaporation' globular cluster mass $M_0$ by estimating the total mass loss due to stellar evolution and tidal evaporation for a cluster on the inferred orbit over some timescale $t$. We refrain from deriving an `initial' globular cluster mass, because tidal evaporation in the host galaxy halo is not the only mass loss mechanism experienced by globular clusters over the course of their history. Prior to being deposited into the halo, globular clusters were disrupted by tidal shocks due to gravitational perturbations from overdensities in the interstellar medium of their natal galaxy \citep[e.g.][]{gieles06,kruijssen11,miholics17,pfeffer:2018}. Integrated over the history of globular clusters, tidal shocks are thought to dominate the total dynamical mass loss \citep[e.g.][]{kruijssen15b}. Therefore, the quantity $M_0$ refers strictly to the `pre-evaporation' globular cluster mass -- after the first phase of disruption tidal shocks, but before the second phase of disruption by tidal evaporation. We also include the total amount of mass lost by stellar evolution, so that only the mass loss by tidal shocks is unaccounted for.
 
 We relate $M_0$ to the orbit of the stellar stream by assuming a present-day globular cluster mass of zero (consistent with the fact that only a fossil stream remains) and writing eq.~7 of \citet{lamers05} as
 \begin{equation}
@@ -226,7 +226,7 @@ In this section we discuss this population of low-mass, disrupted globular clust
 Most processes that destroy globular clusters operate more efficiently closer to the Galactic center \citep[e.g.,][]{gnedin:1997}.
 Hence, if the initial population of globular clusters sampled the orbital space uniformly, we might expect to preferentially find stellar streams on more eccentric orbits with smaller apocenters.
 However, streams from our sample occupy similar orbital families as the present-day globular clusters, and the main difference between the two populations is the lower average mass of disrupted clusters.
-This may indicate that most globular clusters that ever orbited the Milky Way can be associated with a handful of its progenitor galaxies, in agreement with the phase-space \citep{massari:2019} and age-metallicity \citep{kruijssen19e} distributions of the surviving cluster population.
+This may indicate that most globular clusters that ever orbited the Milky Way can be associated with a handful of its progenitor galaxies, in agreement with the phase-space \citep{massari:2019} and age-metallicity \citep{kruijssen19e,kruijssen20} distributions of the surviving cluster population.
 Partly, streams with small apocenters and those with high eccentricities may be missing from our sample due to observational biases: low eccentricity tidal debris is more readily identifiable as a thin stellar stream \citep{hendel:2015}, while searching for streams in the inner Galaxy is challenging due to high contamination from the field Milky Way stars \citep[e.g.,][]{ibata:2019}.
 The wealth of observational data expected over the next decade will allow for a more complete census of stellar streams that can further test the emerging picture in which the initial population of Galactic globular clusters originates from a small number of host galaxies.
 
@@ -234,7 +234,7 @@ Low-mass clusters are more susceptible to disruption \citep[e.g.,][]{fall:2001}.
 As a result, globular clusters, which are predominantly old, peak at a characteristic mass of $\approx10^5\,\msun$ \citep[e.g.,][]{harris:1991}, whereas the masses of young clusters follow a power law distribution \citep[e.g.,][]{zhang:1999}.
 As expected for disrupted globular clusters, we find that the masses of stellar stream progenitors are lower than those of still bound clusters.
 However, the combined distribution of pre-evaporation masses for stream progenitors and surviving clusters is much shallower than the initial cluster mass function.
-In part, the comparative dearth of low-mass clusters may be attributed to incompleteness in the stream sample, but it may also signify that evaporation is a subdominant cluster disruption mechanism.
+In part, the comparative dearth of low-mass clusters may be attributed to incompleteness in the stream sample and the finite lifetimes of the streams, but it may also signify that evaporation is a subdominant cluster disruption mechanism.
 For example, \citet{kruijssen15b} proposed that most early-forming clusters were rapidly disrupted in the turbulent disks of their host galaxies, and that only a small fraction of the initial cluster population survives long enough to experience evaporation.
 A complete census of stellar streams could therefore inform on dynamical properties of star-forming galaxies at high redshift.
 
@@ -244,10 +244,14 @@ A complete census of stellar streams could therefore inform on dynamical propert
 \label{fig:mhost}
 Mass fraction of the natal galaxy constituted by the progenitors of fossil streams (blue) and low-metallicity globular clusters (black) as a function of the galaxy mass.
 % The sample is restricted to fossil streams with known metallicities, which are converted to a natal galaxy mass using the galaxy mass-metallicity relation between $z=3$ and $z=6$.
-% Error bars combine metallicity uncertainties with the evolution of the mass-metallicity relation across this redshift range.
+Error bars combine metallicity uncertainties with the evolution of the mass-metallicity relation across this redshift range.
 On average, stream progenitors constituted a smaller fraction of their natal galaxy's mass than globular clusters, but the progenitors of the most metal-poor streams likely represented a significant fraction of the lowest-mass galaxies ever to exist.
 }
 \end{figure}
+
+We can place the pre-evaporation masses of the progenitor clusters in the context of their natal galaxy by using the metallicity of the stream to infer the galaxy mass at the time of cluster formation \citep{kruijssen20b}. This is possible, because the galaxy mass-metallicity relation is predicted to exhibit little evolution over the formation redshift range of the metal-poor clusters considered here, such that the stream metallicity mostly traces the natal galaxy mass, rather than the formation redshift. Metallicities are available for seven of the streams in our sample (Aliqa Uma, ATLAS, Fj\"orm, Phoenix, Slidr, Sylgr, and Ylgr; \citealt{ibata:2019,li:2020,wan20}). We follow \citet{kruijssen19c} and convert these metallicities to natal galaxy masses using the galaxy mass-metallicity relation between $z=3$ and $z=6$ predicted by the FIRE simulations \citep{ma16}.
+
+\autoref{fig:mhost} shows the resulting relation between the galaxy mass fraction constituted by the stream progenitor clusters (using their pre-evaporation masses) and the natal galaxy mass. For comparison, we are also including the ten GCs with metallicities $[{\rm Fe}/{\rm H}]<-2$ from the compilation of \citet{kruijssen19e}. MORE NEEDED HERE.
 
 - what were they in the context of the host galaxy
 - under the assumption that at birth they clusters had the same metallicity as the ambient galaxy, estimate its mass from mass-metallicity relation (cite).
@@ -267,7 +271,8 @@ Error bars combine metallicity uncertainties with the evolution of the mass-meta
 
 
 \vspace{0.5cm}
-It is a pleasure to thank: Charlie Conroy
+It is a pleasure to thank: Charlie Conroy.
+J.M.D.K.\ gratefully acknowledges the generous hospitality of the Institute for Theory and Computation at Harvard University, where part of this work was carried out. J.M.D.K.\ gratefully acknowledges funding from the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) through an Emmy Noether Research Group (grant number KR4801/1-1) and the DFG Sachbeihilfe (grant number KR4801/2-1), as well as from the European Research Council (ERC) under the European Union's Horizon 2020 research and innovation programme via the ERC Starting Grant MUSTANG (grant agreement number 714907).
 
 \software{
 \package{Astropy} \citep{astropy, astropy:2018},
