@@ -148,8 +148,8 @@ def ln_likelihood_icrs(p, ra_0, data, n_steps, dt, wangle, ham, gc_frame):
     c = coord.ICRS(ra=ra_0*u.deg, dec=dec*u.deg, distance=d*u.kpc, pm_ra_cosdec=pmra*u.mas/u.yr, pm_dec=pmdec*u.mas/u.yr, radial_velocity=vr*u.km/u.s)
     w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
     
-    if ham.energy(w0)>0:
-        return -np.inf
+    #if ham.energy(w0)>0:
+        #return -np.inf
     
     orbit = ham.integrate_orbit(w0, dt=dt, n_steps=n_steps)
     model_stream = orbit.to_coord_frame(coord.ICRS, galactocentric_frame=gc_frame)
@@ -179,11 +179,17 @@ def ln_likelihood_icrs(p, ra_0, data, n_steps, dt, wangle, ham, gc_frame):
     
     # model smoothing
     isigma = {}
-    isigma['dec'] = 0.2 # deg
+    isigma['dec'] = 0.01 # deg
     isigma['dist'] = 0.1 # kpc
     isigma['pmra'] = 0. # mas/yr
     isigma['pmdec'] = 0. # mas/yr
     isigma['vr'] = 1 # km/s
+    
+    #isigma['dec'] = 0. # deg
+    #isigma['dist'] = 0. # kpc
+    #isigma['pmra'] = 0. # mas/yr
+    #isigma['pmdec'] = 0. # mas/yr
+    #isigma['vr'] = 0. # km/s
     
     chi2 = 0
     keys = data.keys()
@@ -327,6 +333,113 @@ def prep_gd1():
     
     pickle.dump(data, open('../data/streams/data_gd1.pkl', 'wb'))
 
+def prep_svol():
+    """"""
+    t1 = Table.read('../data/streams/docs/svol_l_b.csv', format='ascii.no_header', delimiter=',')
+    t2 = Table.read('../data/streams/docs/svol_pmra_b.csv', format='ascii.no_header', delimiter=',')
+    t3 = Table.read('../data/streams/docs/svol_pmdec_b.csv', format='ascii.no_header', delimiter=',')
+    
+    tc = Table.read('../data/stream_endpoints_5d.fits')
+    ind = tc['name']=='Sv\\"{o}l'
+    ts = tc[ind]
+    
+    # typo in Riley table
+    ceq_ = coord.SkyCoord(ra=ts['ra'], dec=ts['dec'], distance=ts['d'], frame='icrs')[0]
+    cgal_ = ceq_.transform_to(coord.Galactic)
+    cgal_end = coord.SkyCoord(l=cgal_.b.degree*u.deg, b=cgal_.l.degree*u.deg, distance=cgal_.distance, frame='galactic')
+    ceq_end = cgal_end.transform_to(coord.ICRS)
+    
+    # uncertainties
+    l_err = np.mean(ts['dec_err'])*ts['dec_err'].unit
+    d_err = np.mean(ts['d_err'])*ts['d_err'].unit
+    pm_err = np.mean(ts['pm_err'])*ts['pm_err'].unit
+    #pm_err = 0.5*u.mas/u.yr
+    
+    # convert to equatorial coordinates
+    c = coord.Galactic(l=t1['col2']*u.deg, b=t1['col1']*u.deg)
+    c_eq = c.transform_to(coord.ICRS)
+    
+    np.random.seed(193)
+    t1['col1'] += np.random.randn(len(t1))*1e-6
+    isort = np.argsort(t1['col1'])
+    interp_l = InterpolatedUnivariateSpline(t1['col1'][isort], t1['col2'][isort], k=3, bbox=[-90,90])
+    
+    l_pmra = interp_l(t2['col1'])
+    cpmra = coord.Galactic(l=l_pmra*u.deg, b=t2['col1']*u.deg)
+    cpmra_eq = cpmra.transform_to(coord.ICRS)
+    
+    l_pmdec = interp_l(t3['col1'])
+    cpmdec = coord.Galactic(l=l_pmdec*u.deg, b=t3['col1']*u.deg)
+    cpmdec_eq = cpmdec.transform_to(coord.ICRS)
+    
+    data = dict()
+    data['dec'] = (c_eq.ra, c_eq.dec, np.ones(len(t1))*l_err)
+    data['dist'] = (ceq_end.ra, ceq_end.distance, np.ones(np.size(ceq_end.ra))*d_err)
+    data['pmra'] = (cpmra_eq.ra, t2['col2']*u.mas/u.yr, np.ones(len(t2))*pm_err)
+    data['pmdec'] = (cpmdec_eq.ra, t3['col2']*u.mas/u.yr, np.ones(len(t3))*pm_err)
+    
+    #data['dec'] = (ceq_end.ra, ceq_end.dec, np.ones(np.size(ceq_end.ra))*l_err)
+    #data['pmra'] = (ceq_end.ra, ts['pmra'].quantity[0], np.ones(np.size(ceq_end.ra))*pm_err)
+    #data['pmdec'] = (ceq_end.ra, ts['pmdec'].quantity[0], np.ones(np.size(ceq_end.ra))*pm_err)
+    
+    pickle.dump(data, open('../data/streams/data_svol.pkl', 'wb'))
+
+def reily_name(name):
+    
+    names = dict(svol='Sv\\"{o}l', leiptr='Leiptr', gjoll='Gj\\"{o}ll', fjorm='Fj\\"{o}rm', fimbulthul='Fimbulthul', ylgr='Ylgr', sylgr='Sylgr', slidr='Slidr')
+    
+    return names[name]
+    
+def prep_ibata_l(name, graph=False):
+    """"""
+    t1 = Table.read('../data/streams/docs/{:s}_b_l.csv'.format(name), format='ascii.no_header', delimiter=',')
+    t2 = Table.read('../data/streams/docs/{:s}_pmra_l.csv'.format(name), format='ascii.no_header', delimiter=',')
+    t3 = Table.read('../data/streams/docs/{:s}_pmdec_l.csv'.format(name), format='ascii.no_header', delimiter=',')
+    
+    tc = Table.read('../data/stream_endpoints_5d.fits')
+    ind = tc['name']==reily_name(name)
+    ts = tc[ind]
+    ceq_end = coord.SkyCoord(ra=ts['ra'], dec=ts['dec'], distance=ts['d'], frame='icrs')[0]
+    
+    # mean uncertainties
+    l_err = np.nanmean(ts['dec_err'])*ts['dec_err'].unit
+    d_err = np.nanmean(ts['d_err'])*ts['d_err'].unit
+    pm_err = np.nanmean(ts['pm_err'])*ts['pm_err'].unit
+    
+    # galactic latitude interpolation
+    if name=='fjorm':
+        k = 6
+    else:
+        k = 3
+    pp = np.polyfit(t1['col1'], t1['col2'], k)
+    interp_b = np.poly1d(pp)
+    
+    if graph:
+        plt.close()
+        plt.plot(t1['col1'], t1['col2'], 'ko')
+        x = np.linspace(np.min(t1['col1']), np.max(t1['col1']), 100)
+        y = interp_b(x)
+        plt.plot(x, y, 'r-')
+    
+    # convert to equatorial coordinates
+    c = coord.Galactic(l=t1['col1']*u.deg, b=t1['col2']*u.deg)
+    c_eq = c.transform_to(coord.ICRS)
+    
+    b_pmra = interp_b(t2['col1'])
+    cpmra = coord.Galactic(l=t2['col1']*u.deg, b=b_pmra*u.deg)
+    cpmra_eq = cpmra.transform_to(coord.ICRS)
+    
+    b_pmdec = interp_b(t3['col1'])
+    cpmdec = coord.Galactic(l=t3['col1']*u.deg, b=b_pmdec*u.deg)
+    cpmdec_eq = cpmdec.transform_to(coord.ICRS)
+    
+    data = dict()
+    data['dec'] = (c_eq.ra, c_eq.dec, np.ones(len(t1))*l_err)
+    data['dist'] = (ceq_end.ra, ceq_end.distance, np.ones(np.size(ceq_end.ra))*d_err)
+    data['pmra'] = (cpmra_eq.ra, t2['col2']*u.mas/u.yr, np.ones(len(t2))*pm_err)
+    data['pmdec'] = (cpmdec_eq.ra, t3['col2']*u.mas/u.yr, np.ones(len(t3))*pm_err)
+    
+    pickle.dump(data, open('../data/streams/data_{:s}.pkl'.format(name), 'wb'))
 
 def test_oph():
     """"""
@@ -431,7 +544,7 @@ def initialize():
 def get_names():
     """Get names of streams in the sample"""
     
-    streams = ['ophiuchus', 'gd1']
+    streams = ['ophiuchus', 'gd1', 'svol', 'leiptr', 'gjoll', 'fjorm', 'fimbulthul', 'ylgr', 'sylgr', 'slidr']
     
     return sorted(streams)
 
@@ -441,7 +554,24 @@ def get_properties(name):
     props = {}
 
     props['ophiuchus'] = dict(label='Ophiuchus', wangle=360*u.deg, ra0=240.5*u.deg, dec0=-7.3*u.deg, d0=10*u.kpc, pmra0=-4*u.mas/u.yr, pmdec0=-4.5*u.mas/u.yr, vr0=270*u.km/u.s, tstream=13*u.Myr)
+    
     props['gd1'] = dict(label='GD-1', wangle=360*u.deg, ra0=123*u.deg, dec0=-10*u.deg, d0=9*u.kpc, pmra0=-2*u.mas/u.yr, pmdec0=-7*u.mas/u.yr, vr0=300*u.km/u.s, tstream=110*u.Myr)
+    
+    props['svol'] = dict(label='Sv\\"{o}l', wangle=360*u.deg, ra0=250*u.deg, dec0=25*u.deg, d0=8*u.kpc, pmra0=3.5*u.mas/u.yr, pmdec0=-6*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=30*u.Myr)
+    
+    props['leiptr'] = dict(label='Leiptr', wangle=360*u.deg, ra0=98*u.deg, dec0=-35*u.deg, d0=8*u.kpc, pmra0=10*u.mas/u.yr, pmdec0=-8*u.mas/u.yr, vr0=250*u.km/u.s, tstream=30*u.Myr)
+
+    props['gjoll'] = dict(label='Gj\\"{o}ll', wangle=360*u.deg, ra0=90*u.deg, dec0=-21*u.deg, d0=3.5*u.kpc, pmra0=24*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=150*u.km/u.s, tstream=13*u.Myr)
+    
+    props['fjorm'] = dict(label='Fj\\"{o}rm', wangle=360*u.deg, ra0=260*u.deg, dec0=70*u.deg, d0=5*u.kpc, pmra0=6*u.mas/u.yr, pmdec0=3*u.mas/u.yr, vr0=-100*u.km/u.s, tstream=30*u.Myr)
+    
+    props['fimbulthul'] = dict(label='Fimbulthul', wangle=360*u.deg, ra0=198*u.deg, dec0=-32*u.deg, d0=4*u.kpc, pmra0=-9*u.mas/u.yr, pmdec0=-9*u.mas/u.yr, vr0=250*u.km/u.s, tstream=20*u.Myr)
+    
+    props['ylgr'] = dict(label='Ylgr', wangle=360*u.deg, ra0=183*u.deg, dec0=-38*u.deg, d0=9*u.kpc, pmra0=-0.5*u.mas/u.yr, pmdec0=-5*u.mas/u.yr, vr0=320*u.km/u.s, tstream=30*u.Myr)
+
+    props['sylgr'] = dict(label='Sylgr', wangle=360*u.deg, ra0=164*u.deg, dec0=-13*u.deg, d0=4*u.kpc, pmra0=-25*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=-200*u.km/u.s, tstream=15*u.Myr)
+    
+    props['slidr'] = dict(label='Slidr', wangle=360*u.deg, ra0=148*u.deg, dec0=17*u.deg, d0=2.5*u.kpc, pmra0=-28*u.mas/u.yr, pmdec0=-10*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=20*u.Myr)
     
     return props[name]
 
@@ -453,10 +583,11 @@ def test(name, dra=2, best=True):
         res = pickle.load(open('../data/fits/minimization_{:s}.pkl'.format(stream.savename), 'rb'))
         p0 = [x*y.unit for x, y in zip(res.x, stream.p0)]
         dec, dist, pmra, pmdec, vr = p0
+        print(p0)
+        fit_label = 'Best-fit'
     else:
         dec, dist, pmra, pmdec, vr = stream.p0
-        
-    print(ham_heavy.potential.parameters)
+        fit_label = 'Initial'
     
     c = coord.SkyCoord(ra=stream.ra0*u.deg, dec=dec, distance=dist, pm_ra_cosdec=pmra, pm_dec=pmdec, radial_velocity=vr, frame='icrs')
     w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
@@ -481,11 +612,11 @@ def test(name, dra=2, best=True):
             plt.plot(stream.data[fields[i]][0], stream.data[fields[i]][1], 'k.', label='Data')
             plt.errorbar(stream.data[fields[i]][0].value, stream.data[fields[i]][1].value, yerr=stream.data[fields[i]][2].value, fmt='none', color='k', alpha=0.7, label='')
             
-        plt.plot(model.ra[istart:iend], model_fields[i][istart:iend], '-', color='tab:blue', label='Initial orbit')
+        plt.plot(model.ra[istart:iend], model_fields[i][istart:iend], '-', color='tab:blue', label='{:s} orbit'.format(fit_label))
         
         plt.ylabel(labels[i])
         if i==0:
-            plt.legend(loc=4, fontsize='small', handlelength=1)
+            plt.legend(fontsize='small', handlelength=1)
 
     plt.minorticks_on()
     plt.xlim(np.min(stream.data['dec'][0].to(u.deg).value)-dra, np.max(stream.data['dec'][0].to(u.deg).value)+dra)
@@ -495,7 +626,7 @@ def test(name, dra=2, best=True):
     if best:
         plt.savefig('../plots/diag/best_{:s}.png'.format(stream.name))
     
-def fit_stream(name):
+def fit_stream(name, full=False):
     """"""
     
     stream = Stream(name, ham=ham, save_ext='')
@@ -505,18 +636,19 @@ def fit_stream(name):
     t = Table.read('../data/fits/minimization_orbit_{:s}.fits'.format(name))
     t.pprint()
     
-    stream = Stream(name, ham=ham_bovy, save_ext='bovy')
-    res = stream.orbit_minimize(save=True)
-    stream.orbital_properties(save=True)
-    
-    t = Table.read('../data/fits/minimization_orbit_{:s}_bovy.fits'.format(name))
-    t.pprint()
-    
-    stream = Stream(name, ham=ham_heavy, save_ext='heavy')
-    res = stream.orbit_minimize(save=True)
-    stream.orbital_properties(save=True)
-    
-    t = Table.read('../data/fits/minimization_orbit_{:s}_heavy.fits'.format(name))
-    t.pprint()
+    if full:
+        stream = Stream(name, ham=ham_bovy, save_ext='bovy')
+        res = stream.orbit_minimize(save=True)
+        stream.orbital_properties(save=True)
+        
+        t = Table.read('../data/fits/minimization_orbit_{:s}_bovy.fits'.format(name))
+        t.pprint()
+        
+        stream = Stream(name, ham=ham_heavy, save_ext='heavy')
+        res = stream.orbit_minimize(save=True)
+        stream.orbital_properties(save=True)
+        
+        t = Table.read('../data/fits/minimization_orbit_{:s}_heavy.fits'.format(name))
+        t.pprint()
 
     
