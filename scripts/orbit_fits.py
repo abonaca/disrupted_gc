@@ -6,6 +6,8 @@ from astropy.table import Table, QTable, hstack, vstack
 import astropy.units as u
 import astropy.coordinates as coord
 from astropy.io import ascii
+from astropy.coordinates import frame_transform_graph
+from astropy.coordinates.matrix_utilities import matrix_transpose
 
 import gala.coordinates as gc
 import gala.potential as gp
@@ -23,6 +25,78 @@ ham_heavy = gp.Hamiltonian(gp.MilkyWayPotential(nucleus=dict(m=0), halo=dict(c=0
 
 coord.galactocentric_frame_defaults.set('v4.0')
 gc_frame = coord.Galactocentric()
+
+
+class AAU(coord.BaseCoordinateFrame):
+    """
+    A Heliocentric spherical coordinate system defined by the track of the ATLAS Aliqa Uma stream
+
+    For more information about this class, see the Astropy documentation
+    on coordinate frames in :mod:`~astropy.coordinates`.
+
+    Parameters
+    ----------
+    representation : :class:`~astropy.coordinates.BaseRepresentation` or None
+        A representation object or None to have no data (or use the other keywords)
+
+    phi1 : angle_like, optional, must be keyword
+        The longitude-like angle corresponding to AAU's orbit.
+    phi2 : angle_like, optional, must be keyword
+        The latitude-like angle corresponding to AAU's orbit.
+    distance : :class:`~astropy.units.Quantity`, optional, must be keyword
+        The Distance for this object along the line-of-sight.
+
+    pm_phi1_cosphi2 : :class:`~astropy.units.Quantity`, optional, must be keyword
+        The proper motion in the longitude-like direction corresponding to
+        the AAU stream's orbit.
+    pm_phi2 : :class:`~astropy.units.Quantity`, optional, must be keyword
+        The proper motion in the latitude-like direction perpendicular to the
+        AAU stream's orbit.
+    radial_velocity : :class:`~astropy.units.Quantity`, optional, must be keyword
+        The Distance for this object along the line-of-sight.
+
+    """
+    default_representation = coord.SphericalRepresentation
+    default_differential = coord.SphericalCosLatDifferential
+
+    frame_specific_representation_info = {
+        coord.SphericalRepresentation: [
+            coord.RepresentationMapping('lon', 'phi1'),
+            coord.RepresentationMapping('lat', 'phi2'),
+            coord.RepresentationMapping('distance', 'distance')],
+        coord.SphericalCosLatDifferential: [
+            coord.RepresentationMapping('d_lon_coslat', 'pm_phi1_cosphi2'),
+            coord.RepresentationMapping('d_lat', 'pm_phi2'),
+            coord.RepresentationMapping('d_distance', 'radial_velocity')],
+        coord.SphericalDifferential: [
+            coord.RepresentationMapping('d_lon', 'pm_phi1'),
+            coord.RepresentationMapping('d_lat', 'pm_phi2'),
+            coord.RepresentationMapping('d_distance', 'radial_velocity')]
+    }
+
+    frame_specific_representation_info[coord.UnitSphericalRepresentation] = \
+        frame_specific_representation_info[coord.SphericalRepresentation]
+    frame_specific_representation_info[coord.UnitSphericalCosLatDifferential] = \
+        frame_specific_representation_info[coord.SphericalCosLatDifferential]
+    frame_specific_representation_info[coord.UnitSphericalDifferential] = \
+        frame_specific_representation_info[coord.SphericalDifferential]
+
+@frame_transform_graph.transform(coord.StaticMatrixTransform, coord.ICRS, AAU)
+def icrs_to_aau():
+    """ Compute the transformation from Galactic spherical to
+        heliocentric AAU coordinates.
+    """
+    rotmat = np.array([[0.83697865, 0.29481904, -0.4610298], [0.51616778, -0.70514011, 0.4861566], [0.18176238, 0.64487142, 0.74236331]])
+
+    return rotmat
+
+@frame_transform_graph.transform(coord.StaticMatrixTransform, AAU, coord.ICRS)
+def aau_to_icrs():
+    """ Compute the transformation from heliocentric AAU coordinates to
+        spherical Galactic.
+    """
+    return matrix_transpose(icrs_to_aau())
+
 
 class GeneralStream():
     def __init__(self, name, label='', wangle=360*u.deg, ra0=np.nan*u.deg, tstream=50*u.Myr, dt=-0.5*u.Myr, vnorm=1., pmnorm=1., minra=True, dra=0.5*u.deg, ham=ham, gc_frame=gc_frame, save_ext=''):
@@ -76,7 +150,7 @@ class GeneralStream():
         self.rm_dataunits()
         p0_input = [x_.value for x_ in p0]
         
-        res = minimize(lambda *x: -ln_likelihood_icrs(*x), x0=p0_input, args=(self.ra0, self.data_nounits, self.nstep, self.dt, self.wangle, self.ham, self.gc_frame))
+        res = minimize(lambda *x: -ln_likelihood_icrs(*x), x0=p0_input, args=(self.ra0, self.data_nounits, self.nstep, self.dt, self.wangle, self.ham, self.gc_frame, self.fra))
         self.pbest = res.x
         
         if save:
@@ -126,6 +200,7 @@ class Stream(GeneralStream):
         self.data = pickle.load(open('../data/streams/data_{:s}.pkl'.format(self.name), 'rb'))
         
         self.wangle = prop['wangle']
+        self.fra = prop['fra']
         self.ra0 = prop['ra0'].value
         self.p0 = [prop[x] for x in ['dec0', 'd0', 'pmra0', 'pmdec0', 'vr0']]
         
@@ -136,7 +211,7 @@ class Stream(GeneralStream):
         self.ham = ham
         self.gc_frame = gc_frame
 
-def ln_likelihood_icrs(p, ra_0, data, n_steps, dt, wangle, ham, gc_frame):
+def ln_likelihood_icrs(p, ra_0, data, n_steps, dt, wangle, ham, gc_frame, fra):
     # initial conditions at ra_0
     dec, d, pmra, pmdec, vr = p
     
@@ -147,17 +222,26 @@ def ln_likelihood_icrs(p, ra_0, data, n_steps, dt, wangle, ham, gc_frame):
     
     c = coord.ICRS(ra=ra_0*u.deg, dec=dec*u.deg, distance=d*u.kpc, pm_ra_cosdec=pmra*u.mas/u.yr, pm_dec=pmdec*u.mas/u.yr, radial_velocity=vr*u.km/u.s)
     w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
-    
-    #if ham.energy(w0)>0:
-        #return -np.inf
-    
     orbit = ham.integrate_orbit(w0, dt=dt, n_steps=n_steps)
     model_stream = orbit.to_coord_frame(coord.ICRS, galactocentric_frame=gc_frame)
-    model_x = model_stream.ra.wrap_at(wangle).degree
-    if model_x[-1] < wdeg - 360:
-        return -np.inf
     
+    model_ra = model_stream.ra.wrap_at(wangle).degree
+    if model_ra[-1] < wdeg - 360:
+        return -np.inf
     model_dec = model_stream.dec.degree
+    
+    if fra:
+        model_x = model_ra
+        model_y = model_dec
+    else:
+        model_x = model_dec
+        model_y = model_ra
+        
+        # switch data order
+        tmp = data['dec'][1]
+        data['dec'][1] = data['dec'][0]
+        data['dec'][0] = tmp
+    
     model_dist = model_stream.distance.to(u.kpc).value
     model_pmra = model_stream.pm_ra_cosdec.to(u.mas/u.yr).value
     model_pmdec = model_stream.pm_dec.to(u.mas/u.yr).value
@@ -171,7 +255,7 @@ def ln_likelihood_icrs(p, ra_0, data, n_steps, dt, wangle, ham, gc_frame):
     bbox = [wdeg - 360, wdeg]
     
     interp = {}
-    interp['dec'] = InterpolatedUnivariateSpline(model_x, model_dec[ix], k=order, bbox=bbox)
+    interp['dec'] = InterpolatedUnivariateSpline(model_x, model_y[ix], k=order, bbox=bbox)
     interp['dist'] = InterpolatedUnivariateSpline(model_x, model_dist[ix], k=order, bbox=bbox)
     interp['pmra'] = InterpolatedUnivariateSpline(model_x, model_pmra[ix], k=order, bbox=bbox)
     interp['pmdec'] = InterpolatedUnivariateSpline(model_x, model_pmdec[ix], k=order, bbox=bbox)
@@ -385,8 +469,9 @@ def prep_svol():
     pickle.dump(data, open('../data/streams/data_svol.pkl', 'wb'))
 
 def reily_name(name):
+    """Maps our simplified names to full Reily names"""
     
-    names = dict(svol='Sv\\"{o}l', leiptr='Leiptr', gjoll='Gj\\"{o}ll', fjorm='Fj\\"{o}rm', fimbulthul='Fimbulthul', ylgr='Ylgr', sylgr='Sylgr', slidr='Slidr', phlegethon='Phlegethon', aliqa_uma='Aliqa Uma', atlas='ATLAS', elqui='Elqui', indus='Indus', phoenix='Phoenix', turranburra='Turranburra', jhelum='Jhelum')
+    names = dict(svol='Sv\\"{o}l', leiptr='Leiptr', gjoll='Gj\\"{o}ll', fjorm='Fj\\"{o}rm', fimbulthul='Fimbulthul', ylgr='Ylgr', sylgr='Sylgr', slidr='Slidr', phlegethon='Phlegethon', aliqa_uma='Aliqa Uma', atlas='ATLAS', elqui='Elqui', indus='Indus', phoenix='Phoenix', turranburra='Turranburra', jhelum='Jhelum', ravi='Ravi', turbio='Turbio', wambelong='Wambelong', willka_yaku='Willka Yaku')
     
     return names[name]
 
@@ -484,6 +569,84 @@ def prep_shipp_members(name):
     
     pickle.dump(data, open('../data/streams/data_{:s}.pkl'.format(name), 'wb'))
 
+def prep_aau(name):
+    """"""
+    ti = Table.read('../data/streams/docs/shipp_members.txt', format='ascii.commented_header', delimiter=',')
+    isort = np.argsort(ti['Gaia_Source_ID'])
+    ti = ti[isort]
+    t = Table.read('../data/streams/docs/shipp_members_gdr2.gz')
+    
+    ind = ti['Stream']==reily_name(name)
+    t = t[ind]
+    
+    props = get_properties(name)
+    wangle = props['wangle']
+    
+    # endpoints
+    tc = Table.read('../data/stream_endpoints_5d.fits')
+    ind = tc['name']==reily_name(name)
+    ts = tc[ind]
+    ceq_end = coord.SkyCoord(ra=ts['ra'], dec=ts['dec'], distance=ts['d'], frame='icrs')[0]
+
+    # mean uncertainties
+    l_err = np.nanmean(ts['dec_err'])*ts['dec_err'].unit
+    d_err = np.nanmean(ts['d_err'])*ts['d_err'].unit
+    pm_err = np.nanmean(ts['pm_err'])*ts['pm_err'].unit
+    vr_err = 4.8*u.km/u.s # velocity dispersion in Li et al.
+    
+    # radial velocities from Li et al. (2020)
+    ceq = coord.SkyCoord(ra=t['ra'], dec=t['dec'], frame='icrs')
+    caau = ceq.transform_to(AAU)
+    phi10 = caau.phi1.wrap_at(wangle).deg/10
+    vgsr = (-131.33 + 0.07*phi10 + 5.68*phi10**2)*u.km/u.s
+    vr = gc.vgsr_to_vhel(ceq, vgsr)
+    
+    data = dict()
+    data['dec'] = (coord.Longitude(t['ra'].quantity).wrap_at(wangle), t['dec'].quantity, np.ones(len(t))*l_err)
+    data['dist'] = (ceq_end.ra.wrap_at(wangle), ceq_end.distance, np.ones(np.size(ceq_end.ra))*d_err)
+    data['pmra'] = (coord.Longitude(t['ra'].quantity).wrap_at(wangle), t['pmra'].quantity, t['pmra_error'].quantity)
+    data['pmdec'] = (coord.Longitude(t['ra'].quantity).wrap_at(wangle), t['pmdec'].quantity, t['pmdec_error'].quantity)
+    data['vr'] = (coord.Longitude(t['ra'].quantity).wrap_at(wangle), vr, np.ones(len(t))*vr_err)
+    
+    pickle.dump(data, open('../data/streams/data_{:s}.pkl'.format(name), 'wb'))
+
+def prep_shipp_avg(name, N=20):
+    """"""
+    
+    # endpoints
+    tc = Table.read('../data/stream_endpoints_5d.fits')
+    ind = tc['name']==reily_name(name)
+    t = tc[ind]
+    
+    props = get_properties(name)
+    wangle = props['wangle']
+    
+    # find stream reference frame
+    ceq_end = coord.SkyCoord(ra=t['ra'], dec=t['dec'], distance=t['d'], frame='icrs')[0]
+    stream_pole = gc.pole_from_endpoints(ceq_end[0], ceq_end[1])
+    stream_frame = gc.GreatCircleICRSFrame(pole=stream_pole)
+    cend = ceq_end.transform_to(stream_frame)
+    
+    # distribute additional points along the great circle
+    phi1 = np.linspace(np.min(cend.phi1), np.max(cend.phi1), N)
+    phi2 = np.zeros(N)*u.deg
+    call = coord.SkyCoord(phi1=phi1, phi2=phi2, frame=stream_frame)
+    ceq_all = call.transform_to(coord.ICRS)
+    
+    dec_err = np.ones(N) * np.median(t['dec_err']) * t['dec_err'].unit
+    d = np.ones(N) * np.median(t['d']) * t['d'].unit
+    d_err = np.ones(N) * np.median(t['d_err']) * t['d_err'].unit
+    pmra = np.ones(N) * np.median(t['pmra']) * t['pmra'].unit
+    pmdec = np.ones(N) * np.median(t['pmdec']) * t['pmdec'].unit
+    pm_err = np.ones(N) * np.median(t['pm_err']) * t['pm_err'].unit
+    
+    data = dict()
+    data['dec'] = [ceq_all.ra.wrap_at(wangle), ceq_all.dec, dec_err]
+    data['dist'] = [ceq_all.ra.wrap_at(wangle), d, d_err]
+    data['pmra'] = [ceq_all.ra.wrap_at(wangle), pmra, pm_err]
+    data['pmdec'] = [ceq_all.ra.wrap_at(wangle), pmdec, pm_err]
+    
+    pickle.dump(data, open('../data/streams/data_{:s}.pkl'.format(name), 'wb'))
 
 
 def test_oph():
@@ -589,7 +752,7 @@ def initialize():
 def get_names():
     """Get names of streams in the sample"""
     
-    streams = ['ophiuchus', 'gd1', 'svol', 'leiptr', 'gjoll', 'fjorm', 'fimbulthul', 'ylgr', 'sylgr', 'slidr', 'phlegethon', 'phoenix', 'turranburra', 'indus', 'elqui', 'jhelum']
+    streams = ['ophiuchus', 'gd1', 'svol', 'leiptr', 'gjoll', 'fjorm', 'fimbulthul', 'ylgr', 'sylgr', 'slidr', 'phlegethon', 'phoenix', 'turranburra', 'indus', 'elqui', 'jhelum', 'atlas', 'aliqa_uma', 'ravi', 'wambelong', 'willka_yaku']
     
     return sorted(streams)
 
@@ -598,40 +761,50 @@ def get_properties(name):
     
     props = {}
 
-    props['ophiuchus'] = dict(label='Ophiuchus', wangle=360*u.deg, ra0=240.5*u.deg, dec0=-7.3*u.deg, d0=10*u.kpc, pmra0=-4*u.mas/u.yr, pmdec0=-4.5*u.mas/u.yr, vr0=270*u.km/u.s, tstream=13*u.Myr)
+    props['ophiuchus'] = dict(label='Ophiuchus', wangle=360*u.deg, ra0=240.5*u.deg, dec0=-7.3*u.deg, d0=10*u.kpc, pmra0=-4*u.mas/u.yr, pmdec0=-4.5*u.mas/u.yr, vr0=270*u.km/u.s, tstream=13*u.Myr, fra=True)
     
-    props['gd1'] = dict(label='GD-1', wangle=360*u.deg, ra0=123*u.deg, dec0=-10*u.deg, d0=9*u.kpc, pmra0=-2*u.mas/u.yr, pmdec0=-7*u.mas/u.yr, vr0=300*u.km/u.s, tstream=110*u.Myr)
+    props['gd1'] = dict(label='GD-1', wangle=360*u.deg, ra0=123*u.deg, dec0=-10*u.deg, d0=9*u.kpc, pmra0=-2*u.mas/u.yr, pmdec0=-7*u.mas/u.yr, vr0=300*u.km/u.s, tstream=110*u.Myr, fra=True)
     
-    props['svol'] = dict(label='Sv\\"{o}l', wangle=360*u.deg, ra0=250*u.deg, dec0=25*u.deg, d0=8*u.kpc, pmra0=3.5*u.mas/u.yr, pmdec0=-6*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=30*u.Myr)
+    props['svol'] = dict(label='Sv\\"{o}l', wangle=360*u.deg, ra0=250*u.deg, dec0=25*u.deg, d0=8*u.kpc, pmra0=3.5*u.mas/u.yr, pmdec0=-6*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=30*u.Myr, fra=True)
     
-    props['leiptr'] = dict(label='Leiptr', wangle=360*u.deg, ra0=98*u.deg, dec0=-35*u.deg, d0=8*u.kpc, pmra0=10*u.mas/u.yr, pmdec0=-8*u.mas/u.yr, vr0=250*u.km/u.s, tstream=30*u.Myr)
+    props['leiptr'] = dict(label='Leiptr', wangle=360*u.deg, ra0=98*u.deg, dec0=-35*u.deg, d0=8*u.kpc, pmra0=10*u.mas/u.yr, pmdec0=-8*u.mas/u.yr, vr0=250*u.km/u.s, tstream=30*u.Myr, fra=True)
 
-    props['gjoll'] = dict(label='Gj\\"{o}ll', wangle=360*u.deg, ra0=90*u.deg, dec0=-21*u.deg, d0=3.5*u.kpc, pmra0=24*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=150*u.km/u.s, tstream=13*u.Myr)
+    props['gjoll'] = dict(label='Gj\\"{o}ll', wangle=360*u.deg, ra0=90*u.deg, dec0=-21*u.deg, d0=3.5*u.kpc, pmra0=24*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=150*u.km/u.s, tstream=13*u.Myr, fra=True)
     
-    props['fjorm'] = dict(label='Fj\\"{o}rm', wangle=360*u.deg, ra0=260*u.deg, dec0=70*u.deg, d0=5*u.kpc, pmra0=6*u.mas/u.yr, pmdec0=3*u.mas/u.yr, vr0=-100*u.km/u.s, tstream=30*u.Myr)
+    props['fjorm'] = dict(label='Fj\\"{o}rm', wangle=360*u.deg, ra0=260*u.deg, dec0=70*u.deg, d0=5*u.kpc, pmra0=6*u.mas/u.yr, pmdec0=3*u.mas/u.yr, vr0=-100*u.km/u.s, tstream=30*u.Myr, fra=True)
     
-    props['fimbulthul'] = dict(label='Fimbulthul', wangle=360*u.deg, ra0=198*u.deg, dec0=-32*u.deg, d0=4*u.kpc, pmra0=-9*u.mas/u.yr, pmdec0=-9*u.mas/u.yr, vr0=250*u.km/u.s, tstream=20*u.Myr)
+    props['fimbulthul'] = dict(label='Fimbulthul', wangle=360*u.deg, ra0=198*u.deg, dec0=-32*u.deg, d0=4*u.kpc, pmra0=-9*u.mas/u.yr, pmdec0=-9*u.mas/u.yr, vr0=250*u.km/u.s, tstream=20*u.Myr, fra=True)
     
-    props['ylgr'] = dict(label='Ylgr', wangle=360*u.deg, ra0=183*u.deg, dec0=-38*u.deg, d0=9*u.kpc, pmra0=-0.5*u.mas/u.yr, pmdec0=-5*u.mas/u.yr, vr0=320*u.km/u.s, tstream=30*u.Myr)
+    props['ylgr'] = dict(label='Ylgr', wangle=360*u.deg, ra0=183*u.deg, dec0=-38*u.deg, d0=9*u.kpc, pmra0=-0.5*u.mas/u.yr, pmdec0=-5*u.mas/u.yr, vr0=320*u.km/u.s, tstream=30*u.Myr, fra=True)
 
-    props['sylgr'] = dict(label='Sylgr', wangle=360*u.deg, ra0=164*u.deg, dec0=-13*u.deg, d0=4*u.kpc, pmra0=-25*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=-200*u.km/u.s, tstream=15*u.Myr)
+    props['sylgr'] = dict(label='Sylgr', wangle=360*u.deg, ra0=164*u.deg, dec0=-13*u.deg, d0=4*u.kpc, pmra0=-25*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=-200*u.km/u.s, tstream=15*u.Myr, fra=True)
     
-    props['slidr'] = dict(label='Slidr', wangle=360*u.deg, ra0=148*u.deg, dec0=17*u.deg, d0=3.5*u.kpc, pmra0=-28*u.mas/u.yr, pmdec0=-10*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=20*u.Myr)
+    props['slidr'] = dict(label='Slidr', wangle=360*u.deg, ra0=148*u.deg, dec0=17*u.deg, d0=3.5*u.kpc, pmra0=-28*u.mas/u.yr, pmdec0=-10*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=20*u.Myr, fra=True)
 
-    props['phlegethon'] = dict(label='Phlegethon', wangle=360*u.deg, ra0=300*u.deg, dec0=-58*u.deg, d0=3*u.kpc, pmra0=-12*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=180*u.km/u.s, tstream=20*u.Myr)
+    props['phlegethon'] = dict(label='Phlegethon', wangle=360*u.deg, ra0=300*u.deg, dec0=-58*u.deg, d0=3*u.kpc, pmra0=-12*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=180*u.km/u.s, tstream=20*u.Myr, fra=True)
     
-    props['phoenix'] = dict(label='Phoenix', wangle=360*u.deg, ra0=27.5*u.deg, dec0=-44*u.deg, d0=16*u.kpc, pmra0=2.8*u.mas/u.yr, pmdec0=-0.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=30*u.Myr)
+    props['phoenix'] = dict(label='Phoenix', wangle=360*u.deg, ra0=27.5*u.deg, dec0=-44*u.deg, d0=16*u.kpc, pmra0=2.8*u.mas/u.yr, pmdec0=-0.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=30*u.Myr, fra=True)
     
-    #props['aliqa_uma'] = dict(label='Aliqa Uma', wangle=360*u.deg, ra0=32*u.deg, dec0=-32*u.deg, d0=26*u.kpc, pmra0=0.25*u.mas/u.yr, pmdec0=-0.7*u.mas/u.yr, vr0=-60*u.km/u.s, tstream=30*u.Myr)
+    props['turranburra'] = dict(label='Turranburra', wangle=360*u.deg, ra0=59*u.deg, dec0=-18*u.deg, d0=10*u.kpc, pmra0=0.35*u.mas/u.yr, pmdec0=-1.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=60*u.Myr, fra=True)
     
-    props['turranburra'] = dict(label='Turranburra', wangle=360*u.deg, ra0=59*u.deg, dec0=-18*u.deg, d0=10*u.kpc, pmra0=0.35*u.mas/u.yr, pmdec0=-1.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=60*u.Myr)
-    
-    props['indus'] = dict(label='Indus', wangle=360*u.deg, ra0=352*u.deg, dec0=-65*u.deg, d0=16*u.kpc, pmra0=4.5*u.mas/u.yr, pmdec0=-4.5*u.mas/u.yr, vr0=-10*u.km/u.s, tstream=60*u.Myr)
+    props['indus'] = dict(label='Indus', wangle=360*u.deg, ra0=352*u.deg, dec0=-65*u.deg, d0=16*u.kpc, pmra0=4.5*u.mas/u.yr, pmdec0=-4.5*u.mas/u.yr, vr0=-10*u.km/u.s, tstream=60*u.Myr, fra=True)
 
-    props['elqui'] = dict(label='Elqui', wangle=360*u.deg, ra0=10*u.deg, dec0=-36*u.deg, d0=30*u.kpc, pmra0=0.1*u.mas/u.yr, pmdec0=-0.5*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=100*u.Myr)
+    props['elqui'] = dict(label='Elqui', wangle=360*u.deg, ra0=10*u.deg, dec0=-36*u.deg, d0=30*u.kpc, pmra0=0.1*u.mas/u.yr, pmdec0=-0.5*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=100*u.Myr, fra=True)
     
-    props['jhelum'] = dict(label='Jhelum', wangle=180*u.deg, ra0=4*u.deg, dec0=-52*u.deg, d0=10*u.kpc, pmra0=8*u.mas/u.yr, pmdec0=-3*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=30*u.Myr)
+    props['jhelum'] = dict(label='Jhelum', wangle=180*u.deg, ra0=4*u.deg, dec0=-52*u.deg, d0=10*u.kpc, pmra0=8*u.mas/u.yr, pmdec0=-3*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=30*u.Myr, fra=True)
 
+    props['atlas'] = dict(label='ATLAS', wangle=180*u.deg, ra0=9*u.deg, dec0=-20*u.deg, d0=18*u.kpc, pmra0=-0.5*u.mas/u.yr, pmdec0=-1*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=60*u.Myr, fra=True)
+    
+    props['aliqa_uma'] = dict(label='Aliqa Uma', wangle=180*u.deg, ra0=31*u.deg, dec0=-32*u.deg, d0=26*u.kpc, pmra0=0.25*u.mas/u.yr, pmdec0=-0.7*u.mas/u.yr, vr0=-60*u.km/u.s, tstream=40*u.Myr, fra=True)
+    
+    props['ravi'] = dict(label='Ravi', wangle=360*u.deg, ra0=344.1*u.deg, dec0=-59*u.deg, d0=25*u.kpc, pmra0=0.9*u.mas/u.yr, pmdec0=-2.5*u.mas/u.yr, vr0=100*u.km/u.s, tstream=130*u.Myr, fra=True)
+    
+    props['turbio'] = dict(label='Turbio', wangle=360*u.deg, ra0=27.8*u.deg, dec0=-40*u.deg, d0=16*u.kpc, pmra0=2.*u.mas/u.yr, pmdec0=2*u.mas/u.yr, vr0=100*u.km/u.s, tstream=20*u.Myr, fra=False)
+    
+    props['wambelong'] = dict(label='Wambelong', wangle=360*u.deg, ra0=91*u.deg, dec0=-46*u.deg, d0=16*u.kpc, pmra0=2*u.mas/u.yr, pmdec0=-1*u.mas/u.yr, vr0=150*u.km/u.s, tstream=100*u.Myr, fra=True)
+    
+    props['willka_yaku'] = dict(label='Willka Yaku', wangle=360*u.deg, ra0=38.5*u.deg, dec0=-58*u.deg, d0=41*u.kpc, pmra0=1*u.mas/u.yr, pmdec0=0.5*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=40*u.Myr, fra=True)
+    
     
     return props[name]
 
@@ -655,14 +828,29 @@ def test(name, dra=2, best=True):
     orbit = stream.ham.integrate_orbit(w0, dt=stream.dt, n_steps=stream.nstep)
     model = orbit.to_coord_frame(coord.ICRS, galactocentric_frame=stream.gc_frame)
     
+    # determine orientation
+    if stream.fra:
+        model_x = model.ra.wrap_at(stream.wangle)
+        model_y = model.dec
+        xlabel = 'R.A. [deg]'
+        ylabel = 'Dec [deg]'
+    else:
+        model_x = model.dec
+        model_y = model.ra.wrap_at(stream.wangle)
+        tmp = stream.data['dec'][1]
+        stream.data['dec'][1] = stream.data['dec'][0]
+        stream.data['dec'][0] = tmp
+        xlabel = 'Dec [deg]'
+        ylabel = 'R.A. [deg]'
+    
     # plot data
     plt.close()
     fig, ax = plt.subplots(5, 1, figsize=(7,11), sharex=True)
 
     fields = ['dec', 'dist', 'pmra', 'pmdec', 'vr']
-    labels = ['Dec [deg]', 'Distance [kpc]', '$\mu_\\alpha$ [mas yr$^{-1}$]', '$\mu_\delta$ [mas yr$^{-1}$]',
+    labels = [ylabel, 'Distance [kpc]', '$\mu_\\alpha$ [mas yr$^{-1}$]', '$\mu_\delta$ [mas yr$^{-1}$]',
             '$V_r$ [km s$^{-1}$]']
-    model_fields = [model.dec, model.distance, model.pm_ra_cosdec, model.pm_dec, model.radial_velocity]
+    model_fields = [model_y, model.distance, model.pm_ra_cosdec, model.pm_dec, model.radial_velocity]
     istart, iend = 0, -1
 
     for i in range(5):
@@ -672,7 +860,7 @@ def test(name, dra=2, best=True):
             plt.plot(stream.data[fields[i]][0], stream.data[fields[i]][1], 'k.', label='Data')
             plt.errorbar(stream.data[fields[i]][0].value, stream.data[fields[i]][1].value, yerr=stream.data[fields[i]][2].value, fmt='none', color='k', alpha=0.7, label='')
             
-        plt.plot(model.ra[istart:iend].wrap_at(stream.wangle), model_fields[i][istart:iend], '-', color='tab:blue', label='{:s} orbit'.format(fit_label))
+        plt.plot(model_x[istart:iend], model_fields[i][istart:iend], '-', color='tab:blue', label='{:s} orbit'.format(fit_label))
         
         plt.ylabel(labels[i])
         if i==0:
@@ -680,7 +868,7 @@ def test(name, dra=2, best=True):
 
     plt.minorticks_on()
     plt.xlim(np.min(stream.data['dec'][0].to(u.deg).value)-dra, np.max(stream.data['dec'][0].to(u.deg).value)+dra)
-    plt.xlabel('R.A. [deg]')
+    plt.xlabel(xlabel)
 
     plt.tight_layout(h_pad=0)
     if best:
@@ -782,7 +970,7 @@ def potential_comparison():
         plt.plot(t[props[e]], f_light, 'o', label='{:.2f}, {:.2f}'.format(lm, lsig))
         
         plt.legend(fontsize='small', frameon=False)
-        plt.xlabel('{:s} {:s}'.format(labels[e], units[e]))
+        plt.xlabel('Fiducial {:s} {:s}'.format(labels[e], units[e]))
         plt.ylabel('1 - alt / fid')
     
     plt.tight_layout(h_pad=0)
