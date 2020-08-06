@@ -386,10 +386,10 @@ def prep_svol():
 
 def reily_name(name):
     
-    names = dict(svol='Sv\\"{o}l', leiptr='Leiptr', gjoll='Gj\\"{o}ll', fjorm='Fj\\"{o}rm', fimbulthul='Fimbulthul', ylgr='Ylgr', sylgr='Sylgr', slidr='Slidr')
+    names = dict(svol='Sv\\"{o}l', leiptr='Leiptr', gjoll='Gj\\"{o}ll', fjorm='Fj\\"{o}rm', fimbulthul='Fimbulthul', ylgr='Ylgr', sylgr='Sylgr', slidr='Slidr', phlegethon='Phlegethon', aliqa_uma='Aliqa Uma', atlas='ATLAS', elqui='Elqui', indus='Indus', phoenix='Phoenix', turranburra='Turranburra', jhelum='Jhelum')
     
     return names[name]
-    
+
 def prep_ibata_l(name, graph=False):
     """"""
     t1 = Table.read('../data/streams/docs/{:s}_b_l.csv'.format(name), format='ascii.no_header', delimiter=',')
@@ -400,7 +400,7 @@ def prep_ibata_l(name, graph=False):
     ind = tc['name']==reily_name(name)
     ts = tc[ind]
     ceq_end = coord.SkyCoord(ra=ts['ra'], dec=ts['dec'], distance=ts['d'], frame='icrs')[0]
-    
+
     # mean uncertainties
     l_err = np.nanmean(ts['dec_err'])*ts['dec_err'].unit
     d_err = np.nanmean(ts['d_err'])*ts['d_err'].unit
@@ -440,6 +440,51 @@ def prep_ibata_l(name, graph=False):
     data['pmdec'] = (cpmdec_eq.ra, t3['col2']*u.mas/u.yr, np.ones(len(t3))*pm_err)
     
     pickle.dump(data, open('../data/streams/data_{:s}.pkl'.format(name), 'wb'))
+
+def get_gaia_shipp():
+    """Download Gaia DR2 data for likely members of DES streams"""
+    t = Table.read('../data/streams/docs/shipp_members.txt', format='ascii.commented_header', delimiter=',')
+    t.pprint()
+    
+    ids = '(' + ' '.join(list('{:d},'.format(x) for x in t['Gaia_Source_ID']))[:-1] + ')'
+    q_base ='''SELECT * FROM gaiadr2.gaia_source WHERE source_id IN {:s}'''.format(ids)
+    print(q_base)
+
+def prep_shipp_members(name):
+    """"""
+    ti = Table.read('../data/streams/docs/shipp_members.txt', format='ascii.commented_header', delimiter=',')
+    isort = np.argsort(ti['Gaia_Source_ID'])
+    ti = ti[isort]
+    t = Table.read('../data/streams/docs/shipp_members_gdr2.gz')
+    
+    if name=='jhelum':
+        ind = (ti['Stream']=='Jhelum-a') | (ti['Stream']=='Jhelum-b')
+    else:
+        ind = ti['Stream']==reily_name(name)
+    t = t[ind]
+    
+    props = get_properties(name)
+    wangle = props['wangle']
+    
+    tc = Table.read('../data/stream_endpoints_5d.fits')
+    ind = tc['name']==reily_name(name)
+    ts = tc[ind]
+    ceq_end = coord.SkyCoord(ra=ts['ra'], dec=ts['dec'], distance=ts['d'], frame='icrs')[0]
+
+    # mean uncertainties
+    l_err = np.nanmean(ts['dec_err'])*ts['dec_err'].unit
+    d_err = np.nanmean(ts['d_err'])*ts['d_err'].unit
+    pm_err = np.nanmean(ts['pm_err'])*ts['pm_err'].unit
+    
+    data = dict()
+    data['dec'] = (coord.Longitude(t['ra'].quantity).wrap_at(wangle), t['dec'].quantity, np.ones(len(t))*l_err)
+    data['dist'] = (ceq_end.ra.wrap_at(wangle), ceq_end.distance, np.ones(np.size(ceq_end.ra))*d_err)
+    data['pmra'] = (coord.Longitude(t['ra'].quantity).wrap_at(wangle), t['pmra'].quantity, t['pmra_error'].quantity)
+    data['pmdec'] = (coord.Longitude(t['ra'].quantity).wrap_at(wangle), t['pmdec'].quantity, t['pmdec_error'].quantity)
+    
+    pickle.dump(data, open('../data/streams/data_{:s}.pkl'.format(name), 'wb'))
+
+
 
 def test_oph():
     """"""
@@ -544,7 +589,7 @@ def initialize():
 def get_names():
     """Get names of streams in the sample"""
     
-    streams = ['ophiuchus', 'gd1', 'svol', 'leiptr', 'gjoll', 'fjorm', 'fimbulthul', 'ylgr', 'sylgr', 'slidr']
+    streams = ['ophiuchus', 'gd1', 'svol', 'leiptr', 'gjoll', 'fjorm', 'fimbulthul', 'ylgr', 'sylgr', 'slidr', 'phlegethon', 'phoenix', 'turranburra', 'indus', 'elqui', 'jhelum']
     
     return sorted(streams)
 
@@ -571,7 +616,22 @@ def get_properties(name):
 
     props['sylgr'] = dict(label='Sylgr', wangle=360*u.deg, ra0=164*u.deg, dec0=-13*u.deg, d0=4*u.kpc, pmra0=-25*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=-200*u.km/u.s, tstream=15*u.Myr)
     
-    props['slidr'] = dict(label='Slidr', wangle=360*u.deg, ra0=148*u.deg, dec0=17*u.deg, d0=2.5*u.kpc, pmra0=-28*u.mas/u.yr, pmdec0=-10*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=20*u.Myr)
+    props['slidr'] = dict(label='Slidr', wangle=360*u.deg, ra0=148*u.deg, dec0=17*u.deg, d0=3.5*u.kpc, pmra0=-28*u.mas/u.yr, pmdec0=-10*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=20*u.Myr)
+
+    props['phlegethon'] = dict(label='Phlegethon', wangle=360*u.deg, ra0=300*u.deg, dec0=-58*u.deg, d0=3*u.kpc, pmra0=-12*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=180*u.km/u.s, tstream=20*u.Myr)
+    
+    props['phoenix'] = dict(label='Phoenix', wangle=360*u.deg, ra0=27.5*u.deg, dec0=-44*u.deg, d0=16*u.kpc, pmra0=2.8*u.mas/u.yr, pmdec0=-0.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=30*u.Myr)
+    
+    #props['aliqa_uma'] = dict(label='Aliqa Uma', wangle=360*u.deg, ra0=32*u.deg, dec0=-32*u.deg, d0=26*u.kpc, pmra0=0.25*u.mas/u.yr, pmdec0=-0.7*u.mas/u.yr, vr0=-60*u.km/u.s, tstream=30*u.Myr)
+    
+    props['turranburra'] = dict(label='Turranburra', wangle=360*u.deg, ra0=59*u.deg, dec0=-18*u.deg, d0=10*u.kpc, pmra0=0.35*u.mas/u.yr, pmdec0=-1.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=60*u.Myr)
+    
+    props['indus'] = dict(label='Indus', wangle=360*u.deg, ra0=352*u.deg, dec0=-65*u.deg, d0=16*u.kpc, pmra0=4.5*u.mas/u.yr, pmdec0=-4.5*u.mas/u.yr, vr0=-10*u.km/u.s, tstream=60*u.Myr)
+
+    props['elqui'] = dict(label='Elqui', wangle=360*u.deg, ra0=10*u.deg, dec0=-36*u.deg, d0=30*u.kpc, pmra0=0.1*u.mas/u.yr, pmdec0=-0.5*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=100*u.Myr)
+    
+    props['jhelum'] = dict(label='Jhelum', wangle=180*u.deg, ra0=4*u.deg, dec0=-52*u.deg, d0=10*u.kpc, pmra0=8*u.mas/u.yr, pmdec0=-3*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=30*u.Myr)
+
     
     return props[name]
 
@@ -612,7 +672,7 @@ def test(name, dra=2, best=True):
             plt.plot(stream.data[fields[i]][0], stream.data[fields[i]][1], 'k.', label='Data')
             plt.errorbar(stream.data[fields[i]][0].value, stream.data[fields[i]][1].value, yerr=stream.data[fields[i]][2].value, fmt='none', color='k', alpha=0.7, label='')
             
-        plt.plot(model.ra[istart:iend], model_fields[i][istart:iend], '-', color='tab:blue', label='{:s} orbit'.format(fit_label))
+        plt.plot(model.ra[istart:iend].wrap_at(stream.wangle), model_fields[i][istart:iend], '-', color='tab:blue', label='{:s} orbit'.format(fit_label))
         
         plt.ylabel(labels[i])
         if i==0:
@@ -651,4 +711,78 @@ def fit_stream(name, full=False):
         t = Table.read('../data/fits/minimization_orbit_{:s}_heavy.fits'.format(name))
         t.pprint()
 
+
+#####################
+# Orbital systematics
+
+def collate_fits(save_ext=''):
+    """"""
     
+    names = get_names()
+    
+    if len(save_ext):
+        save_ext = '_' + save_ext
+    
+    tout = Table()
+    
+    for stream in names:
+        t = Table.read('../data/fits/minimization_orbit_{:s}{:s}.fits'.format(stream, save_ext))
+        
+        tout = vstack([tout, t])
+    
+    tout.pprint()
+    tout.write('../data/minimization_orbit{:s}.fits'.format(save_ext), overwrite=True)
+
+def potential_comparison():
+    """"""
+    
+    t = Table.read('../data/minimization_orbit.fits')
+    t_heavy = Table.read('../data/minimization_orbit_heavy.fits')
+    t_bovy = Table.read('../data/minimization_orbit_bovy.fits')
+    
+    props = ['rperi', 'rapo', 'ecc']
+    labels = ['$r_{peri}$', '$r_{apo}$', 'eccentricity']
+    units = ['[kpc]', '[kpc]', '']
+    potentials = ['fiducial', 'heavy', 'light']
+    
+    colors = ['k', 'tab:blue', 'tab:orange']
+    tables = [t, t_heavy, t_bovy]
+    Nbin = 10
+    bins = [np.linspace(0,30,Nbin), np.linspace(0,80,Nbin), np.linspace(0,1,Nbin)]
+    
+    plt.close()
+    fig, ax = plt.subplots(3, 3, figsize=(17,8.5), gridspec_kw=dict(height_ratios=[1,3,1]), sharex='col')
+    
+    for e in range(3):
+        plt.sca(ax[0][e])
+        for i in range(3):
+            plt.hist(tables[i][props[e]], bins=bins[e], histtype='step', lw=2, color=colors[i], zorder=3-i, density=False, label=potentials[i])
+        plt.ylabel('Number')
+        if e==0:
+            plt.legend(loc=1, fontsize='small', frameon=False)
+        
+        plt.sca(ax[1][e])
+        x = np.linspace(np.min(t[props[e]]), np.max(t[props[e]]), 100)
+        plt.plot(x, x, 'k-', lw=1, alpha=0.5, label='')
+        
+        plt.plot(t[props[e]], t_heavy[props[e]], 'o', label='heavy')
+        plt.plot(t[props[e]], t_bovy[props[e]], 'o', label='light')
+        
+        plt.ylabel('Alternative {:s} {:s}'.format(labels[e], units[e]))
+        
+        plt.sca(ax[2][e])
+        plt.axhline(0, color='k', lw=1, alpha=0.5, label='')
+        
+        f_heavy = 1 - t_heavy[props[e]]/t[props[e]]
+        hm, hsig = np.median(f_heavy), np.std(f_heavy)
+        plt.plot(t[props[e]], f_heavy, 'o', label='{:.1f}, {:.1f}'.format(hm, hsig))
+        
+        f_light = 1 - t_bovy[props[e]]/t[props[e]]
+        lm, lsig = np.median(f_light), np.std(f_light)
+        plt.plot(t[props[e]], f_light, 'o', label='{:.2f}, {:.2f}'.format(lm, lsig))
+        
+        plt.legend(fontsize='small', frameon=False)
+        plt.xlabel('{:s} {:s}'.format(labels[e], units[e]))
+        plt.ylabel('1 - alt / fid')
+    
+    plt.tight_layout(h_pad=0)
