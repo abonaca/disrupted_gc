@@ -114,9 +114,9 @@ The quoted values are the medians, while the uncertainties reflect the $16-84$ p
 
 \section{Stream Orbits}
 \label{sec:orbits}
-A total of x thin stellar streams, likely disrupted globular clusters, have been reported in the Milky Way \citep[an up-to-date list is available in the \package{galstreams} package,][]{mateu:2018}.
+Several dozen of thin stellar streams, likely disrupted globular clusters, have been reported in the Milky Way \citep[an up-to-date list is available in the \package{galstreams} package,][]{mateu:2018}.
 Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}, however, kinematic information is essential for accurate stream modeling \citep{bh:2018}.
-Here we analyze a subset of y stellar streams with published proper motions (Table~\ref{table:constraints}).
+Here we analyze a subset of 22 stellar streams with published proper motions (Table~\ref{table:constraints}).
 
 We measure orbital parameters for a population of dissolved globular clusters by fitting orbits to sky positions, distances, and proper motions of stream endpoints.
 Due to limited observational data on some streams, we decided to fit only the stream endpoints to ensure a homogeneous treatment of the entire sample.
@@ -124,7 +124,7 @@ Due to limited observational data on some streams, we decided to fit only the st
 Therefore, we expect our strategy of recovering orbits from 5D positions of stream endpoints to perform well.
 In Section~\ref{sec:discussion} we discuss how orbital constraints change for streams where additional data is available.
 The endpoint sky positions and distances \citep{riley:2020}, and proper motions \citep[][as noted]{ibata:2019, shipp:2019} are listed in Table~\ref{table:constraints}, along with the associated uncertainties.
-Figure~\ref{fig:streams} shows these data for three representative streams as large black points (top to bottom: x, y, z).
+Figure~\ref{fig:streams} shows these data for three representative streams as large orange points (top to bottom: x, y, z).
 
 We fit stream orbits in a three-component model of the Milky Way gravitational potential implemented in the \package{gala} package \citep{gala} and featuring a \citet{mn:1975} disk (mass: $5.5\times10^{10}\rm\, M_\odot$, scale-length: 3\,kpc, scale-height: 28\,pc), a \citet{hernquist:1990} bulge (mass: $4\times10^9\rm\, M_\odot$, scale-radius: 1\,kpc), and a \citet{nfw:1997} halo (scale-mass: $7\times10^{11}\rm\, M_\odot$, scale-radius: 15.62\,kpc, $z$-axis flattening: 0.95).
 Similar to the orbit-fitting procedure of \citet{pwb}, we represent the orbit as a 6D location in phase-space, fixing its right ascension, R.A., and solving for the remaining 5D coordinates (declination, distance, radial velocity, two proper motion components).
@@ -138,19 +138,19 @@ We advanced 64 walkers for 512 steps and kept the last 256 steps which converged
 The median, 16th and 84th percentiles of the constrained 5D coordinates are reported for each stream's orbit in Table~\ref{table:constraints}.
 
 To visualize and further explore the streams' orbits, we randomly sampled 1,000 points from the posterior distributions of every stream (available at the project repository\footnote{\url{https://github.com/abonaca/disrupted_gc}}).
-First, we integrated short orbital segments starting from these initial positions, and plot them as thin, black lines in the observable coordinates in Figure~\ref{fig:streams}.
-For all of the streams, we recovered a class of orbital solutions that fits the observed stream endpoints.
-The allowed spread in orbits is directly related to the observational uncertainties, so future improvements in distance and proper-motion measurements should further refine the orbital constraints.
+First, we integrated short orbital segments starting from these initial positions, and plot them as blue lines in the observable coordinates in Figure~\ref{fig:streams} (different shades of blue correspond to different samples from the posterior distribution).
+For all of the streams we recovered a class of orbital solutions that fits the observed streams, with the allowed spread set by the observational uncertainties.
 
-To estimate current constraints on the orbital apocenter, $r_{apo}$, and eccentricity, $e=(r_{apo} - r_{peri})/(r_{apo} + r_{peri})$, we additionally performed 5\,Gyr long orbit integrations starting from the same initial positions.
-These longer orbits are shown in cylindrical Galactocentric coordinates in the right panels of Figure~\ref{fig:streams} (different colors correspond to different samples from the posterior distribution).
-- comment on precision
-In Table~\ref{table:constraints} we report the median, 16th and 84th percentiles of the orbital apocenter and eccentricity, while in the next section we estimate the progenitor masses using the samples directly to fully account for correlations between these orbital parameters.
-
-- caveats:
--- orbit fits -> compare to published ones
--- stream ne orbit
-
+Next, we performed 5\,Gyr long orbit integrations starting from the same initial positions to estimate current constraints on the orbital pericenter, $r_{peri}$, apocenter, $r_{apo}$, and eccentricity, $e=(r_{apo} - r_{peri})/(r_{apo} + r_{peri})$.
+These longer orbits are shown in cylindrical Galactocentric coordinates in the right panels of Figure~\ref{fig:streams}.
+We report the median, 16th and 84th percentiles of the streams' pericenters and apocenters in Table~\ref{table:constraints}.
+Most of the orbits are recovered precisely and the median precision is x\% and y\% for the pericenters and apocenters, respectively.
+However, some apocenters are very uncertain due to the lack of radial velocity data.
+To estimate further biases associated with our choice of gravitational potential, we calculated maximum-likelihood orbits in slightly heavier \citep[used in][]{pwb, bonaca:2019a} and lighter \citep{bovy:2015} Milky Way models.
+We detect no biases in pericenters, but apocenters are on average 10\% larger in the light model and 10\% smaller in the heavy model.
+These systematic biases are smaller than individual uncertainties, but underscore the importance of analyzing all streams self-consistently in the same potential.
+% In the next section we estimate the progenitor masses using the samples directly to fully account for correlations between orbital parameters.
+In the next section we use these orbital constraints to estimate the initial masses of the progenitor globular clusters.
 
 \section{Masses of Disrupted globular clusters}
 \label{sec:disrupted}
