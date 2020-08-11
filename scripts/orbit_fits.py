@@ -18,6 +18,10 @@ from scipy.optimize import minimize
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 import pickle
+import emcee
+from multiprocessing import Pool
+import corner
+
 
 ham = gp.Hamiltonian(gp.MilkyWayPotential())
 ham_bovy = gp.Hamiltonian(gp.BovyMWPotential2014())
@@ -97,7 +101,6 @@ def aau_to_icrs():
     """
     return matrix_transpose(icrs_to_aau())
 
-
 class GeneralStream():
     def __init__(self, name, label='', wangle=360*u.deg, ra0=np.nan*u.deg, tstream=50*u.Myr, dt=-0.5*u.Myr, vnorm=1., pmnorm=1., minra=True, dra=0.5*u.deg, ham=ham, gc_frame=gc_frame, save_ext=''):
         self.name = name
@@ -124,6 +127,8 @@ class GeneralStream():
         
         self.ham = ham
         self.gc_frame = gc_frame
+        
+        self.rm_dataunits()
             
     def get_ra0(self, minra=True, dra=0.5*u.deg):
         """Select min/max RA as the orbital fiducial point"""
@@ -147,7 +152,7 @@ class GeneralStream():
         if len(p0)==0:
             p0 = self.p0
         
-        self.rm_dataunits()
+        #self.rm_dataunits()
         p0_input = [x_.value for x_ in p0]
         
         res = minimize(lambda *x: -ln_likelihood_icrs(*x), x0=p0_input, args=(self.ra0, self.data_nounits, self.nstep, self.dt, self.wangle, self.ham, self.gc_frame, self.fra))
@@ -210,6 +215,8 @@ class Stream(GeneralStream):
         
         self.ham = ham
         self.gc_frame = gc_frame
+        
+        self.rm_dataunits()
 
 def ln_likelihood_icrs(p, ra_0, data, n_steps, dt, wangle, ham, gc_frame, fra):
     # initial conditions at ra_0
@@ -233,14 +240,16 @@ def ln_likelihood_icrs(p, ra_0, data, n_steps, dt, wangle, ham, gc_frame, fra):
     if fra:
         model_x = model_ra
         model_y = model_dec
+        indx = 0
+        bbox = [wdeg - 360, wdeg]
     else:
         model_x = model_dec
         model_y = model_ra
+        indx = -1
+        bbox = [-90, 90]
         
         # switch data order
-        tmp = data['dec'][1]
         data['dec'][1] = data['dec'][0]
-        data['dec'][0] = tmp
     
     model_dist = model_stream.distance.to(u.kpc).value
     model_pmra = model_stream.pm_ra_cosdec.to(u.mas/u.yr).value
@@ -252,7 +261,6 @@ def ln_likelihood_icrs(p, ra_0, data, n_steps, dt, wangle, ham, gc_frame, fra):
     
     # define interpolating functions
     order = 3
-    bbox = [wdeg - 360, wdeg]
     
     interp = {}
     interp['dec'] = InterpolatedUnivariateSpline(model_x, model_y[ix], k=order, bbox=bbox)
@@ -279,10 +287,82 @@ def ln_likelihood_icrs(p, ra_0, data, n_steps, dt, wangle, ham, gc_frame, fra):
     keys = data.keys()
     for k in keys:
         sigma = np.sqrt(isigma[k]**2 + data[k][2]**2)
-        chi2 += np.sum(-(interp[k](data[k][0]) - data[k][1])**2 / sigma**2 - 2*np.log(sigma))
+        chi2 += np.sum(-(interp[k](data[k][indx]) - data[k][1])**2 / sigma**2 - 2*np.log(sigma))
     
     return chi2
 
+def ln_likelihood_icrs_mcmc(p, ra_0, data, n_steps, dt, wangle, fra):
+    # initial conditions at ra_0
+    dec, d, pmra, pmdec, vr = p
+    
+    if (d<0) | (np.abs(vr)>500) | (dec<-90) | (dec>90):
+        return -np.inf
+    
+    wdeg = wangle.to(u.deg).value
+    
+    c = coord.ICRS(ra=ra_0*u.deg, dec=dec*u.deg, distance=d*u.kpc, pm_ra_cosdec=pmra*u.mas/u.yr, pm_dec=pmdec*u.mas/u.yr, radial_velocity=vr*u.km/u.s)
+    w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
+    orbit = ham.integrate_orbit(w0, dt=dt, n_steps=n_steps)
+    model_stream = orbit.to_coord_frame(coord.ICRS, galactocentric_frame=gc_frame)
+    
+    model_ra = model_stream.ra.wrap_at(wangle).degree
+    if model_ra[-1] < wdeg - 360:
+        return -np.inf
+    model_dec = model_stream.dec.degree
+    
+    if fra:
+        model_x = model_ra
+        model_y = model_dec
+        indx = 0
+        bbox = [wdeg - 360, wdeg]
+    else:
+        model_x = model_dec
+        model_y = model_ra
+        indx = -1
+        bbox = [-90, 90]
+        
+        # switch data order
+        data['dec'][1] = data['dec'][0]
+    
+    model_dist = model_stream.distance.to(u.kpc).value
+    model_pmra = model_stream.pm_ra_cosdec.to(u.mas/u.yr).value
+    model_pmdec = model_stream.pm_dec.to(u.mas/u.yr).value
+    model_vr = model_stream.radial_velocity.to(u.km/u.s).value
+
+    ix = np.argsort(model_x)
+    model_x = model_x[ix]
+    
+    # define interpolating functions
+    order = 3
+    
+    interp = {}
+    interp['dec'] = InterpolatedUnivariateSpline(model_x, model_y[ix], k=order, bbox=bbox)
+    interp['dist'] = InterpolatedUnivariateSpline(model_x, model_dist[ix], k=order, bbox=bbox)
+    interp['pmra'] = InterpolatedUnivariateSpline(model_x, model_pmra[ix], k=order, bbox=bbox)
+    interp['pmdec'] = InterpolatedUnivariateSpline(model_x, model_pmdec[ix], k=order, bbox=bbox)
+    interp['vr'] = InterpolatedUnivariateSpline(model_x, model_vr[ix], k=order, bbox=bbox)
+    
+    # model smoothing
+    isigma = {}
+    isigma['dec'] = 0.01 # deg
+    isigma['dist'] = 0.1 # kpc
+    isigma['pmra'] = 0. # mas/yr
+    isigma['pmdec'] = 0. # mas/yr
+    isigma['vr'] = 1 # km/s
+    
+    #isigma['dec'] = 0. # deg
+    #isigma['dist'] = 0. # kpc
+    #isigma['pmra'] = 0. # mas/yr
+    #isigma['pmdec'] = 0. # mas/yr
+    #isigma['vr'] = 0. # km/s
+    
+    chi2 = 0
+    keys = data.keys()
+    for k in keys:
+        sigma = np.sqrt(isigma[k]**2 + data[k][2]**2)
+        chi2 += np.sum(-(interp[k](data[k][indx]) - data[k][1])**2 / sigma**2 - 2*np.log(sigma))
+    
+    return chi2
 
 ##################################
 # Save individual stream data sets
@@ -519,10 +599,10 @@ def prep_ibata_l(name, graph=False):
     cpmdec_eq = cpmdec.transform_to(coord.ICRS)
     
     data = dict()
-    data['dec'] = (c_eq.ra, c_eq.dec, np.ones(len(t1))*l_err)
-    data['dist'] = (ceq_end.ra, ceq_end.distance, np.ones(np.size(ceq_end.ra))*d_err)
-    data['pmra'] = (cpmra_eq.ra, t2['col2']*u.mas/u.yr, np.ones(len(t2))*pm_err)
-    data['pmdec'] = (cpmdec_eq.ra, t3['col2']*u.mas/u.yr, np.ones(len(t3))*pm_err)
+    data['dec'] = [c_eq.ra, c_eq.dec, np.ones(len(t1))*l_err, c_eq.dec]
+    data['dist'] = [ceq_end.ra, ceq_end.distance, np.ones(np.size(ceq_end.ra))*d_err, ceq_end.dec]
+    data['pmra'] = [cpmra_eq.ra, t2['col2']*u.mas/u.yr, np.ones(len(t2))*pm_err, cpmra_eq.dec]
+    data['pmdec'] = [cpmdec_eq.ra, t3['col2']*u.mas/u.yr, np.ones(len(t3))*pm_err, cpmdec_eq.dec]
     
     pickle.dump(data, open('../data/streams/data_{:s}.pkl'.format(name), 'wb'))
 
@@ -641,10 +721,10 @@ def prep_shipp_avg(name, N=20):
     pm_err = np.ones(N) * np.median(t['pm_err']) * t['pm_err'].unit
     
     data = dict()
-    data['dec'] = [ceq_all.ra.wrap_at(wangle), ceq_all.dec, dec_err]
-    data['dist'] = [ceq_all.ra.wrap_at(wangle), d, d_err]
-    data['pmra'] = [ceq_all.ra.wrap_at(wangle), pmra, pm_err]
-    data['pmdec'] = [ceq_all.ra.wrap_at(wangle), pmdec, pm_err]
+    data['dec'] = [ceq_all.ra.wrap_at(wangle), ceq_all.dec, dec_err, ceq_all.dec]
+    data['dist'] = [ceq_all.ra.wrap_at(wangle), d, d_err, ceq_all.dec]
+    data['pmra'] = [ceq_all.ra.wrap_at(wangle), pmra, pm_err, ceq_all.dec]
+    data['pmdec'] = [ceq_all.ra.wrap_at(wangle), pmdec, pm_err, ceq_all.dec]
     
     pickle.dump(data, open('../data/streams/data_{:s}.pkl'.format(name), 'wb'))
 
@@ -717,6 +797,8 @@ def orbit_oph():
     t.pprint()
 
 
+######################
+# Find best-fit orbits
 
 def initialize():
     """Construct a table with stream parameters and initial orbital guesses"""
@@ -752,7 +834,7 @@ def initialize():
 def get_names():
     """Get names of streams in the sample"""
     
-    streams = ['ophiuchus', 'gd1', 'svol', 'leiptr', 'gjoll', 'fjorm', 'fimbulthul', 'ylgr', 'sylgr', 'slidr', 'phlegethon', 'phoenix', 'turranburra', 'indus', 'elqui', 'jhelum', 'atlas', 'aliqa_uma', 'ravi', 'wambelong', 'willka_yaku']
+    streams = ['ophiuchus', 'gd1', 'svol', 'leiptr', 'gjoll', 'fjorm', 'fimbulthul', 'ylgr', 'sylgr', 'slidr', 'phlegethon', 'phoenix', 'turranburra', 'indus', 'elqui', 'jhelum', 'atlas', 'aliqa_uma', 'ravi', 'wambelong', 'willka_yaku', 'turbio']
     
     return sorted(streams)
 
@@ -781,7 +863,7 @@ def get_properties(name):
     
     props['slidr'] = dict(label='Slidr', wangle=360*u.deg, ra0=148*u.deg, dec0=17*u.deg, d0=3.5*u.kpc, pmra0=-28*u.mas/u.yr, pmdec0=-10*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=20*u.Myr, fra=True)
 
-    props['phlegethon'] = dict(label='Phlegethon', wangle=360*u.deg, ra0=300*u.deg, dec0=-58*u.deg, d0=3*u.kpc, pmra0=-12*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=180*u.km/u.s, tstream=20*u.Myr, fra=True)
+    props['phlegethon'] = dict(label='Phlegethon', wangle=360*u.deg, ra0=299*u.deg, dec0=-61*u.deg, d0=3.5*u.kpc, pmra0=-12*u.mas/u.yr, pmdec0=-25*u.mas/u.yr, vr0=250*u.km/u.s, tstream=60*u.Myr, fra=False)
     
     props['phoenix'] = dict(label='Phoenix', wangle=360*u.deg, ra0=27.5*u.deg, dec0=-44*u.deg, d0=16*u.kpc, pmra0=2.8*u.mas/u.yr, pmdec0=-0.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=30*u.Myr, fra=True)
     
@@ -799,12 +881,11 @@ def get_properties(name):
     
     props['ravi'] = dict(label='Ravi', wangle=360*u.deg, ra0=344.1*u.deg, dec0=-59*u.deg, d0=25*u.kpc, pmra0=0.9*u.mas/u.yr, pmdec0=-2.5*u.mas/u.yr, vr0=100*u.km/u.s, tstream=130*u.Myr, fra=True)
     
-    props['turbio'] = dict(label='Turbio', wangle=360*u.deg, ra0=27.8*u.deg, dec0=-40*u.deg, d0=16*u.kpc, pmra0=2.*u.mas/u.yr, pmdec0=2*u.mas/u.yr, vr0=100*u.km/u.s, tstream=20*u.Myr, fra=False)
+    props['turbio'] = dict(label='Turbio', wangle=360*u.deg, ra0=27.8*u.deg, dec0=-45*u.deg, d0=16*u.kpc, pmra0=2.*u.mas/u.yr, pmdec0=2*u.mas/u.yr, vr0=100*u.km/u.s, tstream=20*u.Myr, fra=False)
     
     props['wambelong'] = dict(label='Wambelong', wangle=360*u.deg, ra0=91*u.deg, dec0=-46*u.deg, d0=16*u.kpc, pmra0=2*u.mas/u.yr, pmdec0=-1*u.mas/u.yr, vr0=150*u.km/u.s, tstream=100*u.Myr, fra=True)
     
     props['willka_yaku'] = dict(label='Willka Yaku', wangle=360*u.deg, ra0=38.5*u.deg, dec0=-58*u.deg, d0=41*u.kpc, pmra0=1*u.mas/u.yr, pmdec0=0.5*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=40*u.Myr, fra=True)
-    
     
     return props[name]
 
@@ -832,11 +913,15 @@ def test(name, dra=2, best=True):
     if stream.fra:
         model_x = model.ra.wrap_at(stream.wangle)
         model_y = model.dec
+        ix = 0
+        iy = 1
         xlabel = 'R.A. [deg]'
         ylabel = 'Dec [deg]'
     else:
         model_x = model.dec
         model_y = model.ra.wrap_at(stream.wangle)
+        ix = -1
+        #iy = 0
         tmp = stream.data['dec'][1]
         stream.data['dec'][1] = stream.data['dec'][0]
         stream.data['dec'][0] = tmp
@@ -857,8 +942,8 @@ def test(name, dra=2, best=True):
         plt.sca(ax[i])
         
         if fields[i] in stream.data.keys():
-            plt.plot(stream.data[fields[i]][0], stream.data[fields[i]][1], 'k.', label='Data')
-            plt.errorbar(stream.data[fields[i]][0].value, stream.data[fields[i]][1].value, yerr=stream.data[fields[i]][2].value, fmt='none', color='k', alpha=0.7, label='')
+            plt.plot(stream.data[fields[i]][ix], stream.data[fields[i]][1], 'k.', label='Data')
+            plt.errorbar(stream.data[fields[i]][ix].value, stream.data[fields[i]][1].value, yerr=stream.data[fields[i]][2].value, fmt='none', color='k', alpha=0.7, label='')
             
         plt.plot(model_x[istart:iend], model_fields[i][istart:iend], '-', color='tab:blue', label='{:s} orbit'.format(fit_label))
         
@@ -898,6 +983,147 @@ def fit_stream(name, full=False):
         
         t = Table.read('../data/fits/minimization_orbit_{:s}_heavy.fits'.format(name))
         t.pprint()
+
+def mcmc_stream(name, seed=249, nwalkers=64, nsteps=512, nth=3):
+    """"""
+    
+    stream = Stream(name, ham=ham, save_ext='')
+    res = pickle.load(open('../data/fits/minimization_{:s}.pkl'.format(stream.savename), 'rb'))
+    p0s = res.x
+    
+    pool = Pool(nth)
+    np.random.seed(seed)
+    p0 = emcee.utils.sample_ball(p0s, [1e-3, 1e-3, 1e-3, 1e-3, 1e-3], nwalkers)
+    p0[:,1] = np.abs(p0[:,1])
+    
+    sampler = emcee.EnsembleSampler(nwalkers, p0.shape[1], log_prob_fn=ln_likelihood_icrs_mcmc, pool=pool, args=(stream.ra0, stream.data_nounits, stream.nstep, stream.dt, stream.wangle, stream.fra))
+    _ = sampler.run_mcmc(p0, nsteps)
+    
+    pickle.dump(sampler, open('../data/fits/mcmc_{:s}.pkl'.format(stream.savename), 'wb'))
+    print(np.median(sampler.flatchain, axis=0))
+    
+    pool.close()
+
+def plot_chains(sampler, name):
+    """Plot chain"""
+    names = [r'$\phi_2$', r'd', r'$\mu_{\phi_1}$', r'$\mu_{\phi_2}$', r'$V_r$']
+    plt.close()
+    fig, ax = plt.subplots(sampler.ndim, figsize=(10,10), sharex=True)
+
+    for k in range(sampler.ndim):
+        for walker in sampler.chain[..., k]:
+            ax[k].plot(walker, marker='', drawstyle='steps-mid', alpha=0.2)
+        ax[k].set_ylabel(names[k])
+
+    plt.sca(ax[sampler.ndim-1])
+    plt.xlabel('Step')
+
+    plt.tight_layout(h_pad=0)
+    plt.savefig('../plots/diag/chains_{:s}.png'.format(name))
+
+def plot_corner(flatchain, name, bins=25):
+    """Corner plot"""
+    names = [r'$\phi_2$', r'd', r'$\mu_{\phi_1}$', r'$\mu_{\phi_2}$', r'$V_r$']
+    plt.close()
+    corner.corner(flatchain, bins=bins, labels=names, show_titles=True, title_fmt='.2f',
+                 title_kwargs=dict(fontsize='small'))
+
+    plt.tight_layout(h_pad=0.1,w_pad=0.1)
+    plt.savefig('../plots/diag/corner_{:s}.png'.format(name))
+
+def plot_models(flatchain, stream, nplot=100, dra=2):
+    """"""
+    
+    # determine orientation
+    if stream.fra:
+        ix = 0
+        iy = 1
+        xlabel = 'R.A. [deg]'
+        ylabel = 'Dec [deg]'
+    else:
+        ix = -1
+        #iy = 0
+        tmp = stream.data['dec'][1]
+        stream.data['dec'][1] = stream.data['dec'][0]
+        stream.data['dec'][0] = tmp
+        xlabel = 'Dec [deg]'
+        ylabel = 'R.A. [deg]'
+    
+    # plot data
+    plt.close()
+    fig, ax = plt.subplots(5, 1, figsize=(7,11), sharex=True)
+
+    fields = ['dec', 'dist', 'pmra', 'pmdec', 'vr']
+    labels = [ylabel, 'Distance [kpc]', '$\mu_\\alpha$ [mas yr$^{-1}$]', '$\mu_\delta$ [mas yr$^{-1}$]',
+            '$V_r$ [km s$^{-1}$]']
+    istart, iend = 0, -1
+
+    for i in range(5):
+        plt.sca(ax[i])
+        
+        if fields[i] in stream.data.keys():
+            plt.plot(stream.data[fields[i]][ix], stream.data[fields[i]][1], 'k.', label='Data')
+            plt.errorbar(stream.data[fields[i]][ix].value, stream.data[fields[i]][1].value, yerr=stream.data[fields[i]][2].value, fmt='none', color='k', alpha=0.7, label='')
+            
+        plt.ylabel(labels[i])
+    
+    plt.minorticks_on()
+    plt.xlim(np.min(stream.data['dec'][0].to(u.deg).value)-dra, np.max(stream.data['dec'][0].to(u.deg).value)+dra)
+    plt.xlabel(xlabel)
+
+    # plot models
+    for j in range(nplot):
+        p0 = [x*y.unit for x, y in zip(flatchain[j], stream.p0)]
+        dec, dist, pmra, pmdec, vr = p0
+        
+        #dec, dist, pmra, pmdec, vr = flatchain[j]
+    
+        c = coord.SkyCoord(ra=stream.ra0*u.deg, dec=dec, distance=dist, pm_ra_cosdec=pmra, pm_dec=pmdec, radial_velocity=vr, frame='icrs')
+        w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
+
+        orbit = stream.ham.integrate_orbit(w0, dt=stream.dt, n_steps=stream.nstep)
+        model = orbit.to_coord_frame(coord.ICRS, galactocentric_frame=stream.gc_frame)
+        
+        if stream.fra:
+            model_x = model.ra.wrap_at(stream.wangle)
+            model_y = model.dec
+        else:
+            model_x = model.dec
+            model_y = model.ra.wrap_at(stream.wangle)
+
+        model_fields = [model_y, model.distance, model.pm_ra_cosdec, model.pm_dec, model.radial_velocity]
+        
+        for i in range(5):
+            plt.sca(ax[i])
+
+            plt.plot(model_x[istart:iend], model_fields[i][istart:iend], '-', color='tab:blue', label='Sample orbit', zorder=0, lw=0.5, alpha=0.3)
+
+            if (i==0) & (j==0):
+                plt.legend(fontsize='small', handlelength=1)
+
+    plt.tight_layout(h_pad=0)
+    plt.savefig('../plots/diag/stream_models_{:s}.png'.format(stream.savename))
+
+def diagnose_mcmc(name, stage=0):
+    """"""
+    
+    stream = Stream(name, ham=ham, save_ext='')
+    sampler = pickle.load(open('../data/fits/mcmc_{:s}.pkl'.format(stream.savename), 'rb'))
+    
+    if stage==0:
+        plot_chains(sampler, stream.savename)
+    
+    chain = sampler.chain[:,256:,:]
+    flatchain = np.reshape(chain,(-1,5))
+    
+    if stage==1:
+        plot_corner(flatchain, stream.savename)
+        
+    np.random.seed(391)
+    flatchain_short = np.random.permutation(flatchain)[:1000,:]
+    
+    if stage==2:
+        plot_models(flatchain_short, stream, nplot=50)
 
 
 #####################
@@ -963,7 +1189,7 @@ def potential_comparison():
         
         f_heavy = 1 - t_heavy[props[e]]/t[props[e]]
         hm, hsig = np.median(f_heavy), np.std(f_heavy)
-        plt.plot(t[props[e]], f_heavy, 'o', label='{:.1f}, {:.1f}'.format(hm, hsig))
+        plt.plot(t[props[e]], f_heavy, 'o', label='{:.2f}, {:.2f}'.format(hm, hsig))
         
         f_light = 1 - t_bovy[props[e]]/t[props[e]]
         lm, lsig = np.median(f_light), np.std(f_light)
@@ -974,3 +1200,10 @@ def potential_comparison():
         plt.ylabel('1 - alt / fid')
     
     plt.tight_layout(h_pad=0)
+
+#######
+# Paper
+
+def ham_params():
+    """"""
+    print(ham.potential.parameters)
