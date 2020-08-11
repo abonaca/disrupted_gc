@@ -1076,8 +1076,6 @@ def plot_models(flatchain, stream, nplot=100, dra=2):
         p0 = [x*y.unit for x, y in zip(flatchain[j], stream.p0)]
         dec, dist, pmra, pmdec, vr = p0
         
-        #dec, dist, pmra, pmdec, vr = flatchain[j]
-    
         c = coord.SkyCoord(ra=stream.ra0*u.deg, dec=dec, distance=dist, pm_ra_cosdec=pmra, pm_dec=pmdec, radial_velocity=vr, frame='icrs')
         w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
 
@@ -1104,6 +1102,33 @@ def plot_models(flatchain, stream, nplot=100, dra=2):
     plt.tight_layout(h_pad=0)
     plt.savefig('../plots/diag/stream_models_{:s}.png'.format(stream.savename))
 
+def save_orbits(flatchain, stream):
+    """Save orbits for a sample of points in the pdf"""
+    
+    nsample = np.shape(flatchain)[0]
+    tout = Table(names=('ecc', 'rperi', 'rapo', 'vcirc'))
+    
+    # calculate orbits for steps in the chain
+    for j in range(nsample):
+        orbit = stream.orbital_properties(pbest=flatchain[j])
+        
+        trow = dict(rperi=orbit.pericenter(), rapo=orbit.apocenter(), ecc=orbit.eccentricity(), vcirc=ham.potential.circular_velocity(np.array([orbit.apocenter().to(u.kpc).value, 0, 0]))[0])
+        tout.add_row(trow)
+    
+    # add units
+    for k in trow.keys():
+        tout[k].unit = trow[k].unit
+    
+    tout.write('../data/orbit_props_{:s}.fits'.format(stream.savename), overwrite=True)
+    
+def check_orbit_props():
+    
+    t = Table.read('../data/orbit_props_aliqa_uma.fits')
+    t.pprint()
+    
+    for k in t.colnames:
+        print(k, '{:.2f} {:.2f} {:.2f}'.format(*np.nanpercentile(t[k], [16,50,84])))
+
 def diagnose_mcmc(name, stage=0):
     """"""
     
@@ -1124,6 +1149,9 @@ def diagnose_mcmc(name, stage=0):
     
     if stage==2:
         plot_models(flatchain_short, stream, nplot=50)
+    
+    if stage==3:
+        save_orbits(flatchain_short, stream)
 
 
 #####################
@@ -1200,6 +1228,8 @@ def potential_comparison():
         plt.ylabel('1 - alt / fid')
     
     plt.tight_layout(h_pad=0)
+    plt.savefig('../plots/potential_comparison.png')
+
 
 #######
 # Paper
