@@ -1121,10 +1121,10 @@ def save_orbits(flatchain, stream):
     
     tout.write('../data/orbit_props_{:s}.fits'.format(stream.savename), overwrite=True)
     
-def check_orbit_props():
-    
-    t = Table.read('../data/orbit_props_aliqa_uma.fits')
-    t.pprint()
+def check_orbit_props(name):
+    """"""
+    t = Table.read('../data/orbit_props_{:}.fits'.format(name))
+    #t.pprint()
     
     for k in t.colnames:
         print(k, '{:.2f} {:.2f} {:.2f}'.format(*np.nanpercentile(t[k], [16,50,84])))
