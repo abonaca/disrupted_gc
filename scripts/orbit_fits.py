@@ -364,6 +364,153 @@ def ln_likelihood_icrs_mcmc(p, ra_0, data, n_steps, dt, wangle, fra):
     
     return chi2
 
+def ln_likelihood_icrs_mcmc_bovy(p, ra_0, data, n_steps, dt, wangle, fra):
+    # initial conditions at ra_0
+    dec, d, pmra, pmdec, vr = p
+    
+    if (d<0) | (np.abs(vr)>500) | (dec<-90) | (dec>90):
+        return -np.inf
+    
+    wdeg = wangle.to(u.deg).value
+    
+    c = coord.ICRS(ra=ra_0*u.deg, dec=dec*u.deg, distance=d*u.kpc, pm_ra_cosdec=pmra*u.mas/u.yr, pm_dec=pmdec*u.mas/u.yr, radial_velocity=vr*u.km/u.s)
+    w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
+    orbit = ham_bovy.integrate_orbit(w0, dt=dt, n_steps=n_steps)
+    model_stream = orbit.to_coord_frame(coord.ICRS, galactocentric_frame=gc_frame)
+    
+    model_ra = model_stream.ra.wrap_at(wangle).degree
+    if model_ra[-1] < wdeg - 360:
+        return -np.inf
+    model_dec = model_stream.dec.degree
+    
+    if fra:
+        model_x = model_ra
+        model_y = model_dec
+        indx = 0
+        bbox = [wdeg - 360, wdeg]
+    else:
+        model_x = model_dec
+        model_y = model_ra
+        indx = -1
+        bbox = [-90, 90]
+        
+        # switch data order
+        data['dec'][1] = data['dec'][0]
+    
+    model_dist = model_stream.distance.to(u.kpc).value
+    model_pmra = model_stream.pm_ra_cosdec.to(u.mas/u.yr).value
+    model_pmdec = model_stream.pm_dec.to(u.mas/u.yr).value
+    model_vr = model_stream.radial_velocity.to(u.km/u.s).value
+
+    ix = np.argsort(model_x)
+    model_x = model_x[ix]
+    
+    # define interpolating functions
+    order = 3
+    
+    interp = {}
+    interp['dec'] = InterpolatedUnivariateSpline(model_x, model_y[ix], k=order, bbox=bbox)
+    interp['dist'] = InterpolatedUnivariateSpline(model_x, model_dist[ix], k=order, bbox=bbox)
+    interp['pmra'] = InterpolatedUnivariateSpline(model_x, model_pmra[ix], k=order, bbox=bbox)
+    interp['pmdec'] = InterpolatedUnivariateSpline(model_x, model_pmdec[ix], k=order, bbox=bbox)
+    interp['vr'] = InterpolatedUnivariateSpline(model_x, model_vr[ix], k=order, bbox=bbox)
+    
+    # model smoothing
+    isigma = {}
+    isigma['dec'] = 0.01 # deg
+    isigma['dist'] = 0.1 # kpc
+    isigma['pmra'] = 0. # mas/yr
+    isigma['pmdec'] = 0. # mas/yr
+    isigma['vr'] = 1 # km/s
+    
+    #isigma['dec'] = 0. # deg
+    #isigma['dist'] = 0. # kpc
+    #isigma['pmra'] = 0. # mas/yr
+    #isigma['pmdec'] = 0. # mas/yr
+    #isigma['vr'] = 0. # km/s
+    
+    chi2 = 0
+    keys = data.keys()
+    for k in keys:
+        sigma = np.sqrt(isigma[k]**2 + data[k][2]**2)
+        chi2 += np.sum(-(interp[k](data[k][indx]) - data[k][1])**2 / sigma**2 - 2*np.log(sigma))
+    
+    return chi2
+
+def ln_likelihood_icrs_mcmc_heavy(p, ra_0, data, n_steps, dt, wangle, fra):
+    # initial conditions at ra_0
+    dec, d, pmra, pmdec, vr = p
+    
+    if (d<0) | (np.abs(vr)>500) | (dec<-90) | (dec>90):
+        return -np.inf
+    
+    wdeg = wangle.to(u.deg).value
+    
+    c = coord.ICRS(ra=ra_0*u.deg, dec=dec*u.deg, distance=d*u.kpc, pm_ra_cosdec=pmra*u.mas/u.yr, pm_dec=pmdec*u.mas/u.yr, radial_velocity=vr*u.km/u.s)
+    w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
+    orbit = ham_heavy.integrate_orbit(w0, dt=dt, n_steps=n_steps)
+    model_stream = orbit.to_coord_frame(coord.ICRS, galactocentric_frame=gc_frame)
+    
+    model_ra = model_stream.ra.wrap_at(wangle).degree
+    if model_ra[-1] < wdeg - 360:
+        return -np.inf
+    model_dec = model_stream.dec.degree
+    
+    if fra:
+        model_x = model_ra
+        model_y = model_dec
+        indx = 0
+        bbox = [wdeg - 360, wdeg]
+    else:
+        model_x = model_dec
+        model_y = model_ra
+        indx = -1
+        bbox = [-90, 90]
+        
+        # switch data order
+        data['dec'][1] = data['dec'][0]
+    
+    model_dist = model_stream.distance.to(u.kpc).value
+    model_pmra = model_stream.pm_ra_cosdec.to(u.mas/u.yr).value
+    model_pmdec = model_stream.pm_dec.to(u.mas/u.yr).value
+    model_vr = model_stream.radial_velocity.to(u.km/u.s).value
+
+    ix = np.argsort(model_x)
+    model_x = model_x[ix]
+    
+    # define interpolating functions
+    order = 3
+    
+    interp = {}
+    interp['dec'] = InterpolatedUnivariateSpline(model_x, model_y[ix], k=order, bbox=bbox)
+    interp['dist'] = InterpolatedUnivariateSpline(model_x, model_dist[ix], k=order, bbox=bbox)
+    interp['pmra'] = InterpolatedUnivariateSpline(model_x, model_pmra[ix], k=order, bbox=bbox)
+    interp['pmdec'] = InterpolatedUnivariateSpline(model_x, model_pmdec[ix], k=order, bbox=bbox)
+    interp['vr'] = InterpolatedUnivariateSpline(model_x, model_vr[ix], k=order, bbox=bbox)
+    
+    # model smoothing
+    isigma = {}
+    isigma['dec'] = 0.01 # deg
+    isigma['dist'] = 0.1 # kpc
+    isigma['pmra'] = 0. # mas/yr
+    isigma['pmdec'] = 0. # mas/yr
+    isigma['vr'] = 1 # km/s
+    
+    #isigma['dec'] = 0. # deg
+    #isigma['dist'] = 0. # kpc
+    #isigma['pmra'] = 0. # mas/yr
+    #isigma['pmdec'] = 0. # mas/yr
+    #isigma['vr'] = 0. # km/s
+    
+    chi2 = 0
+    keys = data.keys()
+    for k in keys:
+        sigma = np.sqrt(isigma[k]**2 + data[k][2]**2)
+        chi2 += np.sum(-(interp[k](data[k][indx]) - data[k][1])**2 / sigma**2 - 2*np.log(sigma))
+    
+    return chi2
+
+
 ##################################
 # Save individual stream data sets
 
@@ -984,10 +1131,26 @@ def fit_stream(name, full=False):
         t = Table.read('../data/fits/minimization_orbit_{:s}_heavy.fits'.format(name))
         t.pprint()
 
-def mcmc_stream(name, seed=249, nwalkers=64, nsteps=512, nth=3):
+def get_ham(pot):
+    """Return the hamiltonian and stream extension for a given potential"""
+    
+    if pot=='bovy':
+        ham_ = ham_bovy
+        ext_ = 'bovy'
+    elif pot=='heavy':
+        ham_ = ham_heavy
+        ext_ = 'heavy'
+    else:
+        ham_ = ham
+        ext_ = ''
+    
+    return (ham_, ext_)
+
+def mcmc_stream(name, seed=249, nwalkers=64, nsteps=512, nth=3, pot='fid'):
     """"""
     
-    stream = Stream(name, ham=ham, save_ext='')
+    ham_, ext_ = get_ham(pot)
+    stream = Stream(name, ham=ham_, save_ext=ext_)
     res = pickle.load(open('../data/fits/minimization_{:s}.pkl'.format(stream.savename), 'rb'))
     p0s = res.x
     
@@ -1024,9 +1187,9 @@ def plot_chains(sampler, name):
 def plot_corner(flatchain, name, bins=25):
     """Corner plot"""
     names = [r'$\phi_2$', r'd', r'$\mu_{\phi_1}$', r'$\mu_{\phi_2}$', r'$V_r$']
+    
     plt.close()
-    corner.corner(flatchain, bins=bins, labels=names, show_titles=True, title_fmt='.2f',
-                 title_kwargs=dict(fontsize='small'))
+    corner.corner(flatchain, bins=bins, labels=names, show_titles=True, title_fmt='.2f', title_kwargs=dict(fontsize='small'))
 
     plt.tight_layout(h_pad=0.1,w_pad=0.1)
     plt.savefig('../plots/diag/corner_{:s}.png'.format(name))
@@ -1129,10 +1292,11 @@ def check_orbit_props(name):
     for k in t.colnames:
         print(k, '{:.2f} {:.2f} {:.2f}'.format(*np.nanpercentile(t[k], [16,50,84])))
 
-def diagnose_mcmc(name, stage=0):
+def diagnose_mcmc(name, stage=0, pot='fid'):
     """"""
     
-    stream = Stream(name, ham=ham, save_ext='')
+    ham_, ext_ = get_ham(pot)
+    stream = Stream(name, ham=ham_, save_ext=ext_)
     sampler = pickle.load(open('../data/fits/mcmc_{:s}.pkl'.format(stream.savename), 'rb'))
     
     if stage==0:
@@ -1174,6 +1338,21 @@ def collate_fits(save_ext=''):
     
     tout.pprint()
     tout.write('../data/minimization_orbit{:s}.fits'.format(save_ext), overwrite=True)
+
+def collate_mcmc_fits():
+    """"""
+    names = get_names()
+    
+    for name in names[:]:
+        tfid = Table.read('../data/orbit_props_{:s}.fits'.format(name))
+        tfid['potential'] = 'fiducial'
+        tbovy = Table.read('../data/orbit_props_{:s}_bovy.fits'.format(name))
+        tbovy['potential'] = 'bovy'
+        theavy = Table.read('../data/orbit_props_{:s}_heavy.fits'.format(name))
+        theavy['potential'] = 'heavy'
+        
+        tout = vstack([tfid, tbovy, theavy])
+        tout.write('../data/orbit_props_{:s}_combined.fits'.format(name), overwrite=True)
 
 def potential_comparison():
     """"""
