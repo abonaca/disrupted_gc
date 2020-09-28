@@ -3,6 +3,21 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# data files
+*.fits
+*.pkl
+*.txt
+*.npz
+*.csv
+
+# latex aux files
+*.aux
+*.bbl
+*.backup
+*.blg
+*.out
+*.pdf
+
 # C extensions
 *.so
 
