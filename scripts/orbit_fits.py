@@ -1137,19 +1137,22 @@ def get_ham(pot):
     if pot=='bovy':
         ham_ = ham_bovy
         ext_ = 'bovy'
+        lhood_ = ln_likelihood_icrs_mcmc_bovy
     elif pot=='heavy':
         ham_ = ham_heavy
         ext_ = 'heavy'
+        lhood_ = ln_likelihood_icrs_mcmc_heavy
     else:
         ham_ = ham
         ext_ = ''
+        lhood_ = ln_likelihood_icrs_mcmc
     
-    return (ham_, ext_)
+    return (ham_, ext_, lhood_)
 
 def mcmc_stream(name, seed=249, nwalkers=64, nsteps=512, nth=3, pot='fid'):
     """"""
     
-    ham_, ext_ = get_ham(pot)
+    ham_, ext_, lhood_ = get_ham(pot)
     stream = Stream(name, ham=ham_, save_ext=ext_)
     res = pickle.load(open('../data/fits/minimization_{:s}.pkl'.format(stream.savename), 'rb'))
     p0s = res.x
@@ -1159,7 +1162,7 @@ def mcmc_stream(name, seed=249, nwalkers=64, nsteps=512, nth=3, pot='fid'):
     p0 = emcee.utils.sample_ball(p0s, [1e-3, 1e-3, 1e-3, 1e-3, 1e-3], nwalkers)
     p0[:,1] = np.abs(p0[:,1])
     
-    sampler = emcee.EnsembleSampler(nwalkers, p0.shape[1], log_prob_fn=ln_likelihood_icrs_mcmc, pool=pool, args=(stream.ra0, stream.data_nounits, stream.nstep, stream.dt, stream.wangle, stream.fra))
+    sampler = emcee.EnsembleSampler(nwalkers, p0.shape[1], log_prob_fn=lhood_, pool=pool, args=(stream.ra0, stream.data_nounits, stream.nstep, stream.dt, stream.wangle, stream.fra))
     _ = sampler.run_mcmc(p0, nsteps)
     
     pickle.dump(sampler, open('../data/fits/mcmc_{:s}.pkl'.format(stream.savename), 'wb'))
@@ -1217,8 +1220,7 @@ def plot_models(flatchain, stream, nplot=100, dra=2):
     fig, ax = plt.subplots(5, 1, figsize=(7,11), sharex=True)
 
     fields = ['dec', 'dist', 'pmra', 'pmdec', 'vr']
-    labels = [ylabel, 'Distance [kpc]', '$\mu_\\alpha$ [mas yr$^{-1}$]', '$\mu_\delta$ [mas yr$^{-1}$]',
-            '$V_r$ [km s$^{-1}$]']
+    labels = [ylabel, 'Distance [kpc]', '$\mu_\\alpha$ [mas yr$^{-1}$]', '$\mu_\delta$ [mas yr$^{-1}$]', '$V_r$ [km s$^{-1}$]']
     istart, iend = 0, -1
 
     for i in range(5):
@@ -1295,7 +1297,7 @@ def check_orbit_props(name):
 def diagnose_mcmc(name, stage=0, pot='fid'):
     """"""
     
-    ham_, ext_ = get_ham(pot)
+    ham_, ext_, lhood_ = get_ham(pot)
     stream = Stream(name, ham=ham_, save_ext=ext_)
     sampler = pickle.load(open('../data/fits/mcmc_{:s}.pkl'.format(stream.savename), 'rb'))
     
