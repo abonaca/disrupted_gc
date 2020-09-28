@@ -138,10 +138,11 @@ Several dozen of thin stellar streams, likely disrupted globular clusters, have 
 Because kinematic information is essential for accurate stream modeling \citep{bh:2018}, here we limit our analysis to 22 stellar streams with published proper motions.
 % (Table~\ref{table:constraints}).
 
-Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012} and here we use the observed sky positions, distances, proper motions, and, where available, radial velocities to find the stream's orbit.
+We use the observed sky positions, distances, proper motions, and, where available, radial velocities to find the streams' orbits.
 - most streams: individual member stars identified, directly fit
 - for most diffuse ones, only avg motion detected, so we assume it doesn't change
-- the data we fit is available in the repo, and the provenance of original measurements is described in the appendix and table
+The provenance of original measurements is described in Appendix~\ref{sec:appendix} and summarized in Table~\ref{table:phasespace}.
+All of the data points we used to fit are available in the project repository\footnote{\url{https://github.com/abonaca/disrupted_gc/tree/master/data/streams}}.
 - data we fit on Fj\" orm is shown on the left side of Figure~\ref{fig:streams} in orange points (from top to bottom: Dec, distance, RA pm, Dec pm, and radial velocity as a function of RA)
 - the interactive version of this Figure contains a gallery of all the streams in our sample and is available in the online version of the paper, and here.
 
@@ -185,7 +186,8 @@ Similar to the orbit-fitting procedure of \citet{pwb}, we represent the orbit as
 - other potentials
 - lmc, sgr caveats
 
-- summary of stream fitting
+- summary of stream fitting (orbit vs stream)
+% Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}.
 At the R.A. of the stream endpoints, we evaluate the orbital declinations, distances and proper motions against the observations, assuming Gaussian uncertainties.
 The orbits are initialized at one of the stream endpoints, with a radial velocity such that the total velocity vector equals the circular velocity at that Galactocentric distance and points to the other endpoint.
 We employ only minimal priors by requiring a bound orbit and the absolute radial velocity lower than 500\,\kms.
