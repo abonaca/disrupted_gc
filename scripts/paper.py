@@ -91,15 +91,17 @@ def table_orbits():
     tin = Table.read('../data/orbital_summary.fits')
     N = len(tin)
     
+    tm = Table.read('../data/gc_masses.txt', format='ascii.commented_header')
+    
     f = open('../paper/table_properties.tex', 'w')
     for i in range(N):
         label = get_properties(tin['name'][i])['label']
         if label=='Ophiuchus':
-            f.write('{:s} & {:4.2f}$^{{+{:.3f}}}_{{-{:.3f}}}$ & {:4.1f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & ${:3.2f}\pm{:3.2f}$ \\\\ \n'.format(label, tin['rperi'][i][0], tin['rperi'][i][2], tin['rperi'][i][1], tin['rapo'][i][0], tin['rapo'][i][2], tin['rapo'][i][1], tin['rapo'][i][0], tin['rapo'][i][2]))
+            f.write('{:s} & {:4.2f}$^{{+{:.3f}}}_{{-{:.3f}}}$ & {:4.1f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & ${:3.2f}\pm{:3.2f}\pm{:3.2f}$ \\\\ \n'.format(label, tin['rperi'][i][0], tin['rperi'][i][2], tin['rperi'][i][1], tin['rapo'][i][0], tin['rapo'][i][2], tin['rapo'][i][1], tm['logM0'][i], tm['error_stat'][i], tm['error_sys'][i]))
         elif label=='Fimbulthul':
-            f.write('{:s} & {:4.2f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & {:4.1f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & ${:3.2f}\pm{:3.2f}$ \\\\ \n'.format(label, tin['rperi'][i][0], tin['rperi'][i][2], tin['rperi'][i][1], tin['rapo'][i][0], tin['rapo'][i][2], tin['rapo'][i][1], tin['rapo'][i][0], tin['rapo'][i][2]))
+            f.write('{:s} & {:4.2f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & {:4.1f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & ${:3.2f}\pm{:3.2f}\pm{:3.2f}$ \\\\ \n'.format(label, tin['rperi'][i][0], tin['rperi'][i][2], tin['rperi'][i][1], tin['rapo'][i][0], tin['rapo'][i][2], tin['rapo'][i][1], tm['logM0'][i], tm['error_stat'][i], tm['error_sys'][i]))
         else:
-            f.write('{:s} & {:4.2f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & {:4.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & ${:3.2f}\pm{:3.2f}$ \\\\ \n'.format(label, tin['rperi'][i][0], tin['rperi'][i][2], tin['rperi'][i][1], tin['rapo'][i][0], tin['rapo'][i][2], tin['rapo'][i][1], tin['rapo'][i][0], tin['rapo'][i][2]))
+            f.write('{:s} & {:4.2f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & {:4.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & ${:3.2f}\pm{:3.2f}\pm{:3.2f}$ \\\\ \n'.format(label, tin['rperi'][i][0], tin['rperi'][i][2], tin['rperi'][i][1], tin['rapo'][i][0], tin['rapo'][i][2], tin['rapo'][i][1], tm['logM0'][i], tm['error_stat'][i], tm['error_sys'][i]))
         
         
         #f.write('{:s} & ${:.1f}$ & {:.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & {:.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & {:.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & {:.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & {:.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & '.format(tall['name'][i], tall['ra0'][i], r_fit[i,0,0], r_fit[i,1,0], r_fit[i,2,0], r_fit[i,0,1], r_fit[i,1,1], r_fit[i,2,1], r_fit[i,0,2], r_fit[i,1,2], r_fit[i,2,2], r_fit[i,0,3], r_fit[i,1,3], r_fit[i,2,3], r_fit[i,0,4], r_fit[i,1,4], r_fit[i,2,4]))
@@ -269,5 +271,7 @@ def plot_stream_fit_orbit(name):
     plt.savefig('../paper/figures/fig1_all/{:s}.png'.format(name))
     if name=='fjorm':
         plt.savefig('../paper/figures/stream_fitting.pdf')
+
+
 
 

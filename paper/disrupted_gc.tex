@@ -135,16 +135,23 @@ We place this population of disrupted globular clusters in the context of cluste
 \label{sec:orbits}
 
 Several dozen of thin stellar streams, likely disrupted globular clusters, have been reported in the Milky Way \citep[an up-to-date list is available in the \package{galstreams} package,][]{mateu:2018}.
-Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}, however, kinematic information is essential for accurate stream modeling \citep{bh:2018}.
-Here we analyze a subset of 22 stellar streams with published proper motions (Table~\ref{table:constraints}).
+Because kinematic information is essential for accurate stream modeling \citep{bh:2018}, here we limit our analysis to 22 stellar streams with published proper motions.
+% (Table~\ref{table:constraints}).
 
-We measure orbital parameters for a population of dissolved globular clusters by fitting orbits to sky positions, distances, and proper motions of stream endpoints.
-Due to limited observational data on some streams, we decided to fit only the stream endpoints to ensure a homogeneous treatment of the entire sample.
-\citet{riley:2020} demonstrated that the 3D positions of stream end-points robustly constrain their orbital poles, while \citet{ibata:2019} found that the absence of radial velocities produces no significant biases in orbit determination for streams with proper motion data.
-Therefore, we expect our strategy of recovering orbits from 5D positions of stream endpoints to perform well.
-In Section~\ref{sec:discussion} we discuss how orbital constraints change for streams where additional data is available.
-The endpoint sky positions and distances \citep{riley:2020}, and proper motions \citep[][as noted]{ibata:2019, shipp:2019} are listed in Table~\ref{table:constraints}, along with the associated uncertainties.
-Figure~\ref{fig:streams} shows these data for three representative streams as large orange points (top to bottom: x, y, z).
+Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012} and here we use the observed sky positions, distances, proper motions, and, where available, radial velocities to find the stream's orbit.
+- most streams: individual member stars identified, directly fit
+- for most diffuse ones, only avg motion detected, so we assume it doesn't change
+- the data we fit is available in the repo, and the provenance of original measurements is described in the appendix and table
+- data we fit on Fj\" orm is shown on the left side of Figure~\ref{fig:streams} in orange points (from top to bottom: Dec, distance, RA pm, Dec pm, and radial velocity as a function of RA)
+- the interactive version of this Figure contains a gallery of all the streams in our sample and is available in the online version of the paper, and here.
+
+% We measure orbital parameters for a population of dissolved globular clusters by fitting orbits to sky positions, distances, and proper motions of stream endpoints.
+% Due to limited observational data on some streams, we decided to fit only the stream endpoints to ensure a homogeneous treatment of the entire sample.
+% \citet{riley:2020} demonstrated that the 3D positions of stream end-points robustly constrain their orbital poles, while \citet{ibata:2019} found that the absence of radial velocities produces no significant biases in orbit determination for streams with proper motion data.
+% Therefore, we expect our strategy of recovering orbits from 5D positions of stream endpoints to perform well.
+% In Section~\ref{sec:discussion} we discuss how orbital constraints change for streams where additional data is available.
+% The endpoint sky positions and distances \citep{riley:2020}, and proper motions \citep[][as noted]{ibata:2019, shipp:2019} are listed in Table~\ref{table:constraints}, along with the associated uncertainties.
+% Figure~\ref{fig:streams} shows these data for three representative streams as large orange points (top to bottom: x, y, z).
 
 \begin{figure*}
 \begin{center}
@@ -175,6 +182,10 @@ Quoted values are the medians of the sampled posterior distributions and the unc
 
 We fit stream orbits in a three-component model of the Milky Way gravitational potential implemented in the \package{gala} package \citep{gala} and featuring a \citet{mn:1975} disk (mass: $5.5\times10^{10}\rm\, M_\odot$, scale-length: 3\,kpc, scale-height: 28\,pc), a \citet{hernquist:1990} bulge (mass: $4\times10^9\rm\, M_\odot$, scale-radius: 1\,kpc), and a \citet{nfw:1997} halo (scale-mass: $7\times10^{11}\rm\, M_\odot$, scale-radius: 15.62\,kpc, $z$-axis flattening: 0.95).
 Similar to the orbit-fitting procedure of \citet{pwb}, we represent the orbit as a 6D location in phase-space, fixing its right ascension, R.A., and solving for the remaining 5D coordinates (declination, distance, radial velocity, two proper motion components).
+- other potentials
+- lmc, sgr caveats
+
+- summary of stream fitting
 At the R.A. of the stream endpoints, we evaluate the orbital declinations, distances and proper motions against the observations, assuming Gaussian uncertainties.
 The orbits are initialized at one of the stream endpoints, with a radial velocity such that the total velocity vector equals the circular velocity at that Galactocentric distance and points to the other endpoint.
 We employ only minimal priors by requiring a bound orbit and the absolute radial velocity lower than 500\,\kms.
@@ -257,7 +268,7 @@ Two-dimensional demographics of fossil streams progenitors compared to those of 
 \autoref{fig:kde} shows the two-dimensional projections of the same quantities as in \autoref{fig:hist}, together with the region within which clusters are predicted to be disrupted within 10~Gyr for the observed stream properties. As expected, the streams fall within this region, which is systematically offset from the distributions of globular clusters, irrespectively of whether we adopt current or pre-evaporation globular cluster masses. Stream progenitors had lower masses (which is necessary to end up as a stream at the present day), have somewhat lower eccentricities (because streams with high eccentricities are disrupted at pericentre), and occupied larger radii (because streams at small radii are difficult to observe and may survive less long). Interestingly, the difference in apocentre radii manifests itself most strongly at low eccentricities. It is well known that the orbits of globular clusters become radially anisotropic towards larger radii \citep[e.g.][]{dinescu99}, and the fossil streams do not follow the same behaviour. We expect this difference to be driven by a combination of incompleteness of the stream sample and stream survival. {\color{red}Ana, thoughts?} Finally, the top-left panel of \autoref{fig:kde} shows that the lack of streams with small apocentre radii limits their possible pre-evaporation masses to $<3\times10^5~\msun$. However, this is not responsible for the mass offset that we find. Even when extrapolating the expected distribution of the stream sample along the gray band to same range of apocentre radii as globular clusters, the pre-evaporation masses remain about an order of magnitude lower than those of globular clusters.
 
 
-\section{Discussion}
+\section{Summary and Discussion}
 \label{sec:discussion}
 
 We determined the orbits of 20 globular clusters disrupted in the Milky Way by fitting sky positions, distances, and proper motions of the remnant stellar streams.
@@ -271,6 +282,7 @@ In this section we discuss this population of low-mass, disrupted globular clust
 Most processes that destroy globular clusters operate more efficiently closer to the Galactic center \citep[e.g.,][]{gnedin:1997}.
 Hence, if the initial population of globular clusters sampled the orbital space uniformly, we might expect to preferentially find stellar streams on more eccentric orbits with smaller apocenters.
 However, streams from our sample occupy similar orbital families as the present-day globular clusters, and the main difference between the two populations is the lower average mass of disrupted clusters.
+% explain more
 This may indicate that most globular clusters that ever orbited the Milky Way can be associated with a handful of its progenitor galaxies, in agreement with the phase-space \citep{massari:2019} and age-metallicity \citep{kruijssen19e,kruijssen20} distributions of the surviving cluster population.
 Partly, streams with small apocenters and those with high eccentricities may be missing from our sample due to observational biases: low eccentricity tidal debris is more readily identifiable as a thin stellar stream \citep{hendel:2015}, while searching for streams in the inner Galaxy is challenging due to high contamination from the field Milky Way stars \citep[e.g.,][]{ibata:2019}.
 The wealth of observational data expected over the next decade will allow for a more complete census of stellar streams that can further test the emerging picture in which the initial population of Galactic globular clusters originates from a small number of host galaxies.
@@ -282,6 +294,28 @@ However, the combined distribution of pre-evaporation masses for stream progenit
 In part, the comparative dearth of low-mass clusters may be attributed to incompleteness in the stream sample and the finite lifetimes of the streams, but it may also signify that evaporation is a subdominant cluster disruption mechanism.
 For example, \citet{kruijssen15b} proposed that most early-forming clusters were rapidly disrupted in the turbulent disks of their host galaxies, and that only a small fraction of the initial cluster population survives long enough to experience evaporation.
 A complete census of stellar streams could therefore inform on dynamical properties of star-forming galaxies at high redshift.
+
+
+\subsection{Implications for dynamical studies of stellar streams}
+\label{sec:discuss_dynamics}
+- implications for individual streams
+- compare to mass estimates in the detect part of the stream -> are they mostly detected or are they extending past the currently detected endpoints? -- some were being connected -- is it dynamically plausible
+- lower mass -> implications for epicycles: check andreas' paper
+- make specific comments for individual streams (e.g., gd-1)
+-- if preprocessed, some features might indeed be nature rather than nurture
+
+Forming kinematically cold and being shaped by the Milky Way tides, we expect that globular cluster streams are sensitive both to the global distribution of matter in the Galaxy \citep[e.g.,][]{lux:2013, bonaca:2014, sanders:2014}, and to small-scale perturbations, such as predicted from low-mass dark-matter subhalos \citep[e.g.,][]{ibata:2002, yoon:2011, erkal:2016}.
+Detailed observations have recently revealed signatures of perturbation in a number of thin streams \citep[e.g.,][]{pwb, bonaca:2019a, bonaca:2020, li:2020}, which may be attributed to impacts of dark-matter subhalos \citep[e.g.,][]{bonaca:2019b, banik:2019}.
+Alternatively, the observed features may be due to the way stars escape globular clusters \citep[e.g.,][]{kuepper:2008, kuepper:2010} or due to the onset of cluster disruption before its original host galaxy accreted onto the Milky Way \citep[e.g.,][]{carlberg:2018, malhan:2020}.
+
+% - think of disclaimer
+% - add idea sentence in the intro
+% - put this in discussion:
+To employ tidal tails as cosmological tracers of dark matter, it is essential to disentangle the internal and external sources of perturbation.
+Direct N-body simulations of the progenitor globular clusters in realistic environments would accurately capture the relevant processes \citep[e.g.,][]{renaud:2015}.
+However, these simulations remain out of reach because a cluster's dynamical evolution sensitively depends on its mass \citep[e.g.,][]{hh:2003, balbinot:2018}, and masses of most dissolved clusters are extremely uncertain \citep[e.g.,][]{erkal:2016b}.
+
+
 
 \begin{figure}
 \includegraphics[width=\hsize]{figures/mhost_fraction.pdf}
@@ -317,25 +351,6 @@ Due to the narrow range of stream masses, their metallicity is a strong predicto
 %- after fig 4: make prediction for jwst
 %- if jwst sees below mstar<~1e6Msun, you see bright knots -- not a surviving gc, but a stream progenitor
 %-- explore puny mass range
-
-\subsection{Implications for dynamical studies of stellar streams}
-\label{sec:discuss_dynamics}
-- implications for individual streams
-- compare to mass estimates in the detect part of the stream -> are they mostly detected or are they extending past the currently detected endpoints? -- some were being connected -- is it dynamically plausible
-- lower mass -> implications for epicycles: check andreas' paper
-- make specific comments for individual streams (e.g., gd-1)
--- if preprocessed, some features might indeed be nature rather than nurture
-
-Forming kinematically cold and being shaped by the Milky Way tides, we expect that globular cluster streams are sensitive both to the global distribution of matter in the Galaxy \citep[e.g.,][]{lux:2013, bonaca:2014, sanders:2014}, and to small-scale perturbations, such as predicted from low-mass dark-matter subhalos \citep[e.g.,][]{ibata:2002, yoon:2011, erkal:2016}.
-Detailed observations have recently revealed signatures of perturbation in a number of thin streams \citep[e.g.,][]{pwb, bonaca:2019a, bonaca:2020, li:2020}, which may be attributed to impacts of dark-matter subhalos \citep[e.g.,][]{bonaca:2019b, banik:2019}.
-Alternatively, the observed features may be due to the way stars escape globular clusters \citep[e.g.,][]{kuepper:2008, kuepper:2010} or due to the onset of cluster disruption before its original host galaxy accreted onto the Milky Way \citep[e.g.,][]{carlberg:2018, malhan:2020}.
-
-% - think of disclaimer
-% - add idea sentence in the intro
-% - put this in discussion:
-To employ tidal tails as cosmological tracers of dark matter, it is essential to disentangle the internal and external sources of perturbation.
-Direct N-body simulations of the progenitor globular clusters in realistic environments would accurately capture the relevant processes \citep[e.g.,][]{renaud:2015}.
-However, these simulations remain out of reach because a cluster's dynamical evolution sensitively depends on its mass \citep[e.g.,][]{hh:2003, balbinot:2018}, and masses of most dissolved clusters are extremely uncertain \citep[e.g.,][]{erkal:2016b}.
 
 
 
