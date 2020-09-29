@@ -135,8 +135,8 @@ We place this population of disrupted globular clusters in the context of cluste
 \label{sec:orbits}
 
 Several dozen of thin stellar streams, likely disrupted globular clusters, have been reported in the Milky Way \citep[an up-to-date list is available in the \package{galstreams} package,][]{mateu:2018}.
+Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}.
 Because kinematic information is essential for accurate stream modeling \citep{bh:2018}, here we limit our analysis to 22 stellar streams with published proper motions.
-% (Table~\ref{table:constraints}).
 
 We use the observed sky positions, distances, proper motions, and, where available, radial velocities to find the streams' orbits.
 Member stars have been identified along most streams in our sample, so for those we use their phase-space coordinates directly.
@@ -186,21 +186,25 @@ To estimate the systematic uncertainty in derived orbital parameters and initial
 In detail, the Galactic gravitational potential is perturbed by the Large and Small Magellanic Clouds, and the Sagittarius dwarf galaxy \citep{gomez:2015, erkal:2019, vasiliev:2020}.
 However, most of the streams in our sample have been orbiting in the inner Galaxy, where the impact of these massive satellites is least prominent \citep{petersen:2020} and the assumption of a static gravitational potential introduces biases in the recovery of orbital apocenters on the order of only $\approx10\%$ \citep{garrow:2020}.
 
-Similar to the orbit-fitting procedure of \citet{pwb}, we represent the orbit as a 6D location in phase-space, fixing its right ascension, R.A., and solving for the remaining 5D coordinates (declination, distance, radial velocity, two proper motion components).
-- summary of stream fitting (orbit vs stream)
-% Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}.
-At the R.A. of the stream endpoints, we evaluate the orbital declinations, distances and proper motions against the observations, assuming Gaussian uncertainties.
-The orbits are initialized at one of the stream endpoints, with a radial velocity such that the total velocity vector equals the circular velocity at that Galactocentric distance and points to the other endpoint.
-We employ only minimal priors by requiring a bound orbit and the absolute radial velocity lower than 500\,\kms.
+
+Individual stellar streams can be well represented by a single orbit \citep[e.g.,][]{koposov:2010, pwb, ibata:2019}.
+However, as stars escape from a globular cluster through its Lagrange points, their orbits differ from the cluster's \citep{eyre:2011}.
+This orbital misalignment can be forward modeled \citep{varghese:2011, bonaca:2014, sanders:2014}, but this is computationally involved, so we leave it to future work and proceed with the more tractable orbit-fitting.
+We follow \citet{pwb} and represent the orbit as a 6D location in phase-space, fixing its right ascension, R.A., and solving for the remaining 5D coordinates (declination, distance, radial velocity, two proper motion components).
+At the R.A. of the stream measurements, we evaluate the orbital declinations, distances, proper motions, and radial velocities (where available) against the observations, assuming Gaussian uncertainties.
+The orbits are initialized close to a stream's endpoint such that the trial orbit passes close to the observed data points.
+To prefer bound solutions, we employ a weak prior by requiring the absolute radial velocity lower than 500\,\kms.
 
 We begin the search for well-fitting stream orbits by maximizing the likelihood of orbits passing through the observed endpoints using the \package{scipy} implementation of the BFGS algorithm.
-Focusing on this best-fitting solution, we further sample the likelihood with an affine-invariant sampler \package{emcee} to estimate the posterior distribution of the orbital parameters.
-We advanced 64 walkers for 512 steps and kept the last 256 steps which converged to constant median and dispersion values for all model parameters.
-The median, 16th and 84th percentiles of the constrained 5D coordinates are reported for each stream's orbit in Table~\ref{table:constraints}.
+Focusing on this best-fitting solution, we further sample the phase-space parameters with an affine-invariant sampler \package{emcee} to estimate the posterior distribution of the orbital parameters.
+We advanced 64 walkers for 512 steps and kept the last 256 steps, which converged to constant median and dispersion values for all model parameters.
+The median, 16th and 84th percentiles of the constrained 5D coordinates are reported for each stream's orbit in the Appendix~\ref{sec:appendix} (Table~\ref{table:phase-space}).
 
 To visualize and further explore the streams' orbits, we randomly sampled 1,000 points from the posterior distributions of every stream (available at the project repository\footnote{\url{https://github.com/abonaca/disrupted_gc}}).
 First, we integrated short orbital segments starting from these initial positions, and plot them as blue lines in the observable coordinates in Figure~\ref{fig:streams} (different shades of blue correspond to different samples from the posterior distribution).
 For all of the streams we recovered a class of orbital solutions that fits the observed streams, with the allowed spread set by the observational uncertainties.
+For streams without radial velocities, we predict the radial velocity gradient along the stream.
+In case of Fj\" orm, radial velocities with $\approx1$\,\kms uncertainties are needed to further constrain its orbit (bottom left panel of Figure~\ref{fig:streams}).
 
 Next, we performed 5\,Gyr long orbit integrations starting from the same initial positions to estimate current constraints on the orbital pericenter, $r_{peri}$, apocenter, $r_{apo}$, and eccentricity, $e=(r_{apo} - r_{peri})/(r_{apo} + r_{peri})$.
 These longer orbits are shown in cylindrical Galactocentric coordinates in the right panels of Figure~\ref{fig:streams}.
