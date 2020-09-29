@@ -139,12 +139,12 @@ Because kinematic information is essential for accurate stream modeling \citep{b
 % (Table~\ref{table:constraints}).
 
 We use the observed sky positions, distances, proper motions, and, where available, radial velocities to find the streams' orbits.
-- most streams: individual member stars identified, directly fit
-- for most diffuse ones, only avg motion detected, so we assume it doesn't change
-The provenance of original measurements is described in Appendix~\ref{sec:appendix} and summarized in Table~\ref{table:phasespace}.
+Member stars have been identified along most streams in our sample, so for those we use their phase-space coordinates directly.
+For the most diffuse streams (Ravi, Turbio, Wambelong, and Willka-Yaku), only average distances and proper motions are available \citep{shipp:2019}, so we distribute 20 control points between these streams' endpoints \citep{riley:2020}, and assume that distance and proper motion are constant along the stream.
+The complete provenance of the original measurements is described in Appendix~\ref{sec:appendix} and summarized in Table~\ref{table:phasespace}.
 All of the data points we used to fit are available in the project repository\footnote{\url{https://github.com/abonaca/disrupted_gc/tree/master/data/streams}}.
-- data we fit on Fj\" orm is shown on the left side of Figure~\ref{fig:streams} in orange points (from top to bottom: Dec, distance, RA pm, Dec pm, and radial velocity as a function of RA)
-- the interactive version of this Figure contains a gallery of all the streams in our sample and is available in the online version of the paper, and here.
+On the left side of Figure~\ref{fig:streams} we show the observed sky positions, distances, and components of the proper motion vector for the Fj\" orm stream as orange points (in top to bottom panels).
+The interactive version of this Figure contains a gallery of all the streams in our sample and is available in the online version of this article, and here.
 
 % We measure orbital parameters for a population of dissolved globular clusters by fitting orbits to sky positions, distances, and proper motions of stream endpoints.
 % Due to limited observational data on some streams, we decided to fit only the stream endpoints to ensure a homogeneous treatment of the entire sample.
@@ -181,11 +181,12 @@ Quoted values are the medians of the sampled posterior distributions and the unc
 \label{table:constraints}
 \end{deluxetable}
 
-We fit stream orbits in a three-component model of the Milky Way gravitational potential implemented in the \package{gala} package \citep{gala} and featuring a \citet{mn:1975} disk (mass: $5.5\times10^{10}\rm\, M_\odot$, scale-length: 3\,kpc, scale-height: 28\,pc), a \citet{hernquist:1990} bulge (mass: $4\times10^9\rm\, M_\odot$, scale-radius: 1\,kpc), and a \citet{nfw:1997} halo (scale-mass: $7\times10^{11}\rm\, M_\odot$, scale-radius: 15.62\,kpc, $z$-axis flattening: 0.95).
-Similar to the orbit-fitting procedure of \citet{pwb}, we represent the orbit as a 6D location in phase-space, fixing its right ascension, R.A., and solving for the remaining 5D coordinates (declination, distance, radial velocity, two proper motion components).
-- other potentials
-- lmc, sgr caveats
+We fit stream orbits in a three-component model of the Milky Way's gravitational potential implemented in the \package{gala} package \citep{gala} and featuring a \citet{mn:1975} disk (mass: $5.5\times10^{10}\rm\, M_\odot$, scale-length: 3\,kpc, scale-height: 28\,pc), a \citet{hernquist:1990} bulge (mass: $4\times10^9\rm\, M_\odot$, scale-radius: 1\,kpc), and a \citet{nfw:1997} halo (scale-mass: $7\times10^{11}\rm\, M_\odot$, scale-radius: 15.62\,kpc, $z$-axis flattening: 0.95).
+To estimate the systematic uncertainty in derived orbital parameters and initial progenitor masses, we also constrain orbits in a slightly less massive \texttt{MWPotential2014} gravitational potential \citep{bovy:2015} and a somewhat more massive potential used in \citet{pwb}.
+In detail, the Galactic gravitational potential is perturbed by the Large and Small Magellanic Clouds, and the Sagittarius dwarf galaxy \citep{gomez:2015, erkal:2019, vasiliev:2020}.
+However, most of the streams in our sample have been orbiting in the inner Galaxy, where the impact of these massive satellites is least prominent \citep{petersen:2020} and the assumption of a static gravitational potential introduces biases in the recovery of orbital apocenters on the order of only $\approx10\%$ \citep{garrow:2020}.
 
+Similar to the orbit-fitting procedure of \citet{pwb}, we represent the orbit as a 6D location in phase-space, fixing its right ascension, R.A., and solving for the remaining 5D coordinates (declination, distance, radial velocity, two proper motion components).
 - summary of stream fitting (orbit vs stream)
 % Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}.
 At the R.A. of the stream endpoints, we evaluate the orbital declinations, distances and proper motions against the observations, assuming Gaussian uncertainties.
@@ -367,6 +368,10 @@ J.M.D.K.\ gratefully acknowledges the generous hospitality of the Institute for 
 \package{numpy} \citep{numpy},
 \package{scipy} \citep{scipy}
 }
+
+\appendix
+\section{Stream data origin}
+\label{sec:appendix}
 
 \bibliographystyle{aasjournal}
 \bibliography{disrupted_gc}
