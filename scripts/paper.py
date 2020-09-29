@@ -272,6 +272,16 @@ def plot_stream_fit_orbit(name):
     if name=='fjorm':
         plt.savefig('../paper/figures/stream_fitting.pdf')
 
+def orbital_precision():
+    """"""
+    tin = Table.read('../data/orbital_summary.fits')
+    tin.pprint()
+    
+    print(np.median(tin['rperi'][:,3]), np.median(tin['rperi'][:,3]/tin['rperi'][:,0]))
+    print(np.median(tin['rapo'][:,3]), np.median(tin['rapo'][:,3]/tin['rapo'][:,0]))
+    
+
+
 
 
 
