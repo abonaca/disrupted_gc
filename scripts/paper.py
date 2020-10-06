@@ -3,6 +3,20 @@ from orbit_fits import *
 from matplotlib.legend_handler import HandlerBase
 from itertools import cycle
 
+#from matplotlib import rc, rcParams
+#rc('font',**{'family':'serif','serif':['Times New Roman'],'size':14})
+#rc('text',usetex=True)
+#rc('patch',antialiased=False)
+#rcParams['font.size'] = 15.5
+#rcParams['xtick.direction'] = 'in'
+#rcParams['ytick.direction'] = 'in'
+#rcParams['xtick.major.size'] = 6
+#rcParams['ytick.major.size'] = 6
+#rcParams['xtick.minor.size'] = 3
+#rcParams['ytick.minor.size'] = 3
+
+plt.style.use('tex')
+
 class HandlerTupleVert(HandlerBase):
     """
     Handler for Tuple.
@@ -60,7 +74,7 @@ class HandlerTupleVert(HandlerBase):
 
         return a_list
 
-def summarize_orbits():
+def summarize_orbits(pot='fiducial'):
     """"""
     
     names = get_names()
@@ -74,7 +88,7 @@ def summarize_orbits():
     
     for i in range(N):
         t = Table.read('../data/orbit_props_{:s}_combined.fits'.format(names[i]))
-        ind_fiducial = t['potential']=='fiducial'
+        ind_fiducial = t['potential']==pot
         for k in ['ecc', 'rperi', 'rapo']:
             tout[i][k][0] = np.nanmedian(t[k][ind_fiducial])
             tout[i][k][1] = tout[i][k][0] - np.nanpercentile(t[k][ind_fiducial], 16)
@@ -83,7 +97,7 @@ def summarize_orbits():
             tout[i][k][4] = np.nanstd(t[k])
     
     tout.pprint()
-    tout.write('../data/orbital_summary.fits', overwrite=True)
+    tout.write('../data/orbital_summary_{:s}.fits'.format(pot), overwrite=True)
 
 def table_orbits():
     """Create a latex table with streams' orbital properties"""
@@ -274,14 +288,165 @@ def plot_stream_fit_orbit(name):
 
 def orbital_precision():
     """"""
-    tin = Table.read('../data/orbital_summary.fits')
+    tin = Table.read('../data/orbital_summary_fiducial.fits')
     tin.pprint()
     
     print(np.median(tin['rperi'][:,3]), np.median(tin['rperi'][:,3]/tin['rperi'][:,0]))
     print(np.median(tin['rapo'][:,3]), np.median(tin['rapo'][:,3]/tin['rapo'][:,0]))
+
+def get_lz(names):
+    """"""
     
+    lz = np.zeros(len(names)) * u.kpc**2 / u.Myr
+    
+    for i, name in enumerate(names[:]):
+        stream = Stream(name, ham=ham, save_ext='')
+
+        # best-fit orbit
+        res = pickle.load(open('../data/fits/minimization_{:s}.pkl'.format(stream.savename), 'rb'))
+        orbit = stream.orbital_properties(pbest=res.x, t=stream.tstream)
+
+        # long orbit
+        orbit = stream.orbital_properties(pbest=res.x, t=20*stream.tstream)
+        lz[i] = np.median(orbit.angular_momentum()[:,2])
+    
+    return lz
+
+def overall_summary():
+    """"""
+    to = Table.read('../data/orbital_summary_fiducial.fits')
+    tm = Table.read('../data/gc_masses.txt', format='ascii.commented_header')
+    lz = get_lz(to['name'])
+    label = [get_properties(name)['label'] for name in to['name']]
+    
+    tout = hstack([to, tm])
+    tout['Lz'] = lz
+    tout['label'] = label
+    tout.pprint()
+    
+    tout.write('../data/overall_summary.fits', overwrite=True)
 
 
+def print_masses():
+    """"""
+    t = Table.read('../data/overall_summary.fits')
+    mass = np.array(10**t['logM0'])
+    
+    for i in range(len(t)):
+        print('{:s} {:.2e}'.format(t['name'][i], mass[i]))
+
+def conste_rapo(rperi, e):
+    
+    return rperi * (1+e)/(1-e)
+
+def associations():
+    """"""
+    t = Table.read('../data/overall_summary.fits')
+    
+    plt.close()
+    fig, ax = plt.subplots(1,1,figsize=(5.5,6.5))
+    
+    s = 0.15*t['logM0']**5
+    im = plt.scatter(t['rperi'][:,0], t['rapo'][:,0], c=t['Lz'], vmin=-2, vmax=2, zorder=1, cmap='PuOr', s=s, edgecolors='k', linewidths=0.5, label='')
+    plt.errorbar(t['rperi'][:,0], t['rapo'][:,0], xerr=(t['rperi'][:,1], t['rperi'][:,2]), yerr=(t['rapo'][:,1], t['rapo'][:,2]), fmt='none', zorder=0, color='k', lw=0.5, label='')
+    
+    
+    # constant eccentricity
+    x_ = np.linspace(2,100,10)
+    xlabel = np.array([7.6, 3.15, 2.5])
+    
+    for i, e in enumerate([0, 0.5, 0.75]):
+        ra_ = conste_rapo(x_, e)
+        plt.plot(x_, ra_, 'k--', lw=0.5, alpha=0.3, zorder=0, label='')
+        plt.text(xlabel[i], conste_rapo(xlabel[i], e), 'e = {:g}'.format(e), fontsize='xx-small', alpha=0.3, bbox=dict(fc='w', ec='none'), rotation=50, va='center', ha='center')
+    
+    f = 0.05
+    N = len(t)
+    np.random.seed(12846)
+    phase = (np.random.rand(N) + -1) * 0.5*np.pi
+    for i in range(N):
+        plt.text(t['rperi'][i,0] * (1.03 + f*np.cos(phase[i])), t['rapo'][i,0] * (1 + f*np.sin(phase[i])), '{:s}'.format(t['label'][i]), fontsize='xx-small') #, bbox=dict(fc='w', ec='none', alpha=0.3))
+    
+    # legend
+    logm = np.array([3.5, 4, 4.5])
+    Nm = len(logm)
+    for i in range(Nm):
+        sz = 0.15 * logm[i]**5
+        plt.scatter(16, 200, c='w', ec='k', linewidths=0.5, s=sz, label='log M$_0$/M$_\odot$ = {:.1f}'.format(logm[i]))
+    
+    plt.legend(loc=4, frameon=False, fontsize='x-small', handlelength=0.6, scatteryoffsets=[0.75])
+    
+    plt.xlim(2,33)
+    plt.ylim(6, 100)
+    #plt.gca().set_aspect('equal')
+    plt.gca().set_xscale('log')
+    plt.gca().set_yscale('log')
+    
+    plt.xticks([5,10,20])
+    plt.yticks([10,50,100])
+    plt.gca().xaxis.set_major_formatter(mpl.ticker.FormatStrFormatter('%.0f'))
+    plt.gca().yaxis.set_major_formatter(mpl.ticker.FormatStrFormatter('%.0f'))
+
+    plt.xlabel('Pericenter [kpc]')
+    plt.ylabel('Apocenter [kpc]', labelpad=-15)
+    plt.tight_layout()
+    
+    pos = ax.get_position()
+    #cax = plt.axes([pos.x1+0.02, pos.y0, 0.03, pos.y1-pos.y0])
+    #plt.colorbar(im, cax=cax, label='z angular momentum [kpc$^2$ Myr$^{-1}$]')
+    
+    cax = plt.axes([pos.x0, pos.y1+0.015, pos.x1-pos.x0, 0.025])
+    plt.colorbar(im, cax=cax, label='$L_z$ [kpc$^2$ Myr$^{-1}$]', orientation='horizontal', ticklocation='top')
+    #cax.xaxis.set_label_position('top')
+    #cax.xaxis.set_tick_params(labeltop='on')
+    
+    
+    plt.savefig('../plots/streams_peri_apo.png')
+    plt.savefig('../paper/figures/streams_peri_apo.pdf', bbox_incehs='tight')
+
+def rapo_ecc():
+    """"""
+    t = Table.read('../data/overall_summary.fits')
+    
+    plt.close()
+    fig, ax = plt.subplots(1,1,figsize=(10,10))
+    
+    s = 0.05*t['logM0']**6
+    im = plt.scatter(t['rapo'][:,0], t['ecc'][:,0], c=t['Lz'], vmin=-2, vmax=2, zorder=1, cmap='PuOr', s=s, edgecolors='k', linewidths=0.5)
+    #plt.errorbar(t['ecc'][:,0], t['rapo'][:,0], xerr=(t['ecc'][:,1], t['ecc'][:,2]), yerr=(t['rapo'][:,1], t['rapo'][:,2]), fmt='none', zorder=0, color='k', lw=0.5)
+    
+    #f = 0.05
+    #N = len(t)
+    #np.random.seed(12846)
+    #phase = (np.random.rand(N) + -1) * 0.5*np.pi
+    #for i in range(N):
+        #plt.text(t['ecc'][i,0] * (1 + f*np.cos(phase[i])), t['rapo'][i,0] * (1 + f*np.sin(phase[i])), '${:s}$'.format(t['label'][i]), fontsize='x-small') #, bbox=dict(fc='w', ec='none', alpha=0.3))
+    
+    #plt.ylim(1, 100)
+    #plt.gca().set_aspect('equal')
+    #plt.gca().set_xscale('log')
+    #plt.gca().set_yscale('log')
+    plt.ylabel('Eccentricity')
+    plt.xlabel('Apocenter [kpc]')
+    plt.tight_layout()
+    
+    pos = ax.get_position()
+    print(pos)
+    cax = plt.axes([pos.x1+0.02, pos.y0, 0.03, pos.y1-pos.y0])
+    plt.colorbar(im, cax=cax, label='z angular momentum [kpc$^2$ Myr$^{-1}$]')
+
+def lz():
+    """"""
+    t = Table.read('../data/overall_summary.fits')
+    print(np.median(t['Lz']))
+    
+    plt.close()
+    plt.figure()
+    
+    plt.hist(t['Lz'], bins=20)
+    plt.axvline(np.median(t['Lz']), color='tab:red')
+    
+    plt.tight_layout()
 
 
 

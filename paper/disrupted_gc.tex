@@ -213,7 +213,7 @@ The extensive observational data puts strong constraints on the streams' orbits,
 Across the board, pericenters are measured more precisely than apocenters, with the typical uncertainty of 3\% compared to 6\%, respectively.
 This is also visible in the top right panel of Figure~\ref{fig:streams}, where different orbital solutions for the  Fj\" orm stream are cospatial at the pericenter, but fanned out at the apocenter.
 Comparing orbits derived in alternate Milky Way models, we detect no biases in pericenters, but apocenters are on average 10\% larger in the light model and 10\% smaller in the heavy model.
-These systematic biases are smaller than individual uncertainties, but underscore the importance of analyzing all streams self-consistently in the same potential.
+These systematic biases are larger than individual uncertainties, underscoring the importance of analyzing all streams self-consistently in the same potential.
 In the next section we use these orbital constraints to estimate the initial masses of the progenitor globular clusters.
 
 \section{Masses of disrupted globular clusters}
@@ -299,25 +299,77 @@ In part, the comparative dearth of low-mass clusters may be attributed to incomp
 For example, \citet{kruijssen15b} proposed that most early-forming clusters were rapidly disrupted in the turbulent disks of their host galaxies, and that only a small fraction of the initial cluster population survives long enough to experience evaporation.
 A complete census of stellar streams could therefore inform on dynamical properties of star-forming galaxies at high redshift.
 
+\begin{figure}
+\includegraphics[width=\hsize]{figures/streams_peri_apo.pdf}
+\caption{
+\label{fig:individual_summary}
+}
+\end{figure}
+
 
 \subsection{Implications for dynamical studies of stellar streams}
 \label{sec:discuss_dynamics}
-- implications for individual streams
-- compare to mass estimates in the detect part of the stream -> are they mostly detected or are they extending past the currently detected endpoints? -- some were being connected -- is it dynamically plausible
-- lower mass -> implications for epicycles: check andreas' paper
-- make specific comments for individual streams (e.g., gd-1)
--- if preprocessed, some features might indeed be nature rather than nurture
+Orbital properties of individual streams in our sample are summarized in Figure~\ref{fig:individual_summary}, which shows their apocenters versus pericenters, with errorbars enclosing the $16-84$ percentiles of the uncertainty range.
+Dashed lines trace orbits with the same eccentricity.
+Stream markers are colored by the $z$-component of their orbital angular momenta, $L_z$, with orange for prograde ($L_z<0$), purple for retrograde ($L_z>0$), and white for radial orbits ($L_z\approx0$).
+Larger symbols correspond to more massive progenitors.
+In the remainder of this section we discuss how derived orbits and masses inform the orbital histories of individual stellar streams in the Milky Way.
 
-Forming kinematically cold and being shaped by the Milky Way tides, we expect that globular cluster streams are sensitive both to the global distribution of matter in the Galaxy \citep[e.g.,][]{lux:2013, bonaca:2014, sanders:2014}, and to small-scale perturbations, such as predicted from low-mass dark-matter subhalos \citep[e.g.,][]{ibata:2002, yoon:2011, erkal:2016}.
-Detailed observations have recently revealed signatures of perturbation in a number of thin streams \citep[e.g.,][]{pwb, bonaca:2019a, bonaca:2020, li:2020}, which may be attributed to impacts of dark-matter subhalos \citep[e.g.,][]{bonaca:2019b, banik:2019}.
-Alternatively, the observed features may be due to the way stars escape globular clusters \citep[e.g.,][]{kuepper:2008, kuepper:2010} or due to the onset of cluster disruption before its original host galaxy accreted onto the Milky Way \citep[e.g.,][]{carlberg:2018, malhan:2020}.
+In general, we infer higher masses for disrupted clusters that have orbited in stronger tidal fields: at a fixed eccentricity, streams on orbits with smaller apocenters have more massive progenitors.
+Similarly, for a given apocenter radius, streams on more eccentric orbits have more massive progenitors.
+The strong correlation between derived stream orbits and the initial cluster masses is set in part because we assumed that all clusters have been dissolving for the same amount of time.
+Future independent constraints on the streams' dynamical ages, for example from their phase-space dispersal \citep{buckley:2019},  would modulate this behavior.
 
-% - think of disclaimer
-% - add idea sentence in the intro
-% - put this in discussion:
-To employ tidal tails as cosmological tracers of dark matter, it is essential to disentangle the internal and external sources of perturbation.
-Direct N-body simulations of the progenitor globular clusters in realistic environments would accurately capture the relevant processes \citep[e.g.,][]{renaud:2015}.
-However, these simulations remain out of reach because a cluster's dynamical evolution sensitively depends on its mass \citep[e.g.,][]{hh:2003, balbinot:2018}, and masses of most dissolved clusters are extremely uncertain \citep[e.g.,][]{erkal:2016b}.
+- the most massive objects imply additional debris remains undetected
+- fimbulthul, ophiuchus -- short, diffuse
+- wambelong (shipp: 2e3 stellar mass, total from us: 2.9e4, also in good agreement w their estimate), phoenix
+- comment on orbital phase -- detected portions only closest to us?
+- indus, jhelum, elqui we infer lower masses than measured stellar, consistent w being dwarf galaxies (cit ji)
+- others appear to be detected in full: aau+atlas, turranburra, turbio, ravi, willka yaku (marginal, slightly larger stellar mass than expected)
+- especially interesting: aau+atlas if in full, will be able to model the whole interaction if certain this is all there is to the stream
+
+-- add reference to erkal's method in the intro (2016a,b -- rough bc assumes circular)
+
+% In addition to this, these results show that more might be going on.
+% For example, the most massive disrupted globular cluster is the progenitor of the Fimbulthul stream.
+% Fimbulthul is a low-density stream that spans only $\approx18^\circ$ at a distance of $\approx4\,\kpc$ \citep{ibata:2019}, so our estimated progenitor mass of $\approx7\times10^4\,\msun$ implies additional debris remains undetected.
+% \citet{ibata:2019} hypothesized that Omega Cen might be the progenitor of Fimbulthul due to their similar orbits, which would
+% 
+% - ophiuchus, massive but short -- heavily dispersed or orbital change?
+
+
+- orbital pairs: aau-atlas, sylgr-ylgr, turranbura-slidr?
+- plot rperi vs rapo, identify pairs, comment if they make sense in terms of association (different phases, total mass detected)
+
+- individually, identified as tracers of the potential
+- historical ideas
+- w gaia features seen, but origin unknown -> need accurate models
+- gd-1 not massive, epicycles not as prominent?
+
+
+% - comment on those that might be galaxies
+
+
+
+
+
+% % - compare to mass estimates in the detect part of the stream -> are they mostly detected or are they extending past the currently detected endpoints? -- some were being connected -- is it dynamically plausible
+% % - lower mass -> implications for epicycles: check andreas' paper
+% % - make specific comments for individual streams (e.g., gd-1)
+% % -- if preprocessed, some features might indeed be nature rather than nurture
+% 
+% Forming kinematically cold and being shaped by the Milky Way tides, we expect that globular cluster streams are sensitive both to the global distribution of matter in the Galaxy \citep[e.g.,][]{lux:2013, bonaca:2014, sanders:2014}, and to small-scale perturbations, such as predicted from low-mass dark-matter subhalos \citep[e.g.,][]{ibata:2002, yoon:2011, erkal:2016}.
+% Detailed observations have recently revealed signatures of perturbation in a number of thin streams \citep[e.g.,][]{pwb, bonaca:2019a, bonaca:2020, li:2020}, which may be attributed to impacts of dark-matter subhalos \citep[e.g.,][]{bonaca:2019b, banik:2019}.
+% Alternatively, the observed features may be due to the way stars escape globular clusters \citep[e.g.,][]{kuepper:2008, kuepper:2010} or due to the onset of cluster disruption before its original host galaxy accreted onto the Milky Way \citep[e.g.,][]{carlberg:2018, malhan:2020}.
+% 
+% To employ tidal tails as cosmological tracers of dark matter, it is essential to disentangle the internal and external sources of perturbation.
+% Direct N-body simulations of the progenitor globular clusters in realistic environments would accurately capture the relevant processes \citep[e.g.,][]{renaud:2015}.
+% However, these simulations remain out of reach because a cluster's dynamical evolution sensitively depends on its mass \citep[e.g.,][]{hh:2003, balbinot:2018}, and masses of most dissolved clusters are extremely uncertain \citep[e.g.,][]{erkal:2016b}.
+% 
+% 
+% % - think of disclaimer
+% % - add idea sentence in the intro
+% % - put this in discussion:
 
 
 
