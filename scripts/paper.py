@@ -336,7 +336,7 @@ def print_masses():
         print('{:s} {:.2e}'.format(t['name'][i], mass[i]))
 
 def conste_rapo(rperi, e):
-    
+    """"""
     return rperi * (1+e)/(1-e)
 
 def associations():
@@ -448,5 +448,35 @@ def lz():
     
     plt.tight_layout()
 
+
+def orbital_phase():
+    """Print current galactocentric radius, as well as the peri and apocenter"""
+    
+    t = Table.read('../data/overall_summary.fits')
+    #t.pprint()
+    
+    for e, name in enumerate(t['name'][:]):
+        stream = Stream(name)
+        sampler = pickle.load(open('../data/fits/mcmc_{:s}.pkl'.format(stream.savename), 'rb'))
+        chain = sampler.chain[:,256:,:]
+        flatchain = np.reshape(chain,(-1,5))
+        pbest = np.median(flatchain, axis=0)
+        
+        p0 = [x*y.unit for x, y in zip(pbest, stream.p0)]
+        dec, dist, pmra, pmdec, vr = p0
+        
+        c = coord.SkyCoord(ra=stream.ra0*u.deg, dec=dec, distance=dist, pm_ra_cosdec=pmra, pm_dec=pmdec, radial_velocity=vr, frame='icrs')
+        w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
+
+        orbit = stream.ham.integrate_orbit(w0, dt=stream.dt, n_steps=stream.nstep)
+        #model = orbit.to_coord_frame(coord.ICRS, galactocentric_frame=stream.gc_frame)
+        
+        rcurrent = np.median(orbit.spherical.pos.distance)
+        rperi = t['rperi'][e][0]*u.kpc
+        rapo = t['rapo'][e][0]*u.kpc
+        f = (rcurrent - rperi) / (rapo - rperi)
+        print('{:s} {:.2f}'.format(name, f))
+        #print(, , t['rapo'][e][0])
+        #print(np.median(orbit.cartesian.pos.norm()))
 
 
