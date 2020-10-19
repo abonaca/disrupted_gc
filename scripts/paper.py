@@ -334,6 +334,8 @@ def print_masses():
     
     for i in range(len(t)):
         print('{:s} {:.2e}'.format(t['name'][i], mass[i]))
+    
+    print('median {:.2e}'.format(np.median(mass)))
 
 def conste_rapo(rperi, e):
     """"""
