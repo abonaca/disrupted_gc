@@ -51,12 +51,15 @@
 
 \begin{abstract}\noindent % trust me
 We present orbits and masses of 22 thin stellar streams in the Milky Way.
-We constrained the streams' orbits by fitting the combined 5D phase space of sky positions, distances and proper motions, including radial velocities where available.
+We constrained the streams' orbits by fitting the combined 5D phase-space of sky positions, distances and proper motions, including radial velocities where available.
 % 3D positions of a stream's endpoints from ground-based photometry and its proper motions from Gaia.
-Assuming that the streams are globular clusters that dissolved in 10\,Gyr, we used orbital apocenters and eccentricities to estimate their pre-evaporation masses.
-Fossil streams follow a similar distribution of orbital apocenters and eccentricities as the surviving globular clusters, however, their pre-evaporation masses are an order of magnitude lower, with a median of $8\times10^3\,\msun$.
+Assuming that the streams are globular clusters which dissolved in 10\,Gyr, we used orbital apocenters and eccentricities to estimate their pre-evaporation masses.
+Fossil streams follow a similar distribution of orbital apocenters and eccentricities as the surviving globular clusters, however, their pre-evaporation masses are an order of magnitude lower, with a median of $8.5\times10^3\,\msun$.
 The progenitors of tidal streams observed at the present are a specific, low-mass subset of the initial globular cluster population.
-This has implications for (1) , (2) establishing the role of internal dynamics in sculpting the observed tidal debris, and the amount of external perturbation, e.g., from dark-matter subhalos, that these streams experienced, and (3) .
+Building on these findings, we conclude that (1) globular clusters represent the high-mass end of a broader initial cluster population extending into the low-mass regime of clusters observed to form today,
+(2) the internal dynamics plausibly had a limited role in sculpting the observed density variations in streams such that external perturbations (e.g., from dark-matter subhalos) are required, and
+(3) the lowest metallicity stellar streams may have constituted a significant fraction of their host galaxy's mass at the time of their formation.
+% establishing the role of internal dynamics in sculpting the observed tidal debris, and the amount of external perturbation, e.g., from dark-matter subhalos, that these streams experienced.
 \end{abstract}
 
 \section{Introduction}
@@ -99,10 +102,10 @@ In this family of models, one would expect the masses of fossil stream progenito
 
 Our goal in this paper is to dynamically estimate masses of disrupted globular clusters that are now observed as stellar streams in the Milky Way, under the assumption that the streams result from disrupted clusters rather than dwarf galaxies.
 The timescale for cluster disruption is determined by its initial mass, i.e.\ more massive clusters survive over longer timescales, and its orbit, i.e.\ clusters on more eccentric orbits and with smaller apocenters dissolve faster \citep{baumgardt03,kruijssen09}.
-Kinematic data are essential for accurately estimating the streams' orbits \citep{bh:2018}, and thanks to the Gaia mission \citep{gdr2}, proper motions have recently been measured for 22 stellar streams.
+Velocities are essential for accurately estimating the streams' orbits \citep{bh:2018}, and thanks to Gaia proper motions \citep{gdr2}, there are now 22 stellar streams with known kinematics.
 In Section~\ref{sec:orbits} we use the observed positions and motions of stream stars to determine their orbits.
 Since the streams are coherent, we assume the progenitor globular clusters disrupted recently \citep{helmi:2003}, and in Section~\ref{sec:disrupted} calculate their pre-evaporation masses.
-We place this population of disrupted globular clusters in the context of cluster (\S\,\ref{sec:discuss_gcform}) and galaxy formation (\S\,\ref{sec:discuss_galform}), and close by discussing the implications of the inferred low masses in the context of stellar streams as tracers of dark matter in the Milky Way (\S\,\ref{sec:discuss_dynamics}).
+We place this population of disrupted globular clusters in the context of cluster (\S\,\ref{sec:discuss_gcform}) and galaxy formation (\S\,\ref{sec:discuss_galform}), and discuss the implications of the inferred low masses in the context of stellar streams as tracers of dark matter in the Milky Way (\S\,\ref{sec:discuss_dynamics}).
 
 % As described above, a mass function that includes disrupted globular clusters can determine whether globular clusters are a product of regular star formation or whether they require unique conditions to form.
 % In addition, measuring masses of stream progenitors will further constrain their role in the early galaxy formation, as well as improve dynamical modeling of the streams' evolution in the Milky Way.
@@ -133,15 +136,16 @@ We place this population of disrupted globular clusters in the context of cluste
 \label{sec:orbits}
 
 Several dozen of thin stellar streams, likely disrupted globular clusters, have been reported in the Milky Way \citep[an up-to-date list is available in the \package{galstreams} package,][]{mateu:2018}.
-Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}.
 Because kinematic information is essential for accurate stream modeling \citep{bh:2018}, here we limit our analysis to 22 stellar streams with published proper motions.
 
+Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}.
 We use the observed sky positions, distances, proper motions, and, where available, radial velocities to find the streams' orbits.
 Member stars have been identified along most streams in our sample, so for those we use their phase-space coordinates directly.
 For the most diffuse streams (Ravi, Turbio, Wambelong, and Willka-Yaku), only average distances and proper motions are available \citep{shipp:2019}, so we distribute 20 control points between these streams' endpoints \citep{riley:2020}, and assume that distance and proper motion are constant along the stream.
 The complete provenance of the original measurements is described in Appendix~\ref{sec:appendix} and summarized in Table~\ref{table:phasespace}.
-All of the data points we used to fit are available in the project repository\footnote{\url{https://github.com/abonaca/disrupted_gc/tree/master/data/streams}}.
-On the left side of Figure~\ref{fig:streams} we show the observed sky positions, distances, and components of the proper motion vector for the Fj\" orm stream as orange points (in top to bottom panels).
+All of the data points we used to fit are available in the project repository\footnote{\url{https://github.com/abonaca/disrupted_gc}}).
+% \footnote{\url{https://github.com/abonaca/disrupted_gc/tree/master/data/streams}}.
+On the left side of Figure~\ref{fig:streams} we show (from the top) the observed sky positions, distances, and components of the proper motion vector for the Fj\" orm stream as orange points.
 The interactive version of this Figure contains a gallery of all the streams in our sample and is available in the online version of this article, and here.
 
 % We measure orbital parameters for a population of dissolved globular clusters by fitting orbits to sky positions, distances, and proper motions of stream endpoints.
@@ -157,7 +161,7 @@ The interactive version of this Figure contains a gallery of all the streams in 
 \includegraphics[width=0.9\textwidth]{figures/stream_fitting.pdf}
 \end{center}
 \caption{Orbital constraints for the Fj\"{o}rm stellar stream in the observed coordinates (left: panels from top to bottom show declination, distance, and proper motion components as a function of right ascension) and cylindrical Galactocentric coordinates (right: in and out of the Galactic plane for the top and bottom panels, respectively).
-Different shades of blue represent orbit samples from the posterior constrained by the stream endpoints (orange points).
+Different shades of blue represent orbit samples from the posterior constrained by the stream observations (orange points).
 Current observations allow for a range of orbital apocenters and eccentricities.
 }
 \label{fig:streams}
@@ -182,32 +186,33 @@ Quoted values are the medians of the sampled posterior distributions and the unc
 We fit stream orbits in a three-component model of the Milky Way's gravitational potential implemented in the \package{gala} package \citep{gala} and featuring a \citet{mn:1975} disk (mass: $5.5\times10^{10}\rm\, M_\odot$, scale-length: 3\,kpc, scale-height: 28\,pc), a \citet{hernquist:1990} bulge (mass: $4\times10^9\rm\, M_\odot$, scale-radius: 1\,kpc), and a \citet{nfw:1997} halo (scale-mass: $7\times10^{11}\rm\, M_\odot$, scale-radius: 15.62\,kpc, $z$-axis flattening: 0.95).
 To estimate the systematic uncertainty in derived orbital parameters and initial progenitor masses, we also constrain orbits in a slightly less massive \texttt{MWPotential2014} gravitational potential \citep{bovy:2015} and a somewhat more massive potential used in \citet{pwb}.
 In detail, the Galactic gravitational potential is perturbed by the Large and Small Magellanic Clouds, and the Sagittarius dwarf galaxy \citep{gomez:2015, erkal:2019, vasiliev:2020}.
-However, most of the streams in our sample have been orbiting in the inner Galaxy, where the impact of these massive satellites is least prominent \citep{petersen:2020} and the assumption of a static gravitational potential introduces biases in the recovery of orbital apocenters on the order of only $\approx10\%$ \citep{garrow:2020}.
+However, most of the streams in our sample have been orbiting in the inner Galaxy, where the impact of these massive satellites is less prominent \citep{petersen:2020} and the assumption of a static gravitational potential introduces biases in the recovery of orbital apocenters on the order of only $\approx10\%$ \citep{garrow:2020}.
 
 
 Individual stellar streams can be well represented by a single orbit \citep[e.g.,][]{koposov:2010, pwb, ibata:2019}.
 However, as stars escape from a globular cluster through its Lagrange points, their orbits differ from the cluster's \citep{eyre:2011}.
 This orbital misalignment can be forward modeled \citep{varghese:2011, bonaca:2014, sanders:2014}, but this is computationally involved, so we leave it to future work and proceed with the more tractable orbit-fitting.
-We follow \citet{pwb} and represent the orbit as a 6D location in phase-space, fixing its right ascension, R.A., and solving for the remaining 5D coordinates (declination, distance, radial velocity, two proper motion components).
+We follow \citet{pwb} and represent the orbit as a 6D location in phase-space, fixing its right ascension, R.A., and solving for the remaining five coordinates (declination, distance, radial velocity, two proper motion components).
 At the R.A. of the stream measurements, we evaluate the orbital declinations, distances, proper motions, and radial velocities (where available) against the observations, assuming Gaussian uncertainties.
 The orbits are initialized close to a stream's endpoint such that the trial orbit passes close to the observed data points.
 To prefer bound solutions, we employ a weak prior by requiring the absolute radial velocity lower than 500\,\kms.
 
-We begin the search for well-fitting stream orbits by maximizing the likelihood of orbits passing through the observed endpoints using the \package{scipy} implementation of the BFGS algorithm.
+We begin the search for well-fitting stream orbits by maximizing the likelihood of orbits passing through the observed streams using the \package{scipy} implementation of the BFGS algorithm.
 Focusing on this best-fitting solution, we further sample the phase-space parameters with an affine-invariant sampler \package{emcee} to estimate the posterior distribution of the orbital parameters.
 We advanced 64 walkers for 512 steps and kept the last 256 steps, which converged to constant median and dispersion values for all model parameters.
 The median, 16th and 84th percentiles of the constrained 5D coordinates are reported for each stream's orbit in the Appendix~\ref{sec:appendix} (Table~\ref{table:phase-space}).
 
-To visualize and further explore the streams' orbits, we randomly sampled 1,000 points from the posterior distributions of every stream (available at the project repository\footnote{\url{https://github.com/abonaca/disrupted_gc}}).
+To visualize and further explore the streams' orbits, we randomly sampled 1,000 points from the posterior distributions of every stream (available at the project repository).
+% \footnote{\url{https://github.com/abonaca/disrupted_gc}}).
 First, we integrated short orbital segments starting from these initial positions, and plot them as blue lines in the observable coordinates in Figure~\ref{fig:streams} (different shades of blue correspond to different samples from the posterior distribution).
 For all of the streams we recovered a class of orbital solutions that fits the observed streams, with the allowed spread set by the observational uncertainties.
-For streams without radial velocities, we predict the radial velocity gradient along the stream.
+For streams without radial velocities, we predict the radial velocity gradients along the stream.
 In case of Fj\" orm, radial velocities with $\approx1$\,\kms uncertainties are needed to further constrain its orbit (bottom left panel of Figure~\ref{fig:streams}).
 
 Next, we performed 5\,Gyr-long orbit integrations starting from the same initial positions to estimate constraints on the orbital pericenter, $r_{peri}$, apocenter, $r_{apo}$, and eccentricity, $e=(r_{apo} - r_{peri})/(r_{apo} + r_{peri})$.
 These longer orbits are shown in Galactocentric coordinates on the right side of Figure~\ref{fig:streams} (in-plane $x-y$ at the top, and cylindrical $\rho-z$ at the bottom).
 We report the median, 16th and 84th percentiles of the streams' pericenters and apocenters in Table~\ref{table:constraints}.
-The extensive observational data puts strong constraints on the streams' orbits, and the typical uncertainty in the peri- and apocenters is $\lesssim1\,\kms$.
+The extensive observational data puts strong constraints on the streams' orbits, and the typical uncertainty in the peri- and apocenters is $\lesssim1\,\kpc$.
 Across the board, pericenters are measured more precisely than apocenters, with the typical uncertainty of 3\% compared to 6\%, respectively.
 This is also visible in the top right panel of Figure~\ref{fig:streams}, where different orbital solutions for the  Fj\" orm stream are cospatial at the pericenter, but fanned out at the apocenter.
 Comparing orbits derived in alternate Milky Way models, we detect no biases in pericenters, but apocenters are on average 10\% larger in the light model and 10\% smaller in the heavy model.
@@ -252,34 +257,44 @@ with $t_{0,\odot}=10.7~\myr$ and $R_{\rm a}$, $v_{\rm c}$, and $e$ denoting the 
 \includegraphics[width=\hsize]{figures/distributions_mc.pdf}%
 \caption{
 \label{fig:hist}
-Demographics of fossil streams (and their progenitor clusters) compared to those of the Galactic globular cluster population. Left: Apocentre radius distributions. The gray-shaded area indicates the inner radii ($\leq10$~kpc) where few fossil streams are found. In the middle and right panels, we therefore consider the globular clusters outside of these radii. Middle: Orbital eccentricity distributions. globular clusters have a weak excess of high eccentricities relative to fossil streams. Right: Mass distributions, both for current globular clusters and for the masses of fossil streams and globular clusters after rewinding their evaporation-driven mass loss in the Galactic halo. The progenitors of fossil streams were systematically a factor of $>10$ less massive than globular clusters.}
+Demographics of fossil streams (and their progenitor clusters) compared to those of the Galactic globular cluster population. Left: Apocenter radius distributions. The gray-shaded area indicates the inner radii ($\leq10$~kpc) where few fossil streams are found. In the middle and right panels, we therefore consider the globular clusters outside of these radii. Middle: Orbital eccentricity distributions. globular clusters have a weak excess of high eccentricities relative to fossil streams. Right: Mass distributions, both for current globular clusters and for the masses of fossil streams and globular clusters after rewinding their evaporation-driven mass loss in the Galactic halo. The progenitors of fossil streams were systematically a factor of $>10$ less massive than globular clusters.}
 \end{figure*}	
 We propagate the uncertainties on the fossil streams' orbital parameters into those on the pre-evaporation masses by applying eq.~(\ref{eq:m0}) to the entire sample of MCMC solutions. The resulting distributions of all apocenter radii, eccentricities, and pre-evaporation masses of the fossil streams in the MCMC sample are shown in \autoref{fig:hist}, where we also include the population statistics of Galactic globular clusters that have survived till the present day \citep[2010 edition]{harris96}. For these surviving globular clusters, we also include an estimate of their pre-evaporation masses.
 
-\autoref{fig:hist} reveals interesting differences between the demographics of fossil streams and globular clusters. First, there is a distinct dearth of streams with apocentre radii $\leq10$~kpc. We attribute this to incompleteness, as it is more challenging to identify streams within the solar circle. Additionally, streams may have short lifetimes at small radii due to their short orbital periods. For this reason, we exclude globular clusters with apocentre radii $\leq10$~kpc in the subsequent panels. At larger radii, the streams follow approximately the same apocentre radius distribution as globular clusters, even if there may be a deficit of streams with apocentre radii $\geq60$~kpc. This could again be related to completeness, because the photometric and kinematic detection of streams is more challenging at larger distances. Second, we find that the eccentricity distribution of streams falls well below the distribution of globular clusters at large eccentricities. This result is somewhat counterintuitive, because globular clusters on eccentric orbits are expected to be disrupted more rapidly (see equation~\ref{eq:t0}). Rather than being the result of cluster disruption, we expect the difference in eccentricity distributions to result from the rapid disruption of fossil streams on plunging, eccentric orbits. A strongly decreased lifetime of streams with high eccentricities could naturally produce the observed difference.
+\autoref{fig:hist} reveals interesting differences between the demographics of fossil streams and globular clusters. First, there is a distinct dearth of streams with apocenter radii $\leq10$~kpc. We attribute this to incompleteness, as it is more challenging to identify streams within the solar circle. Additionally, streams may have short lifetimes at small radii due to their short orbital periods. For this reason, we exclude globular clusters with apocenter radii $\leq10$~kpc in the subsequent panels. At larger radii, the streams follow approximately the same apocenter radius distribution as globular clusters, even if there may be a deficit of streams with apocenter radii $\geq60$~kpc. This could again be related to completeness, because the photometric and kinematic detection of streams is more challenging at larger distances. Second, we find that the eccentricity distribution of streams falls well below the distribution of globular clusters at large eccentricities. This result is somewhat counterintuitive, because globular clusters on eccentric orbits are expected to be disrupted more rapidly (see equation~\ref{eq:t0}). Rather than being the result of cluster disruption, we expect the difference in eccentricity distributions to result from the rapid disruption of fossil streams on plunging, eccentric orbits. A strongly decreased lifetime of streams with high eccentricities could naturally produce the observed difference.
 
-Finally, and most interestingly, the pre-evaporation masses of fossil streams and globular clusters differ significantly. The median pre-evaporation mass of fossil streams is just $8.5\times10^3~\msun$, compared to $5\times10^5~\msun$ for globular clusters (and $1.5\times10^5~\msun$ for the current globular cluster masses). This factor-of-60 difference in pre-evaporation mass directly reflects the fundamentally different nature of both classes of objects. Globular clusters must have had the right properties to enable their survival over nearly a Hubble time, whereas fossil streams were disrupted by definition. Since the orbital distributions only show mild differences when limiting the sample to apocentre radii $>10$~kpc, the pre-evaporation mass determines almost entirely whether a cluster survives as a globular cluster or results in a fossil stream.
+Finally, and most interestingly, the pre-evaporation masses of fossil streams and globular clusters differ significantly. The median pre-evaporation mass of fossil streams is just $8.5\times10^3~\msun$, compared to $5\times10^5~\msun$ for globular clusters (and $1.5\times10^5~\msun$ for the current globular cluster masses). This factor-of-60 difference in pre-evaporation mass directly reflects the fundamentally different nature of both classes of objects. Globular clusters must have had the right properties to enable their survival over nearly a Hubble time, whereas fossil streams were disrupted by definition. Since the orbital distributions only show mild differences when limiting the sample to apocenter radii $>10$~kpc, the pre-evaporation mass determines almost entirely whether a cluster survives as a globular cluster or results in a fossil stream.
 
 \begin{figure*}
 \includegraphics[width=\hsize]{figures/distributions_2d_mc.pdf}%
 \caption{
 \label{fig:kde}
-Two-dimensional demographics of fossil streams progenitors compared to those of the Galactic globular cluster population. Top left: Mass-apocentre radius plane. Bottom left: Mass-eccentricity plane. Bottom right: Apocentre radius-eccentricity plane. In each panel, the contours show a two-dimensional Gaussian kernel density estimate for the fossil stream progenitors, using the complete sample of MCMC realizations. Blue symbols show the best-fitting result for each fossil stream. Open black symbols show current globular clusters, whereas filled black symbols show their pre-evaporation masses, i.e.\ those corrected for evaporation-driven mass loss on their current orbits. In each panel, the gray-shaded band shows the range in each panel that is predicted to be occupied by the fossil stream progenitors assuming 10~Gyr of evolution, given their range of best-fitting orbital properties and progenitor masses (indicated by the annotations in gray). The fossil stream progenitors are clearly offset from the globular clusters, especially in terms of their pre-evaporation masses (shown in the left-hand panels).}
+Two-dimensional demographics of fossil streams progenitors compared to those of the Galactic globular cluster population. Top left: Mass-apocenter radius plane. Bottom left: Mass-eccentricity plane. Bottom right: Apocenter radius-eccentricity plane. In each panel, the contours show a two-dimensional Gaussian kernel density estimate for the fossil stream progenitors, using the complete sample of MCMC realizations. Blue symbols show the best-fitting result for each fossil stream. Open black symbols show current globular clusters, whereas filled black symbols show their pre-evaporation masses, i.e.\ those corrected for evaporation-driven mass loss on their current orbits. In each panel, the gray-shaded band shows the range in each panel that is predicted to be occupied by the fossil stream progenitors assuming 10~Gyr of evolution, given their range of best-fitting orbital properties and progenitor masses (indicated by the annotations in gray). The fossil stream progenitors are clearly offset from the globular clusters, especially in terms of their pre-evaporation masses (shown in the left-hand panels).}
 \end{figure*}
 
-\autoref{fig:kde} shows the two-dimensional projections of the same quantities as in \autoref{fig:hist}, together with the region within which clusters are predicted to be disrupted within 10~Gyr for the observed stream properties. As expected, the streams fall within this region, which is systematically offset from the distributions of globular clusters, irrespectively of whether we adopt current or pre-evaporation globular cluster masses. Stream progenitors had lower masses (which is necessary to end up as a stream at the present day), have somewhat lower eccentricities (because streams with high eccentricities are disrupted at pericentre), and occupied larger radii (because streams at small radii are difficult to observe and may survive less long). Interestingly, the difference in apocentre radii manifests itself most strongly at low eccentricities. It is well known that the orbits of globular clusters become radially anisotropic towards larger radii \citep[e.g.][]{dinescu99}, and the fossil streams do not follow the same behaviour. We expect this difference to be driven by a combination of incompleteness of the stream sample and stream survival. {\color{red}Ana, thoughts?} Finally, the top-left panel of \autoref{fig:kde} shows that the lack of streams with small apocentre radii limits their possible pre-evaporation masses to $<3\times10^5~\msun$. However, this is not responsible for the mass offset that we find. Even when extrapolating the expected distribution of the stream sample along the gray band to same range of apocentre radii as globular clusters, the pre-evaporation masses remain about an order of magnitude lower than those of globular clusters.
+\autoref{fig:kde} shows the two-dimensional projections of the same quantities as in \autoref{fig:hist}, together with the region within which clusters are predicted to be disrupted within 10~Gyr for the observed stream properties.
+As expected, the streams fall within this region, which is systematically offset from the distributions of globular clusters, irrespectively of whether we adopt current or pre-evaporation globular cluster masses.
+Stream progenitors had lower masses (which is necessary to end up as a stream at the present day), have somewhat lower eccentricities (because streams with high eccentricities are disrupted at pericenter), and occupied larger radii (because streams at small radii are difficult to observe and may survive less long).
+Interestingly, the difference in apocenter radii manifests itself most strongly at low eccentricities.
+It is well known that the orbits of globular clusters become radially anisotropic towards larger radii \citep[e.g.][]{dinescu99}, and the bottom right panel of Figure~\ref{fig:kde} shows that globular clusters with small apocenters have smaller eccentricities than those with large apocenters.
+In contrast, there are barely any low-eccentricity fossil streams with small apocenters.
+We expect this difference to be driven by the lack of searches for stellar streams towards the Galactic center \citep[e.g.,][]{malhan:2018, ibata:2019}, and faster disruption of stellar streams in the inner Galaxy \citep[e.g., due to enhanced dispersal caused by the rotating bar,][]{price-whelan:2016, hattori:2016}.
+% and the fossil streams do not follow the same behaviour.
+% We expect this difference to be driven by a combination of incompleteness of the stream sample and stream survival.
+% {\color{red}Ana, thoughts?}
+Finally, the top-left panel of \autoref{fig:kde} shows that the lack of streams with small apocenter radii limits their possible pre-evaporation masses to $<3\times10^5~\msun$. However, this is not responsible for the mass offset that we find. Even when extrapolating the expected distribution of the stream sample along the gray band to same range of apocenter radii as globular clusters, the pre-evaporation masses remain about an order of magnitude lower than those of globular clusters.
 
 
 \section{Summary and Discussion}
 \label{sec:discussion}
 
-We determined the orbits of 20 globular clusters disrupted in the Milky Way by fitting sky positions, distances, and proper motions of the remnant stellar streams.
-Assuming that the progenitor clusters dissolved recently, we integrated the orbit-dependent mass-loss rate to infer their pre-evaporation masses.
+We determined orbits of 22 disrupted Milky Way satellites by fitting sky positions, distances, and proper motions of the remnant stellar streams.
+Assuming that the progenitors are globular clusters which dissolved recently, we integrated the orbit-dependent mass-loss rate to infer their pre-evaporation masses.
 Surprisingly, the orbital distribution of disrupted globular clusters, in particular their apocenters and eccentricities, is similar to the orbital properties of the surviving population.
-On the other hand, the inferred masses of disrupted globular clusters peak at $10^4\,\msun$---significantly lower than the mass of a typical globular cluster in the Milky Way today.
-In this section we discuss this population of low-mass, disrupted globular clusters as tracers of both the Galactic gravitational potential and early star formation, and conclude with an outlook for future follow-up studies.
+On the other hand, the inferred masses of disrupted globular clusters peak at $8.5\times10^3\,\msun$---an order of magnitude lower than the mass of a typical globular cluster in the Milky Way today.
+In this section we discuss the implications of this population of low-mass, disrupted globular clusters on the proposed mechanisms of globular cluster formation (\S\,\ref{sec:discuss_gcform}), on the dynamics of stellar streams (\S\,\ref{sec:discuss_dynamics}), and on the formation of early galaxies (\S\,\ref{sec:discuss_galform}).
 
-\subsection{Implications for globular cluster formation}
+\subsection{Formation mechanism of globular clusters}
 \label{sec:discuss_gcform}
 Most processes that destroy globular clusters operate more efficiently closer to the Galactic center \citep[e.g.,][]{gnedin:1997}.
 Hence, if the initial population of globular clusters sampled the orbital space uniformly, we might expect to preferentially find stellar streams on more eccentric orbits with smaller apocenters.
@@ -308,7 +323,7 @@ Similarity in orbital pericenters, apocenters, and angular momenta indicate that
 \end{figure}
 
 
-\subsection{Implications for dynamical studies of stellar streams}
+\subsection{Dynamics of stellar streams}
 \label{sec:discuss_dynamics}
 Orbital properties of individual streams in our sample are summarized in Figure~\ref{fig:individual_summary}, which shows their apocenters versus pericenters, with errorbars enclosing the $16-84$ percentiles of the uncertainty range.
 Dashed lines trace orbits with the same eccentricity.
@@ -323,7 +338,7 @@ Future independent constraints on the streams' dynamical ages, for example from 
 % -- add reference to erkal's method in the intro (2016a,b -- rough bc assumes circular)
 
 Stellar streams may extend beyond their current detection limits at a lower surface brightness, so if they truly are disrupted globular clusters, we expect their cumulative stellar masses to be lower than the pre-evaporation progenitor masses we derived here.
-However, the pre-evaporation masses of three streams in our sample (Elqui, Indus, and Jhelum) are an order of magnitude lower than their directly measured stellar masses\citep{shipp:2018}.
+However, the pre-evaporation masses of three streams in our sample (Elqui, Indus, and Jhelum) are an order of magnitude lower than their directly measured stellar masses \citep{shipp:2018}.
 Recently, high-resolution spectroscopy showed these streams have abundance spreads consistent with low-mass dwarf galaxies \citep{ji:2020}, indicating that inferring a pre-evaporation mass lower than the observed stream mass means the stream is a disrupted dwarf galaxy rather than a globular cluster.
 On the other hand, a pre-evaporation mass much larger than the detected stream stellar mass indicates significant portions of the debris remain undiscovered.
 In the inner Galaxy, the high pre-evaporation masses of diffuse and short streams like Fimbulthul and Ophiuchus may signal enhanced dispersal of tidal debris, for example, due to the dynamical influence of the rotating Galactic bar \citep{hattori:2016, price-whelan:2016}.
@@ -361,7 +376,7 @@ On average, stream progenitors constituted a smaller fraction of their natal gal
 }
 \end{figure}
 
-\subsection{Implications for galaxy formation}
+\subsection{Early galaxy formation}
 \label{sec:discuss_galform}
 We can place the pre-evaporation masses of the progenitor clusters in the context of their natal galaxy by assuming that at birth they had the same metallicity as their host galaxy, and using the metallicity of the stream to infer the galaxy mass at the time of cluster formation \citep{kruijssen20b}. This is possible, because the galaxy mass-metallicity relation is predicted to exhibit little evolution over the formation redshift range of the metal-poor clusters considered here, such that the stream metallicity mostly traces the natal galaxy mass, rather than the formation redshift. Metallicities are available for nine of the streams in our sample (Aliqa Uma, ATLAS, Fj\"orm, GD-1, Ophiuchus, Phoenix, Slidr, Sylgr, and Ylgr; \citealt{ibata:2019,li:2020,wan20}). We follow \citet{kruijssen19c} and convert these metallicities to natal galaxy masses using the galaxy mass-metallicity relation between $z=3$ and $z=6$ predicted by the FIRE simulations \citep{ma16}.
 
