@@ -252,13 +252,14 @@ t_0 = t_{0,\odot}\left(\frac{R_{\rm a}}{8.5~\kpc}\right)\left(\frac{v_{\rm c}}{2
 \end{equation}
 with $t_{0,\odot}=10.7~\myr$ and $R_{\rm a}$, $v_{\rm c}$, and $e$ denoting the orbital apocenter radius, circular velocity, and orbital eccentricity, respectively. Finally, we assume that the time spent by each globular cluster orbiting the Milky Way prior to dissolving into a fossil stream is $\Delta t=10~\gyr$. This is motivated by the typical ages of globular clusters in the Galactic halo \citep[$\sim12~\gyr$, e.g.][]{kruijssen19e} and by the fact that the fossil stream phase space density drops precipitously with age \citep{helmi:1999}, such that the progenitors of fossil streams must have disrupted in the past few Gyr. Our results are robust to this choice -- an error of 0.3~dex (i.e.\ a factor of 2) in $\Delta t$ translates into an error of 0.4~dex in the pre-evaporation mass $M_0$. This is the most extreme case -- in practice, we expect a systematic uncertainty due to globular cluster ages and stream lifetimes of about 0.1~dex, which we add to the formal uncertainties of all pre-evaporation masses.
 
-\subsection{Comparison between fossil stream pre-evaporation masses and those of surviving globular clusters}
 \begin{figure*}
 \includegraphics[width=\hsize]{figures/distributions_mc.pdf}%
 \caption{
 \label{fig:hist}
 Demographics of fossil streams (and their progenitor clusters) compared to those of the Galactic globular cluster population. Left: Apocenter radius distributions. The gray-shaded area indicates the inner radii ($\leq10$~kpc) where few fossil streams are found. In the middle and right panels, we therefore consider the globular clusters outside of these radii. Middle: Orbital eccentricity distributions. globular clusters have a weak excess of high eccentricities relative to fossil streams. Right: Mass distributions, both for current globular clusters and for the masses of fossil streams and globular clusters after rewinding their evaporation-driven mass loss in the Galactic halo. The progenitors of fossil streams were systematically a factor of $>10$ less massive than globular clusters.}
-\end{figure*}	
+\end{figure*}
+
+\subsection{Comparison between fossil stream pre-evaporation masses and those of surviving globular clusters}
 We propagate the uncertainties on the fossil streams' orbital parameters into those on the pre-evaporation masses by applying eq.~(\ref{eq:m0}) to the entire sample of MCMC solutions. The resulting distributions of all apocenter radii, eccentricities, and pre-evaporation masses of the fossil streams in the MCMC sample are shown in \autoref{fig:hist}, where we also include the population statistics of Galactic globular clusters that have survived till the present day \citep[2010 edition]{harris96}. For these surviving globular clusters, we also include an estimate of their pre-evaporation masses.
 
 \autoref{fig:hist} reveals interesting differences between the demographics of fossil streams and globular clusters. First, there is a distinct dearth of streams with apocenter radii $\leq10$~kpc. We attribute this to incompleteness, as it is more challenging to identify streams within the solar circle. Additionally, streams may have short lifetimes at small radii due to their short orbital periods. For this reason, we exclude globular clusters with apocenter radii $\leq10$~kpc in the subsequent panels. At larger radii, the streams follow approximately the same apocenter radius distribution as globular clusters, even if there may be a deficit of streams with apocenter radii $\geq60$~kpc. This could again be related to completeness, because the photometric and kinematic detection of streams is more challenging at larger distances. Second, we find that the eccentricity distribution of streams falls well below the distribution of globular clusters at large eccentricities. This result is somewhat counterintuitive, because globular clusters on eccentric orbits are expected to be disrupted more rapidly (see equation~\ref{eq:t0}). Rather than being the result of cluster disruption, we expect the difference in eccentricity distributions to result from the rapid disruption of fossil streams on plunging, eccentric orbits. A strongly decreased lifetime of streams with high eccentricities could naturally produce the observed difference.
@@ -312,25 +313,33 @@ In part, the comparative dearth of low-mass clusters may be attributed to incomp
 For example, \citet{kruijssen15b} proposed that most early-forming clusters were rapidly disrupted in the turbulent disks of their host galaxies, and that only a small fraction of the initial cluster population survives long enough to experience evaporation.
 A complete census of stellar streams could therefore inform on dynamical properties of star-forming galaxies at high redshift.
 
-\begin{figure}
+
+\begin{figure*}
 \includegraphics[width=\hsize]{figures/streams_peri_apo.pdf}
 \caption{
-Apocenter versus pericenter of stellar streams' orbits, with the marker size corresponding to the stream's pre-evaporation mass and its color to the angular momentum $L_z$ (orange for prograde, purple for retrograde orbits).
+Left: Apocenter versus pericenter of stellar streams' orbits, with the marker size corresponding to the stream's pre-evaporation mass and its color to the angular momentum $L_z$ (orange for prograde, purple for retrograde orbits).
 Present-day streams that have been orbiting in stronger tidal fields are preferentially more massive.
 Similarity in orbital pericenters, apocenters, and angular momenta indicate that some streams might be dynamically associated.
+Right: Stellar streams are also associated with the present-day globular clusters, many of which have already been associated with the most massive Milky Way progenitors (different symbols).
 }
 \label{fig:individual_summary}
-\end{figure}
-
+\end{figure*}
 
 \subsection{Dynamics of stellar streams}
 \label{sec:discuss_dynamics}
+Stellar streams are dynamical tracers of 
+- streams dynamical tracers of the mw environment
+- knowing masses useful because:
+% Globular cluster dynamics are set by its mass, and consequently, 
+- total mass can tell us if we've seen the whole stream
+- total mass determines the overdensities
+- we discuss these here
+
 Orbital properties of individual streams in our sample are summarized in Figure~\ref{fig:individual_summary}, which shows their apocenters versus pericenters, with errorbars enclosing the $16-84$ percentiles of the uncertainty range.
 Dashed lines trace orbits with the same eccentricity.
 Stream markers are colored by the $z$-component of their orbital angular momenta, $L_z$, with orange for prograde ($L_z<0$), purple for retrograde ($L_z>0$), and white for radial orbits ($L_z\approx0$).
 Larger symbols correspond to more massive progenitors.
-In the remainder of this section we discuss how derived orbits and masses inform the orbital histories of individual stellar streams in the Milky Way.
-
+% In the remainder of this section we discuss how derived orbits and masses inform the orbital histories of individual stellar streams in the Milky Way.
 In general, we infer higher masses for disrupted clusters that have orbited in stronger tidal fields: at a fixed eccentricity, streams on orbits with smaller apocenters have more massive progenitors.
 Similarly, for a given apocenter radius, streams on more eccentric orbits have more massive progenitors.
 The strong correlation between derived stream orbits and the initial cluster masses is set in part because we assumed that all clusters have been dissolving for the same amount of time.
@@ -347,14 +356,6 @@ According to our orbital constraints, these streams are close to their apocenter
 Finally, the directly measured stellar masses of the following streams agree well with the pre-evaporation masses we inferred, indicating they have been mapped in full: the Aliqa Uma--ATLAS complex, Ravi, Turbio, Turranburra, and Willka Yaku.
 Our assurance that the entire system has been observed will aid the construction of dynamical models that reproduce the observed streams.
 
-Interestingly, Figure~\ref{fig:individual_summary} shows that several groups of streams have similar pericenters, apocenters, and angular momenta.
-Different streams can have similar orbits because: (1) they were originally part of the same stream, as recently reported for ATLAS and Aliqa Uma \citep{li:2020}, or (2) they were accreted in the same host dwarf galaxy, as suggested for GD-1 and Kshir \citep{malhan:2019}.
-In our sample, ATLAS and Aliqa Uma have the most similar orbits, and their combined stellar mass agrees well with the pre-evaporation mass we inferred for their respective progenitors, adding further evidence they are debris from the same globular cluster progenitor.
-Very retrograde and with large apocenters, $\approx45\,\kpc$, Turbio and Willka-Yaku form a loose group, as do GD-1, Phoenix, and Ylgr at smaller apocenters, $\approx20\,\kpc$, and more mildly retrograde orbits.
-These groups are more likely to be evidence of group infall.
-Another stream, Hermus (not included in our analysis due to the lack of proper motions), may be associated with the latter group, as \citet{grillmair:2016} showed that in projection it lies close to the orbit of the Phoenix stream.
-Improved proper motions from future Gaia data releases and orbit integrations in more realistic, time-dependent Milky Way models \citep[e.g., those that self-consistently include Large Magellanic Cloud and Sagittarius,][]{petersen:2020, garavito-camargo:2020, vasiliev:2020} will test the nature of these stream associations.
-
 Finally, we examine how the inferred progenitor masses affect stellar streams as detectors of dark-matter substructure.
 Numerical simulations show that a low-mass dark-matter subhalo encountering a stellar stream can kinematically heat the stream and produce an under-density (gap) at the location of closest approach \citep[e.g.,][]{johnston:2002, ibata:2002, carlberg:2009, yoon:2011, erkal:2015}.
 However, patterns of under- and over-densities naturally arise in stellar streams due to epicyclic pile-ups of stars \citep[e.g.,][]{kupper:2008, just:2009, kupper:2010}.
@@ -364,6 +365,26 @@ We find that the GD-1 progenitor of $\approx7\times10^3\,\msun$ was slightly les
 Our measurements of pre-evaporation masses provide an opportunity to construct more realistic models of streams like the GD-1, and ultimately put more stringent limits on the abundance of dark-matter subhalos in the Milky Way.
 
 
+\subsection{Associations between stellar streams}
+\label{sec:discuss_associations}
+Interestingly, Figure~\ref{fig:individual_summary} shows that several groups of streams have similar pericenters, apocenters, and angular momenta.
+Different streams can have similar orbits because: (1) they were originally part of the same stream, as recently reported for ATLAS and Aliqa Uma \citep{li:2020}, or (2) they were accreted in the same host dwarf galaxy, as suggested for GD-1 and Kshir \citep{malhan:2019}.
+In our sample, ATLAS and Aliqa Uma have the most similar orbits, and their combined stellar mass agrees well with the pre-evaporation mass we inferred for their respective progenitors, adding further evidence they are debris from the same globular cluster progenitor.
+- orbital similarity of sylgr, ravi -> peri and apo?
+
+Very retrograde and with large apocenters, $\approx45\,\kpc$, Turbio and Willka-Yaku form a loose group, as do GD-1, Phoenix, and Ylgr at smaller apocenters, $\approx20\,\kpc$, and more mildly retrograde orbits.
+These groups are more likely to be evidence of group infall.
+Another stream, Hermus (not included in our analysis due to the lack of proper motions), may be associated with the latter group, as \citet{grillmair:2016} showed that in projection it lies close to the orbit of the Phoenix stream.
+
+- globular clusters added: positions from baumgardt
+- associations from kruijssen, massari
+- some stream-cluster pairs very close
+- gjoll same chemistry, although far away -> likely same system
+- other pair similarly close: ophiuchus ngc 288, 
+
+- 
+
+Chemical abundances and improved proper motions from future Gaia data releases and orbit integrations in more realistic, time-dependent Milky Way models \citep[e.g., those that self-consistently include Large Magellanic Cloud and Sagittarius,][]{petersen:2020, garavito-camargo:2020, vasiliev:2020} will test the nature of these stream associations.
 
 \begin{figure}
 \includegraphics[width=\hsize]{figures/mhost_fraction.pdf}

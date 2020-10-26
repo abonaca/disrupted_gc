@@ -337,13 +337,49 @@ def print_masses():
     
     print('median {:.2e}'.format(np.median(mass)))
 
+
+def gc_ascii():
+    """"""
+    t = Table.read('../data/baumgardt_positions.fits')
+    t.pprint()
+    print(t.colnames)
+    t.write('../data/baumgardt_positions.txt', format='ascii.commented_header')
+
+def gc_orbits():
+    """"""
+    
+    t = Table.read('../data/baumgardt_positions.fits')
+    t.pprint()
+    N = len(t)
+    
+    c = coord.SkyCoord(ra=t['RAJ2000'], dec=t['DEJ2000'], distance=t['Rsun'], pm_ra_cosdec=t['pmRA_'], pm_dec=t['pmDE'], radial_velocity=t['RV'], frame='icrs')
+    w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
+    dt = -0.5*u.Myr
+    T = 5*u.Gyr
+    nstep = abs(int((T/dt).decompose()))
+
+    rperi = np.empty(N)*u.kpc
+    rapo = np.empty(N)*u.kpc
+    lz = np.empty(N)*u.kpc**2*u.Myr**-1
+    
+    for i in range(N):
+        orbit = ham.integrate_orbit(w0[i], dt=dt, n_steps=nstep)
+        lz[i] = np.nanmedian(orbit.angular_momentum()[:,2])
+        rperi[i] = orbit.pericenter()
+        rapo[i] = orbit.apocenter()
+    
+    tout = Table([t['Name'], rperi, rapo, lz], names=('name', 'rperi', 'rapo', 'lz'))
+    tout.pprint()
+    tout.write('../data/gc_orbits.fits', overwrite=True)
+
 def conste_rapo(rperi, e):
     """"""
     return rperi * (1+e)/(1-e)
 
-def associations():
+def associations_1panel():
     """"""
     t = Table.read('../data/overall_summary.fits')
+    tgc = Table.read('../data/gc_orbits.fits')
     
     plt.close()
     fig, ax = plt.subplots(1,1,figsize=(5.5,6.5))
@@ -403,8 +439,149 @@ def associations():
     #cax.xaxis.set_tick_params(labeltop='on')
     
     
-    plt.savefig('../plots/streams_peri_apo.png')
-    plt.savefig('../paper/figures/streams_peri_apo.pdf', bbox_incehs='tight')
+    #plt.savefig('../plots/streams_peri_apo.png')
+    #plt.savefig('../paper/figures/streams_peri_apo.pdf', bbox_incehs='tight')
+
+def associations(label_all=False):
+    """"""
+    t = Table.read('../data/overall_summary.fits')
+    tgc = Table.read('../data/gc_orbits.fits')
+    tb = Table.read('../data/baumgardt_positions.fits')
+
+    
+    plt.close()
+    fig, ax = plt.subplots(1,2,figsize=(10,6), sharex=True, sharey=True)
+    
+    for j in range(2):
+        plt.sca(ax[j])
+        
+        # plot streams
+        s = 0.15*t['logM0']**5
+        im = plt.scatter(t['rperi'][:,0], t['rapo'][:,0], c=t['Lz'], vmin=-2, vmax=2, zorder=2, cmap='PuOr', s=s, edgecolors='k', linewidths=0.5, label='')
+        plt.errorbar(t['rperi'][:,0], t['rapo'][:,0], xerr=(t['rperi'][:,1], t['rperi'][:,2]), yerr=(t['rapo'][:,1], t['rapo'][:,2]), fmt='none', zorder=0, color='k', lw=0.5, label='')
+        
+        # constant eccentricity
+        x_ = np.linspace(0.1,100,10)
+        xlabel = np.array([6, 3.15, 2.05])
+        
+        for i, e in enumerate([0, 0.5, 0.75]):
+            ra_ = conste_rapo(x_, e)
+            plt.plot(x_, ra_, 'k--', lw=0.5, alpha=0.3, zorder=0, label='')
+            plt.text(xlabel[i], conste_rapo(xlabel[i], e), 'e = {:g}'.format(e), fontsize='xx-small', alpha=0.3, bbox=dict(fc='w', ec='none'), rotation=44, va='center', ha='center')
+    
+        plt.xlim(1.5, 33)
+        plt.ylim(4.5, 100)
+        plt.gca().set_xscale('log')
+        plt.gca().set_yscale('log')
+        
+        plt.xticks([5,10,20])
+        plt.yticks([10,50,100])
+        plt.gca().xaxis.set_major_formatter(mpl.ticker.FormatStrFormatter('%.0f'))
+        plt.gca().yaxis.set_major_formatter(mpl.ticker.FormatStrFormatter('%.0f'))
+
+        plt.xlabel('Pericenter [kpc]')
+        if j==0:
+            plt.ylabel('Apocenter [kpc]', labelpad=-15)
+        
+    plt.tight_layout(w_pad=0.5)
+    
+    # add colorbar
+    pos = ax[1].get_position()
+    cax = plt.axes([pos.x1+0.01, pos.y0, 0.02, pos.y1-pos.y0])
+    plt.colorbar(im, cax=cax, label='z angular momentum [kpc$^2$ Myr$^{-1}$]')
+    
+    #cax = plt.axes([pos.x0, pos.y1+0.015, pos.x1-pos.x0, 0.025])
+    #plt.colorbar(im, cax=cax, label='$L_z$ [kpc$^2$ Myr$^{-1}$]', orientation='horizontal', ticklocation='top')
+
+
+    plt.sca(ax[0])
+    # add stream labels
+    f = 0.05
+    N = len(t)
+    #np.random.seed(12846)
+    #phase = (np.random.rand(N) + -1) * 0.5*np.pi
+    #print(np.array(t['label']))
+    phase = np.array([-0.4, -0.1, -0.3, 0, -0.1, 0.2, -0.2, -0.1, -0.1, 0.2, 0.4, -0.1, 0.1, 0.2, 0.45, -0.2, -0.1, 0.1, 0, -0.3, -0.25, 0.2]) * np.pi
+    for i in range(N):
+        if t['name'][i]=='willka_yaku':
+            label = 'Willka\nYaku'
+            va = 'top'
+        else:
+            label = t['label'][i]
+            va = 'center'
+        plt.text(t['rperi'][i,0] * (1.03 + f*np.cos(phase[i])), t['rapo'][i,0] * (1 + f*np.sin(phase[i])), '{:s}'.format(label), fontsize='xx-small', va=va) #, bbox=dict(fc='w', ec='none', alpha=0.3))
+    
+    # legend
+    logm = np.array([3.5, 4, 4.5])
+    Nm = len(logm)
+    for i in range(Nm):
+        sz = 0.15 * logm[i]**5
+        plt.scatter(16, 200, c='w', ec='k', linewidths=0.5, s=sz, label='log M$_0$/M$_\odot$ = {:.1f}'.format(logm[i]))
+    
+    plt.legend(loc=4, frameon=False, fontsize='x-small', handlelength=0.6, scatteryoffsets=[0.75])
+    
+    
+    # add globular clusters
+    plt.sca(ax[1])
+    gc_sequoia = np.array(['NGC 5466', 'NGC 7006', 'IC 4499'])
+    ind_sequoia = np.array([True if x in gc_sequoia else False for x in tgc['name']])
+    
+    gc_ge = np.array(['NGC 288', 'NGC 362', 'NGC 1261', 'NGC 1851', 'NGC 1904', 'NGC 2298', 'NGC 2808', 'NGC 4147', 'NGC 4833', 'NGC 5286', 'NGC 5897', 'NGC 6205', 'NGC 6235', 'NGC 6284', 'NGC 6341', 'NGC 6779', 'NGC 6864', 'NGC 7089', 'NGC 7099', 'NGC 7492'])
+    ind_ge = np.array([True if x in gc_ge else False for x in tgc['name']])
+    
+    gc_helmi = np.array(['NGC 4590', 'NGC 5024', 'NGC 5053', 'NGC 5272', 'NGC 6981'])
+    ind_helmi = np.array([True if x in gc_helmi else False for x in tgc['name']])
+    
+    gc_sgr = np.array(['NGC 2419', 'NGC 5824', 'NGC 6715', 'Pal 12', 'Ter 7', 'Ter 8', 'Arp 2', 'Whiting 1'])
+    ind_sgr = np.array([True if x in gc_sgr else False for x in tgc['name']])
+
+    gc_kraken = np.array(['NGC 5946', 'NGC 5986', 'NGC 6093', 'NGC 6121', 'NGC 6144', 'NGC 6254', 'NGC 6273', 'NGC 6287', 'NGC 6541', 'NGC 6544', 'NGC 6681', 'NGC 6712', 'NGC 6809'])
+    ind_kraken = np.array([True if x in gc_kraken else False for x in tgc['name']])
+    
+    ind_smooth = ~ind_sequoia & ~ind_ge & ~ind_helmi & ~ind_sgr & ~ind_kraken
+    
+    #plt.plot(tgc['rperi'][ind_sequoia], tgc['rapo'][ind_sequoia], 'k^', ms=8)
+    #plt.plot(tgc['rperi'][ind_ge], tgc['rapo'][ind_ge], 'ko', ms=8)
+    #plt.plot(tgc['rperi'][ind_helmi], tgc['rapo'][ind_helmi], 'kp', ms=8)
+    #plt.plot(tgc['rperi'][ind_sgr], tgc['rapo'][ind_sgr], 'kD', ms=8)
+    #plt.plot(tgc['rperi'][ind_kraken], tgc['rapo'][ind_kraken], 'ks', ms=8)
+    #plt.scatter(tgc['rperi'][ind_smooth], tgc['rapo'][ind_smooth], c=tgc['lz'][ind_smooth], vmin=-2, vmax=2, zorder=10, cmap='PuOr', s=20, edgecolors='k', linewidths=0.5, label='')
+    
+    labels = ['Sequoia', 'Gaia - Enceladus', 'Helmi', 'Sagittarius', 'Kraken', 'Unassociated']
+    indices = [ind_sequoia, ind_ge, ind_helmi, ind_sgr, ind_kraken, ind_smooth]
+    markers = ['^', 'H', 'p', 'D', 's', 'o']
+    sizes = [60, 80, 80, 40, 60, 20]
+
+    for i in range(6):
+        plt.scatter(tgc['rperi'][indices[i]], tgc['rapo'][indices[i]], c=tgc['lz'][indices[i]], vmin=-2, vmax=2, zorder=10, cmap='PuOr', s=sizes[i], marker=markers[i], edgecolors='k', linewidths=0.5, label='')
+    
+        # legend entries
+        #if i!=4:
+        plt.scatter(0, 0, facecolors='w', s=sizes[i], marker=markers[i], edgecolors='k', linewidths=0.5, label=labels[i])
+    
+    # label globular clusters
+    if label_all:
+        for i in range(len(tgc)):
+            if (tgc['rperi'][i]>2) & (tgc['rapo'][i]>6) & (tgc['rapo'][i]<100):
+                plt.text(tgc['rperi'][i], tgc['rapo'][i], '{:s}'.format(tgc['name'][i]), fontsize=8)
+    else:
+        gc_tolabel = ['NGC 288', 'NGC 5024', 'NGC 5824', 'NGC 3201', 'NGC 5272', 'NGC 4590']
+        for i in range(len(tgc)):
+            if tgc['name'][i] in gc_tolabel:
+                print(tgc['name'][i], tb['RAJ2000'][i], tb['DEJ2000'][i])
+                plt.text(tgc['rperi'][i]*1.01, tgc['rapo'][i]*1.01, '{:s}'.format(tgc['name'][i]), fontsize='xx-small', zorder=15)
+
+    plt.legend(loc=4, frameon=False, fontsize='x-small', handlelength=0.6, title='Globular clusters', title_fontsize='x-small')
+    #print(np.isin(tgc['name'], ind_sequoia))
+    #print(tgc['name']==ind_sequoia[0])
+    
+    if label_all:
+        plt.savefig('../plots/streams_peri_apo_labeled.png')
+    else:
+        plt.savefig('../plots/streams_peri_apo.png')
+        plt.savefig('../paper/figures/streams_peri_apo.pdf', bbox_incehs='tight')
+
+
 
 def rapo_ecc():
     """"""
