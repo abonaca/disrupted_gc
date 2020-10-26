@@ -376,7 +376,7 @@ def conste_rapo(rperi, e):
     """"""
     return rperi * (1+e)/(1-e)
 
-def associations_1panel():
+def associations():
     """"""
     t = Table.read('../data/overall_summary.fits')
     tgc = Table.read('../data/gc_orbits.fits')
@@ -439,10 +439,10 @@ def associations_1panel():
     #cax.xaxis.set_tick_params(labeltop='on')
     
     
-    #plt.savefig('../plots/streams_peri_apo.png')
-    #plt.savefig('../paper/figures/streams_peri_apo.pdf', bbox_incehs='tight')
+    plt.savefig('../plots/streams_peri_apo.png')
+    plt.savefig('../paper/figures/streams_peri_apo.pdf', bbox_incehs='tight')
 
-def associations(label_all=False):
+def associations_2panel(label_all=False):
     """"""
     t = Table.read('../data/overall_summary.fits')
     tgc = Table.read('../data/gc_orbits.fits')
