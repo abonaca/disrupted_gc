@@ -542,3 +542,62 @@ heated by quantum turbulence'''
     
     plt.savefig('../plots/proposal_summary.png', facecolor=fig.get_facecolor())
     plt.savefig('../plots/proposal_summary.pdf', facecolor=fig.get_facecolor())
+
+
+def plot_gd1():
+    """"""
+    g = Table.read('/home/ana/projects/legacy/GD1-DR2/output/gd1_members.fits')
+
+    #ax00 = inset_axes(ax0, '100%', '100%', bbox_to_anchor=[0.58, 0.69, 0.38, 0.2], loc=3, bbox_transform=ax0.transAxes)
+    #plt.sca(ax00)
+    plt.close()
+    fig, ax = plt.subplots(1,1,figsize=(10,2), facecolor='k')
+    
+    plt.scatter(g['phi1'], g['phi2'], s=g['pmem']*1.5, c=g['pmem'], cmap=mpl.cm.binary, vmin=0.5, vmax=1.1, zorder=0, label='', rasterized=True)
+    #plt.plot(g['phi1'], g['phi2'], 'k.', ms=1, alpha=0.5)
+    plt.text(-40,-3, 'gap', fontsize='small', ha='center')
+    plt.text(-32, 3, 'spur', fontsize='small', ha='center')
+    
+    plt.xlim(-80, 0)
+    plt.ylim(-4,4)
+    plt.gca().set_aspect('equal', adjustable='datalim')
+    plt.gca().tick_params(labelbottom=False, labelleft=False, top=False, bottom=False, right=False, left=False)
+    
+    plt.savefig('../plots/fancy_gd1.png', facecolor=fig.get_facecolor())
+
+def plot_jhelum():
+    """"""
+    tj = Table.read('/home/ana/projects/legacy/jhelum/data/jhelum_likely_members.fits')
+    
+    plt.close()
+    fig, ax = plt.subplots(1,1,figsize=(10,4), facecolor='k')
+    
+    plt.plot(tj['phi1'], tj['phi2'], 'k.', ms=4, alpha=0.4, rasterized=True)
+    plt.text(10, -3.5, 'wide component', fontsize='small', ha='center', bbox=dict(facecolor='w', alpha=0.6, edgecolor='none'))
+    plt.text(-2, 2, 'narrow component', fontsize='small', bbox=dict(facecolor='w', alpha=0.6, edgecolor='none'))
+    
+    plt.ylim(-5,5)
+    plt.xlim(-4, 24)
+    plt.gca().set_aspect('equal', adjustable='datalim')
+    plt.gca().tick_params(labelbottom=False, labelleft=False, top=False, bottom=False, right=False, left=False)
+
+    plt.savefig('../plots/fancy_jhelum.png', facecolor=fig.get_facecolor())
+
+def plot_pal5():
+    """"""
+    tp = Table.read('/home/ana/projects/legacy/Pal5sBiggestFan/data/pal5_likely_members.fits')
+    pal5_color = '#00c7ff'
+    
+    plt.close()
+    fig, ax = plt.subplots(1,1,figsize=(8,6), facecolor='k')
+    
+    plt.plot(tp['ra'], tp['dec'], 'k.', ms=0.5, alpha=0.3, rasterized=True)
+    plt.text(223.5, -5, 'fan', fontsize='small', bbox=dict(facecolor='w', alpha=0.4, edgecolor='none'))
+    plt.text(228.5, 0.5, 'Pal 5', fontsize='small', bbox=dict(facecolor='w', alpha=0.4, edgecolor='none'))
+    
+    plt.xlim(243,223)
+    plt.ylim(-10,10)
+    plt.gca().set_aspect('equal', adjustable='datalim')
+    plt.gca().tick_params(labelbottom=False, labelleft=False, top=False, bottom=False, right=False, left=False)
+    
+    plt.savefig('../plots/fancy_pal5.png', facecolor=fig.get_facecolor())

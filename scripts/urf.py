@@ -277,3 +277,4 @@ heated by quantum turbulence'''
     
     plt.savefig('../plots/proposal_summary.png', facecolor=fig.get_facecolor())
     plt.savefig('../plots/proposal_summary.pdf', facecolor=fig.get_facecolor())
+
