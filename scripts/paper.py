@@ -463,10 +463,17 @@ def associations():
     
     f = 0.05
     N = len(t)
-    np.random.seed(12846)
-    phase = (np.random.rand(N) + -1) * 0.5*np.pi
+    #np.random.seed(12846)
+    #phase = (np.random.rand(N) + -1) * 0.5*np.pi
+    phase = np.array([-0.4, -0.1, -0.3, 0, -0.1, 0.2, -0.2, -0.1, -0.1, 0.2, 0.4, -0.1, 0.1, 0.2, 0.45, -0.2, -0.1, 0.1, 0, -0.3, -0.25, 0.2]) * np.pi
     for i in range(N):
-        plt.text(t['rperi'][i,0] * (1.03 + f*np.cos(phase[i])), t['rapo'][i,0] * (1 + f*np.sin(phase[i])), '{:s}'.format(t['label'][i]), fontsize='xx-small') #, bbox=dict(fc='w', ec='none', alpha=0.3))
+        if t['name'][i]=='willka_yaku':
+            label = 'Willka\nYaku'
+            va = 'top'
+        else:
+            label = t['label'][i]
+            va = 'center'
+        plt.text(t['rperi'][i,0] * (1.03 + f*np.cos(phase[i])), t['rapo'][i,0] * (1 + f*np.sin(phase[i])), '{:s}'.format(label), fontsize='xx-small', va=va) #, bbox=dict(fc='w', ec='none', alpha=0.3))
     
     # legend
     logm = np.array([3.5, 4, 4.5])
