@@ -74,20 +74,21 @@ class HandlerTupleVert(HandlerBase):
 
         return a_list
 
+
 def summarize_orbits(pot='fiducial'):
     """"""
     
     names = get_names()
     N = len(names)
     
-    ecc = np.empty((N,5))
-    rperi = np.empty((N,5))
-    rapo = np.empty((N,5))
+    #ecc = np.empty((N,5))
+    #rperi = np.empty((N,5))
+    #rapo = np.empty((N,5))
     
     tout = Table([names, ecc, rperi, rapo], names=('name', 'ecc', 'rperi', 'rapo'))
     
     for i in range(N):
-        t = Table.read('../data/orbit_props_{:s}_combined.fits'.format(names[i]))
+        t = Table.read('../data/output/orbit_props_{:s}_combined.fits'.format(names[i]))
         ind_fiducial = t['potential']==pot
         for k in ['ecc', 'rperi', 'rapo']:
             tout[i][k][0] = np.nanmedian(t[k][ind_fiducial])
@@ -126,6 +127,68 @@ def table_orbits():
         #f.write('{:s} & {:4.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & {:4.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & ${:3.2f}\pm{:3.2f}$ \\\\ \n'.format(r_rp[i][0], r_rp[i][1], r_rp[i][2], r_ra[i][0], r_ra[i][1], r_ra[i][2], tm['logm'][i], tm['logm_err'][i]))
 
     f.close()
+
+
+def summarize_fits(pot='fiducial'):
+    """"""
+    names = get_names()
+    N = len(names)
+    
+    ra = np.empty(N)
+    dec = np.empty((N,4))
+    dist = np.empty((N,4))
+    pmra = np.empty((N,4))
+    pmdec = np.empty((N,4))
+    vr = np.empty((N,4))
+    
+    tout = Table([names, ra, dec, dist, pmra, pmdec, vr], names=('name', 'ra', 'dec', 'dist', 'pmra', 'pmdec', 'vr'))
+    
+    for i in range(N):
+        if pot=='fiducial':
+            t = Table.read('../data/output/samples_{:s}.fits'.format(names[i]))
+        else:
+            t = Table.read('../data/output/samples_{:s}_{:s}.fits'.format(names[i], pot))
+        
+        tout[i]['ra'] = np.median(t['ra'])
+        
+        for k in ['dec', 'dist', 'pmra', 'pmdec', 'vr']:
+            tout[i][k][0] = np.nanmedian(t[k])
+            tout[i][k][1] = tout[i][k][0] - np.nanpercentile(t[k], 16)
+            tout[i][k][2] = np.nanpercentile(t[k], 84) - tout[i][k][0]
+            tout[i][k][3] = np.nanstd(t[k])
+    
+    tout.pprint()
+    tout.write('../data/fit_summary_{:s}.fits'.format(pot), overwrite=True)
+
+def table_fits():
+    """Create a latex table with streams' orbital properties"""
+    
+    tin = Table.read('../data/fit_summary_fiducial.fits')
+    N = len(tin)
+    
+    f = open('../paper/table_fits.tex', 'w')
+    for i in range(N):
+        label = get_properties(tin['name'][i])['label']
+        #if label=='Ophiuchus':
+            #f.write('{:s} & {:4.2f}$^{{+{:.3f}}}_{{-{:.3f}}}$ & {:4.1f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & ${:3.2f}\pm{:3.2f}\pm{:3.2f}$ \\\\ \n'.format(label, tin['rperi'][i][0], tin['rperi'][i][2], tin['rperi'][i][1], tin['rapo'][i][0], tin['rapo'][i][2], tin['rapo'][i][1], tm['logM0'][i], tm['error_stat'][i], tm['error_sys'][i]))
+        #elif label=='Fimbulthul':
+            #f.write('{:s} & {:4.2f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & {:4.1f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & ${:3.2f}\pm{:3.2f}\pm{:3.2f}$ \\\\ \n'.format(label, tin['rperi'][i][0], tin['rperi'][i][2], tin['rperi'][i][1], tin['rapo'][i][0], tin['rapo'][i][2], tin['rapo'][i][1], tm['logM0'][i], tm['error_stat'][i], tm['error_sys'][i]))
+        #else:
+            #f.write('{:s} & {:4.2f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & {:4.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & ${:3.2f}\pm{:3.2f}\pm{:3.2f}$ \\\\ \n'.format(label, tin['rperi'][i][0], tin['rperi'][i][2], tin['rperi'][i][1], tin['rapo'][i][0], tin['rapo'][i][2], tin['rapo'][i][1], tm['logM0'][i], tm['error_stat'][i], tm['error_sys'][i]))
+        
+        
+        #f.write('{:s} & ${:.1f}$ & {:.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & {:.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & {:.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & {:.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ & {:.1f}$^{{+{:.1f}}}_{{-{:.1f}}}$ \\\\ \n'.format(tin['name'][i], tin['ra'][i], tin['dec'][i][0], tin['dec'][i][2], tin['dec'][i][1], tin['dist'][i][0], tin['dist'][i][2], tin['dist'][i][1], tin['pmra'][i][0], tin['pmra'][i][2], tin['pmra'][i][1], tin['pmdec'][i][0], tin['pmdec'][i][2], tin['pmdec'][i][1], tin['vr'][i][0], tin['vr'][i][2], tin['vr'][i][1]))
+
+        f.write('{:s} & ${:.1f}$ & {:.2f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & {:.2f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & {:.2f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & {:.2f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & {:.2f}$^{{+{:.2f}}}_{{-{:.2f}}}$ & '.format(label, tin['ra'][i], tin['dec'][i][0], tin['dec'][i][2], tin['dec'][i][1], tin['dist'][i][0], tin['dist'][i][2], tin['dist'][i][1], tin['pmra'][i][0], tin['pmra'][i][2], tin['pmra'][i][1], tin['pmdec'][i][0], tin['pmdec'][i][2], tin['pmdec'][i][1], tin['vr'][i][0], tin['vr'][i][2], tin['vr'][i][1]))
+        
+        provenance = get_properties(tin['name'][i])['provenance']
+        if np.isfinite(provenance[-1]):
+            f.write('[{:d}, {:d}, {:d}]\\\\ \n'.format(*provenance))
+        else:
+            f.write('[{:d}, {:d}, N/A]\\\\ \n'.format(*provenance[:2]))
+        
+    f.close()
+
 
 def plot_stream_fit_orbit(name):
     """"""
@@ -582,7 +645,6 @@ def associations_2panel(label_all=False):
         plt.savefig('../paper/figures/streams_peri_apo.pdf', bbox_incehs='tight')
 
 
-
 def rapo_ecc():
     """"""
     t = Table.read('../data/overall_summary.fits')
@@ -613,6 +675,17 @@ def rapo_ecc():
     print(pos)
     cax = plt.axes([pos.x1+0.02, pos.y0, 0.03, pos.y1-pos.y0])
     plt.colorbar(im, cax=cax, label='z angular momentum [kpc$^2$ Myr$^{-1}$]')
+
+def rapo_lz():
+    """"""
+    t = Table.read('../data/overall_summary.fits')
+    
+    plt.close()
+    plt.figure()
+    
+    plt.plot(t['Lz'], t['rapo'][:,0], 'ko')
+    
+    plt.tight_layout()
 
 def lz():
     """"""

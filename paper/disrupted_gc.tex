@@ -179,6 +179,7 @@ Name & \multicolumn2c{$r_{peri}$} & \multicolumn2c{$r_{apo}$} & \multicolumn2c{$
 \enddata
 \caption{Derived properties of stellar streams: orbital pericenter, apocenter and the pre-evaporation mass of the stream's progenitor.
 Quoted values are the medians of the sampled posterior distributions and the uncertainties reflect their $16-84$ percentiles.
+The second set of mass uncertainties are systematic between different Milky Way models.
 }
 \label{table:constraints}
 \end{deluxetable}
@@ -200,7 +201,7 @@ To prefer bound solutions, we employ a weak prior by requiring the absolute radi
 We begin the search for well-fitting stream orbits by maximizing the likelihood of orbits passing through the observed streams using the \package{scipy} implementation of the BFGS algorithm.
 Focusing on this best-fitting solution, we further sample the phase-space parameters with an affine-invariant sampler \package{emcee} to estimate the posterior distribution of the orbital parameters.
 We advanced 64 walkers for 512 steps and kept the last 256 steps, which converged to constant median and dispersion values for all model parameters.
-The median, 16th and 84th percentiles of the constrained 5D coordinates are reported for each stream's orbit in the Appendix~\ref{sec:appendix} (Table~\ref{table:phase-space}).
+The median, 16th and 84th percentiles of the constrained 5D coordinates are reported for each stream's orbit in the Appendix~\ref{sec:appendix} (Table~\ref{table:phasespace}).
 
 To visualize and further explore the streams' orbits, we randomly sampled 1,000 points from the posterior distributions of every stream (available at the project repository).
 % \footnote{\url{https://github.com/abonaca/disrupted_gc}}).
@@ -296,13 +297,8 @@ In this section we discuss this population of low-mass, disrupted globular clust
 
 \subsection{Formation mechanism of globular clusters}
 \label{sec:discuss_gcform}
-Most processes that destroy globular clusters operate more efficiently closer to the Galactic center \citep[e.g.,][]{gnedin:1997}.
-Hence, if the initial population of globular clusters sampled the orbital space uniformly, we might expect to preferentially find stellar streams on more eccentric orbits with smaller apocenters.
-However, streams from our sample occupy similar orbital families as the present-day globular clusters, and the main difference between the two populations is the lower average mass of disrupted clusters.
-% explain more
-This may indicate that most globular clusters that ever orbited the Milky Way can be associated with a handful of its progenitor galaxies, in agreement with the phase-space \citep{massari:2019} and age-metallicity \citep{kruijssen19e,kruijssen20} distributions of the surviving cluster population.
-Partly, streams with small apocenters and those with high eccentricities may be missing from our sample due to observational biases: low eccentricity tidal debris is more readily identifiable as a thin stellar stream \citep{hendel:2015}, while searching for streams in the inner Galaxy is challenging due to high contamination from the field Milky Way stars \citep[e.g.,][]{ibata:2019}.
-The wealth of observational data expected over the next decade will allow for a more complete census of stellar streams that can further test the emerging picture in which the initial population of Galactic globular clusters originates from a small number of host galaxies.
+- lower mass -> preferred scenario in which gc massive end of regular cluster formation
+- but not all the way there
 
 Low-mass clusters are more susceptible to disruption \citep[e.g.,][]{fall:2001,kruijssen15b}.
 As a result, globular clusters, which are predominantly old, peak at a characteristic mass of $\approx10^5\,\msun$ \citep[e.g.,][]{harris:1991}, whereas the masses of young clusters follow a power law distribution \citep[e.g.,][]{zhang:1999}.
@@ -311,6 +307,15 @@ However, the combined distribution of pre-evaporation masses for stream progenit
 In part, the comparative dearth of low-mass clusters may be attributed to incompleteness in the stream sample and the finite lifetimes of the streams, but it may also signify that evaporation is a subdominant cluster disruption mechanism.
 For example, \citet{kruijssen15b} proposed that most early-forming clusters were rapidly disrupted in the turbulent disks of their host galaxies, and that only a small fraction of the initial cluster population survives long enough to experience evaporation.
 A complete census of stellar streams could therefore inform on dynamical properties of star-forming galaxies at high redshift.
+
+- origin of clusters: mostly accreted
+Most processes that destroy globular clusters operate more efficiently closer to the Galactic center \citep[e.g.,][]{gnedin:1997}.
+Hence, if the initial population of globular clusters sampled the orbital space uniformly, we might expect to preferentially find stellar streams on more eccentric orbits with smaller apocenters.
+However, streams from our sample occupy similar orbital families as the present-day globular clusters, and the main difference between the two populations is the lower average mass of disrupted clusters.
+% explain more
+This may indicate that most globular clusters that ever orbited the Milky Way can be associated with a handful of its progenitor galaxies, in agreement with the phase-space \citep{massari:2019} and age-metallicity \citep{kruijssen19e,kruijssen20} distributions of the surviving cluster population.
+Partly, streams with small apocenters and those with high eccentricities may be missing from our sample due to observational biases: low eccentricity tidal debris is more readily identifiable as a thin stellar stream \citep{hendel:2015}, while searching for streams in the inner Galaxy is challenging due to high contamination from the field Milky Way stars \citep[e.g.,][]{ibata:2019}.
+The wealth of observational data expected over the next decade will allow for a more complete census of stellar streams that can further test the emerging picture in which the initial population of Galactic globular clusters originates from a small number of host galaxies.
 
 \begin{figure}
 \includegraphics[width=\hsize]{figures/streams_peri_apo.pdf}
@@ -417,8 +422,39 @@ J.M.D.K.\ gratefully acknowledges the generous hospitality of the Institute for 
 }
 
 \appendix
-\section{Stream data origin}
+\section{The origin of stream data and resulting orbital constraints}
 \label{sec:appendix}
+Stream data we fit in this work can be separated into three categories: 1) sky positions and proper motions, 2) heliocentric distance, and 3) radial velocities.
+In the right-most column of Table~\ref{table:phasespace} we report references for each stream in these categories.
+Sky positions and proper motions are reported for individual member stars in most of the streams \citep[e.g.,][]{ibata:2019, shipp:2019}, but for GD-1 we use average properties along the stream track \citep{pwb}, and for Ravi, Turbio, Wambelong, and Willka-Yaku we use the reported orbital poles and the average proper motions \citep{shipp:2019}.
+We use average distace to the stream at its end-points summarized in \citet{riley:2020}, with the exception of GD-1, where we use the distance gradient from \citet{koposov:2010}, and Ophiuchus, where we use the distance gradient inferred by \citet{sesar:2015}.
+Radial velocities are missing for most of the streams in our sample (marked as `N/A' in Table~\ref{table:phasespace}), but we use individual measurements for Ophiuchus from \citet{caldwell:2020}, GD-1 from \citet{bonaca:2020b} (which includes data from \citealt{koposov:2010} and \citet{huang:2019}), and average radial velocity trends reported for Aliqa Uma and ATLAS in \citet{li:2020}.
+
+These data were used to constrain the streams' orbits.
+As described in Section~\ref{sec:orbits}, we parameterized each orbit with a set of five phase-space parameters at a fixed right ascension.
+Columns $2-7$ of Table~\ref{table:phasespace} provide the control R.A. and phase-space coordinates derived in our fiducial model of the Milky Way.
+For each of the orbital parameters, we provide the median of the sampled posterior distribution and the $16-84$ percentile uncertainties.
+Orbital declination, distance, and proper motions were constrained very precisely for all of the streams thanks to the wealth of observational data.
+In some streams, the 5D observables put strong constraints on the orbit, so the allowed uncertainties in radial velocity are also small (e.g., Fj\" orm, Sylgr).
+However, for many streams radial velocities would significantly improve orbital constraints.
+
+\begin{deluxetable}{l @{\hspace{0.5cm}} c D D D D D c}
+\tablehead{
+Name & R.A. & \multicolumn2c{Dec} & \multicolumn2c{distance} & \multicolumn2c{$\mu_\alpha$} & \multicolumn2c{$\mu_\delta$} & \multicolumn2c{$V_r$} & Data\\
+& deg & \multicolumn2c{deg} & \multicolumn2c{kpc} & \multicolumn2c{\masyr} & \multicolumn2c{\masyr} & \multicolumn2c{\kms} & references
+}
+\decimals
+\setlength{\tabcolsep}{3pt}
+\startdata
+\input{table_fits.tex}
+\enddata
+\caption{Constrained orbital parameters of stellar streams: declination, distance, proper motions and radial velocity at a control R.A. location.
+Quoted values are the medians of the sampled posterior distributions and the uncertainties reflect their $16-84$ percentiles.
+Last column gives the origin of the stream data (sky positions and proper motions, distance, radial velocity), with the following key: 1) \citet{shipp:2019}, 2) \citet{riley:2020}, 3) \citet{li:2020}, 4) \citet{ibata:2019}, 5) \citet{pwb}, 6) \citet{bonaca:2020b}, 7) \citet{caldwell:2020}, 8) \citet{ibata:2018}.
+}
+\label{table:phasespace}
+\end{deluxetable}
+
 
 \bibliographystyle{aasjournal}
 \bibliography{disrupted_gc}

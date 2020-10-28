@@ -990,49 +990,49 @@ def get_properties(name):
     
     props = {}
 
-    props['ophiuchus'] = dict(label='Ophiuchus', wangle=360*u.deg, ra0=240.5*u.deg, dec0=-7.3*u.deg, d0=10*u.kpc, pmra0=-4*u.mas/u.yr, pmdec0=-4.5*u.mas/u.yr, vr0=270*u.km/u.s, tstream=13*u.Myr, fra=True)
+    props['ophiuchus'] = dict(label='Ophiuchus', wangle=360*u.deg, ra0=240.5*u.deg, dec0=-7.3*u.deg, d0=10*u.kpc, pmra0=-4*u.mas/u.yr, pmdec0=-4.5*u.mas/u.yr, vr0=270*u.km/u.s, tstream=13*u.Myr, fra=True, provenance=[7,7,7])
     
-    props['gd1'] = dict(label='GD-1', wangle=360*u.deg, ra0=123*u.deg, dec0=-10*u.deg, d0=9*u.kpc, pmra0=-2*u.mas/u.yr, pmdec0=-7*u.mas/u.yr, vr0=300*u.km/u.s, tstream=110*u.Myr, fra=True)
+    props['gd1'] = dict(label='GD-1', wangle=360*u.deg, ra0=123*u.deg, dec0=-10*u.deg, d0=9*u.kpc, pmra0=-2*u.mas/u.yr, pmdec0=-7*u.mas/u.yr, vr0=300*u.km/u.s, tstream=110*u.Myr, fra=True, provenance=[5,5,6])
     
-    props['svol'] = dict(label='Sv\\"{o}l', wangle=360*u.deg, ra0=250*u.deg, dec0=25*u.deg, d0=8*u.kpc, pmra0=3.5*u.mas/u.yr, pmdec0=-6*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=30*u.Myr, fra=True)
+    props['svol'] = dict(label='Sv\\"{o}l', wangle=360*u.deg, ra0=250*u.deg, dec0=25*u.deg, d0=8*u.kpc, pmra0=3.5*u.mas/u.yr, pmdec0=-6*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=30*u.Myr, fra=True, provenance=[4,2,np.nan])
     
-    props['leiptr'] = dict(label='Leiptr', wangle=360*u.deg, ra0=98*u.deg, dec0=-35*u.deg, d0=8*u.kpc, pmra0=10*u.mas/u.yr, pmdec0=-8*u.mas/u.yr, vr0=250*u.km/u.s, tstream=30*u.Myr, fra=True)
+    props['leiptr'] = dict(label='Leiptr', wangle=360*u.deg, ra0=98*u.deg, dec0=-35*u.deg, d0=8*u.kpc, pmra0=10*u.mas/u.yr, pmdec0=-8*u.mas/u.yr, vr0=250*u.km/u.s, tstream=30*u.Myr, fra=True, provenance=[4,2,np.nan])
 
-    props['gjoll'] = dict(label='Gj\\"{o}ll', wangle=360*u.deg, ra0=90*u.deg, dec0=-21*u.deg, d0=3.5*u.kpc, pmra0=24*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=150*u.km/u.s, tstream=13*u.Myr, fra=True)
+    props['gjoll'] = dict(label='Gj\\"{o}ll', wangle=360*u.deg, ra0=90*u.deg, dec0=-21*u.deg, d0=3.5*u.kpc, pmra0=24*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=150*u.km/u.s, tstream=13*u.Myr, fra=True, provenance=[4,2,np.nan])
     
-    props['fjorm'] = dict(label='Fj\\"{o}rm', wangle=360*u.deg, ra0=260*u.deg, dec0=70*u.deg, d0=5*u.kpc, pmra0=6*u.mas/u.yr, pmdec0=3*u.mas/u.yr, vr0=-100*u.km/u.s, tstream=30*u.Myr, fra=True)
+    props['fjorm'] = dict(label='Fj\\"{o}rm', wangle=360*u.deg, ra0=260*u.deg, dec0=70*u.deg, d0=5*u.kpc, pmra0=6*u.mas/u.yr, pmdec0=3*u.mas/u.yr, vr0=-100*u.km/u.s, tstream=30*u.Myr, fra=True, provenance=[4,2,np.nan])
     
-    props['fimbulthul'] = dict(label='Fimbulthul', wangle=360*u.deg, ra0=198*u.deg, dec0=-32*u.deg, d0=4*u.kpc, pmra0=-9*u.mas/u.yr, pmdec0=-9*u.mas/u.yr, vr0=250*u.km/u.s, tstream=20*u.Myr, fra=True)
+    props['fimbulthul'] = dict(label='Fimbulthul', wangle=360*u.deg, ra0=198*u.deg, dec0=-32*u.deg, d0=4*u.kpc, pmra0=-9*u.mas/u.yr, pmdec0=-9*u.mas/u.yr, vr0=250*u.km/u.s, tstream=20*u.Myr, fra=True, provenance=[4,2,np.nan])
     
-    props['ylgr'] = dict(label='Ylgr', wangle=360*u.deg, ra0=183*u.deg, dec0=-38*u.deg, d0=9*u.kpc, pmra0=-0.5*u.mas/u.yr, pmdec0=-5*u.mas/u.yr, vr0=320*u.km/u.s, tstream=30*u.Myr, fra=True)
+    props['ylgr'] = dict(label='Ylgr', wangle=360*u.deg, ra0=183*u.deg, dec0=-38*u.deg, d0=9*u.kpc, pmra0=-0.5*u.mas/u.yr, pmdec0=-5*u.mas/u.yr, vr0=320*u.km/u.s, tstream=30*u.Myr, fra=True, provenance=[4,2,np.nan])
 
-    props['sylgr'] = dict(label='Sylgr', wangle=360*u.deg, ra0=164*u.deg, dec0=-13*u.deg, d0=4*u.kpc, pmra0=-25*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=-200*u.km/u.s, tstream=15*u.Myr, fra=True)
+    props['sylgr'] = dict(label='Sylgr', wangle=360*u.deg, ra0=164*u.deg, dec0=-13*u.deg, d0=4*u.kpc, pmra0=-25*u.mas/u.yr, pmdec0=-22*u.mas/u.yr, vr0=-200*u.km/u.s, tstream=15*u.Myr, fra=True, provenance=[4,2,np.nan])
     
-    props['slidr'] = dict(label='Slidr', wangle=360*u.deg, ra0=148*u.deg, dec0=17*u.deg, d0=3.5*u.kpc, pmra0=-28*u.mas/u.yr, pmdec0=-10*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=20*u.Myr, fra=True)
+    props['slidr'] = dict(label='Slidr', wangle=360*u.deg, ra0=148*u.deg, dec0=17*u.deg, d0=3.5*u.kpc, pmra0=-28*u.mas/u.yr, pmdec0=-10*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=20*u.Myr, fra=True, provenance=[4,2,np.nan])
 
-    props['phlegethon'] = dict(label='Phlegethon', wangle=360*u.deg, ra0=299*u.deg, dec0=-61*u.deg, d0=3.5*u.kpc, pmra0=-12*u.mas/u.yr, pmdec0=-25*u.mas/u.yr, vr0=250*u.km/u.s, tstream=60*u.Myr, fra=False)
+    props['phlegethon'] = dict(label='Phlegethon', wangle=360*u.deg, ra0=299*u.deg, dec0=-61*u.deg, d0=3.5*u.kpc, pmra0=-12*u.mas/u.yr, pmdec0=-25*u.mas/u.yr, vr0=250*u.km/u.s, tstream=60*u.Myr, fra=False, provenance=[8,2,np.nan])
     
-    props['phoenix'] = dict(label='Phoenix', wangle=360*u.deg, ra0=27.5*u.deg, dec0=-44*u.deg, d0=16*u.kpc, pmra0=2.8*u.mas/u.yr, pmdec0=-0.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=30*u.Myr, fra=True)
+    props['phoenix'] = dict(label='Phoenix', wangle=360*u.deg, ra0=27.5*u.deg, dec0=-44*u.deg, d0=16*u.kpc, pmra0=2.8*u.mas/u.yr, pmdec0=-0.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=30*u.Myr, fra=True, provenance=[1,2,np.nan])
     
-    props['turranburra'] = dict(label='Turranburra', wangle=360*u.deg, ra0=59*u.deg, dec0=-18*u.deg, d0=10*u.kpc, pmra0=0.35*u.mas/u.yr, pmdec0=-1.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=60*u.Myr, fra=True)
+    props['turranburra'] = dict(label='Turranburra', wangle=360*u.deg, ra0=59*u.deg, dec0=-18*u.deg, d0=10*u.kpc, pmra0=0.35*u.mas/u.yr, pmdec0=-1.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=60*u.Myr, fra=True, provenance=[1,2,np.nan])
     
-    props['indus'] = dict(label='Indus', wangle=360*u.deg, ra0=352*u.deg, dec0=-65*u.deg, d0=16*u.kpc, pmra0=4.5*u.mas/u.yr, pmdec0=-4.5*u.mas/u.yr, vr0=-10*u.km/u.s, tstream=60*u.Myr, fra=True)
+    props['indus'] = dict(label='Indus', wangle=360*u.deg, ra0=352*u.deg, dec0=-65*u.deg, d0=16*u.kpc, pmra0=4.5*u.mas/u.yr, pmdec0=-4.5*u.mas/u.yr, vr0=-10*u.km/u.s, tstream=60*u.Myr, fra=True, provenance=[1,2,np.nan])
 
-    props['elqui'] = dict(label='Elqui', wangle=360*u.deg, ra0=10*u.deg, dec0=-36*u.deg, d0=30*u.kpc, pmra0=0.1*u.mas/u.yr, pmdec0=-0.5*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=100*u.Myr, fra=True)
+    props['elqui'] = dict(label='Elqui', wangle=360*u.deg, ra0=10*u.deg, dec0=-36*u.deg, d0=30*u.kpc, pmra0=0.1*u.mas/u.yr, pmdec0=-0.5*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=100*u.Myr, fra=True, provenance=[1,2,np.nan])
     
-    props['jhelum'] = dict(label='Jhelum', wangle=180*u.deg, ra0=4*u.deg, dec0=-52*u.deg, d0=10*u.kpc, pmra0=8*u.mas/u.yr, pmdec0=-3*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=30*u.Myr, fra=True)
+    props['jhelum'] = dict(label='Jhelum', wangle=180*u.deg, ra0=4*u.deg, dec0=-52*u.deg, d0=10*u.kpc, pmra0=8*u.mas/u.yr, pmdec0=-3*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=30*u.Myr, fra=True, provenance=[1,2,np.nan])
 
-    props['atlas'] = dict(label='ATLAS', wangle=180*u.deg, ra0=9*u.deg, dec0=-20*u.deg, d0=18*u.kpc, pmra0=-0.5*u.mas/u.yr, pmdec0=-1*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=60*u.Myr, fra=True)
+    props['atlas'] = dict(label='ATLAS', wangle=180*u.deg, ra0=9*u.deg, dec0=-20*u.deg, d0=18*u.kpc, pmra0=-0.5*u.mas/u.yr, pmdec0=-1*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=60*u.Myr, fra=True, provenance=[1,2,3])
     
-    props['aliqa_uma'] = dict(label='Aliqa Uma', wangle=180*u.deg, ra0=31*u.deg, dec0=-32*u.deg, d0=26*u.kpc, pmra0=0.25*u.mas/u.yr, pmdec0=-0.7*u.mas/u.yr, vr0=-60*u.km/u.s, tstream=40*u.Myr, fra=True)
+    props['aliqa_uma'] = dict(label='Aliqa Uma', wangle=180*u.deg, ra0=31*u.deg, dec0=-32*u.deg, d0=26*u.kpc, pmra0=0.25*u.mas/u.yr, pmdec0=-0.7*u.mas/u.yr, vr0=-60*u.km/u.s, tstream=40*u.Myr, fra=True, provenance=[1,2,3])
     
-    props['ravi'] = dict(label='Ravi', wangle=360*u.deg, ra0=344.1*u.deg, dec0=-59*u.deg, d0=25*u.kpc, pmra0=0.9*u.mas/u.yr, pmdec0=-2.5*u.mas/u.yr, vr0=100*u.km/u.s, tstream=130*u.Myr, fra=True)
+    props['ravi'] = dict(label='Ravi', wangle=360*u.deg, ra0=344.1*u.deg, dec0=-59*u.deg, d0=25*u.kpc, pmra0=0.9*u.mas/u.yr, pmdec0=-2.5*u.mas/u.yr, vr0=100*u.km/u.s, tstream=130*u.Myr, fra=True, provenance=[1,2,np.nan])
     
-    props['turbio'] = dict(label='Turbio', wangle=360*u.deg, ra0=27.8*u.deg, dec0=-45*u.deg, d0=16*u.kpc, pmra0=2.*u.mas/u.yr, pmdec0=2*u.mas/u.yr, vr0=100*u.km/u.s, tstream=20*u.Myr, fra=False)
+    props['turbio'] = dict(label='Turbio', wangle=360*u.deg, ra0=27.8*u.deg, dec0=-45*u.deg, d0=16*u.kpc, pmra0=2.*u.mas/u.yr, pmdec0=2*u.mas/u.yr, vr0=100*u.km/u.s, tstream=20*u.Myr, fra=False, provenance=[1,2,np.nan])
     
-    props['wambelong'] = dict(label='Wambelong', wangle=360*u.deg, ra0=91*u.deg, dec0=-46*u.deg, d0=16*u.kpc, pmra0=2*u.mas/u.yr, pmdec0=-1*u.mas/u.yr, vr0=150*u.km/u.s, tstream=100*u.Myr, fra=True)
+    props['wambelong'] = dict(label='Wambelong', wangle=360*u.deg, ra0=91*u.deg, dec0=-46*u.deg, d0=16*u.kpc, pmra0=2*u.mas/u.yr, pmdec0=-1*u.mas/u.yr, vr0=150*u.km/u.s, tstream=100*u.Myr, fra=True, provenance=[1,2,np.nan])
     
-    props['willka_yaku'] = dict(label='Willka Yaku', wangle=360*u.deg, ra0=38.5*u.deg, dec0=-58*u.deg, d0=41*u.kpc, pmra0=1*u.mas/u.yr, pmdec0=0.5*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=40*u.Myr, fra=True)
+    props['willka_yaku'] = dict(label='Willka Yaku', wangle=360*u.deg, ra0=38.5*u.deg, dec0=-58*u.deg, d0=41*u.kpc, pmra0=1*u.mas/u.yr, pmdec0=0.5*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=40*u.Myr, fra=True, provenance=[1,2,np.nan])
     
     return props[name]
 
@@ -1284,8 +1284,23 @@ def save_orbits(flatchain, stream):
     for k in trow.keys():
         tout[k].unit = trow[k].unit
     
-    tout.write('../data/orbit_props_{:s}.fits'.format(stream.savename), overwrite=True)
+    tout.write('../data/output/orbit_props_{:s}.fits'.format(stream.savename), overwrite=True)
+
+def save_samples(flatchain, stream):
+    """Save the flatchain subsample"""
     
+    N = np.shape(flatchain)[0]
+    ra = np.ones(N) * stream.ra0 * u.deg
+    
+    dec = flatchain[:,0] * u.deg
+    dist = flatchain[:,1] * u.kpc
+    pmra = flatchain[:,2] * u.mas/u.yr
+    pmdec = flatchain[:,3] * u.mas/u.yr
+    vr = flatchain[:,4] * u.km/u.s
+    
+    tout = Table([ra, dec, dist, pmra, pmdec, vr], names=('ra', 'dec', 'dist', 'pmra', 'pmdec', 'vr'))
+    tout.write('../data/output/samples_{:s}.fits'.format(stream.savename), overwrite=True)
+
 def check_orbit_props(name):
     """"""
     t = Table.read('../data/orbit_props_{:}.fits'.format(name))
@@ -1318,6 +1333,9 @@ def diagnose_mcmc(name, stage=0, pot='fid'):
     
     if stage==3:
         save_orbits(flatchain_short, stream)
+    
+    if stage==4:
+        save_samples(flatchain_short, stream)
 
 
 #####################
