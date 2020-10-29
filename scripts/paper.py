@@ -340,14 +340,57 @@ def plot_stream_fit_orbit(name):
     plt.xlabel('x [kpc]')
     plt.ylabel('y [kpc]')
 
+    rmax = 50
+    xmin, xmax = plt.gca().get_xlim()
+    if xmin<-rmax: xmin = -rmax
+    if xmax>rmax: xmax = rmax
+    plt.gca().set_xlim(xmin, xmax)
+    
+    ymin, ymax = plt.gca().get_ylim()
+    if ymin<-rmax: ymin = -rmax
+    if ymax>rmax: ymax = rmax
+    plt.gca().set_ylim(ymin, ymax)
+
     plt.sca(ax[6])
     plt.gca().set_aspect('equal', adjustable='datalim')
     plt.xlabel('$\\rho$ [kpc]')
     plt.ylabel('z [kpc]')
 
-    plt.savefig('../paper/figures/fig1_all/{:s}.png'.format(name))
+    rmax = 100
+    ymin, ymax = plt.gca().get_ylim()
+    if (ymin<-rmax) | (ymax>rmax):
+        ymin = -rmax
+        ymax = rmax
+    plt.gca().set_ylim(ymin, ymax)
+    
+    xmin, xmax = plt.gca().get_xlim()
+    if xmin<0: xmin = 0
+    if xmax>rmax: xmax = rmax
+    #print(ymin, ymax)
+    plt.gca().set_xlim(xmin, xmax)
+
+    plt.savefig('../paper/figures/fig1_all/{:s}.png'.format(name), bbox_inches='tight', pad_inches=0.7)
     if name=='fjorm':
         plt.savefig('../paper/figures/stream_fitting.pdf')
+
+def save_xml():
+    """"""
+    f = open('../paper/streams.xml', 'w')
+    
+    f.write('<?xml version="1.0" encoding="UTF-8"?>\n<catalog>\n')
+
+    for name in get_names():
+        f.write('<stream>\n')
+        f.write('<name>{:s}</name>\n'.format(name))
+        label = get_properties(name)['label']
+        label = label.replace('\\"{o}', 'o')
+        #label = label.replace('\\"{o}', '&ouml;')
+        print(label)
+        f.write('<label>{:s}</label>\n'.format(label))
+        f.write('</stream>\n')
+
+    f.write('</catalog>\n')
+
 
 def orbital_precision():
     """"""
