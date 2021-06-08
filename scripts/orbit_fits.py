@@ -533,11 +533,11 @@ def prep_ophiuchus():
     
     # construct the data dictionary
     data = dict()
-    data['dec'] = (tdata['RA']*u.deg, tdata['DEC']*u.deg, w)
-    data['dist'] = (tdata['RA']*u.deg, tdata['d']*u.kpc, derr)
-    data['pmra'] = (tdata['RA']*u.deg, tdata['pmra']*u.mas/u.yr, tdata['pmra_error']*u.mas/u.yr)
-    data['pmdec'] = (tdata['RA']*u.deg, tdata['pmdec']*u.mas/u.yr, tdata['pmdec_error']*u.mas/u.yr)
-    data['vr'] = (tdata['RA']*u.deg, tdata['VELOCITY']*u.km/u.s, verr)
+    data['dec'] = (coord.Longitude(tdata['RA']*u.deg), coord.Latitude(tdata['DEC']*u.deg), w)
+    data['dist'] = (coord.Longitude(tdata['RA']*u.deg), tdata['d']*u.kpc, derr)
+    data['pmra'] = (coord.Longitude(tdata['RA']*u.deg), tdata['pmra']*u.mas/u.yr, tdata['pmra_error']*u.mas/u.yr)
+    data['pmdec'] = (coord.Longitude(tdata['RA']*u.deg), tdata['pmdec']*u.mas/u.yr, tdata['pmdec_error']*u.mas/u.yr)
+    data['vr'] = (coord.Longitude(tdata['RA']*u.deg), tdata['VELOCITY']*u.km/u.s, verr)
     
     pickle.dump(data, open('../data/streams/data_ophiuchus.pkl', 'wb'))
 
@@ -829,7 +829,7 @@ def prep_aau(name):
     vr = gc.vgsr_to_vhel(ceq, vgsr)
     
     data = dict()
-    data['dec'] = (coord.Longitude(t['ra'].quantity).wrap_at(wangle), t['dec'].quantity, np.ones(len(t))*l_err)
+    data['dec'] = (coord.Longitude(t['ra'].quantity).wrap_at(wangle), coord.Latitude(t['dec'].quantity), np.ones(len(t))*l_err)
     data['dist'] = (ceq_end.ra.wrap_at(wangle), ceq_end.distance, np.ones(np.size(ceq_end.ra))*d_err)
     data['pmra'] = (coord.Longitude(t['ra'].quantity).wrap_at(wangle), t['pmra'].quantity, t['pmra_error'].quantity)
     data['pmdec'] = (coord.Longitude(t['ra'].quantity).wrap_at(wangle), t['pmdec'].quantity, t['pmdec_error'].quantity)
@@ -874,6 +874,43 @@ def prep_shipp_avg(name, N=20):
     data['pmdec'] = [ceq_all.ra.wrap_at(wangle), pmdec, pm_err, ceq_all.dec]
     
     pickle.dump(data, open('../data/streams/data_{:s}.pkl'.format(name), 'wb'))
+
+def prep_s300():
+    """Store dictionary with 300km/s Stream data"""
+    
+    # read in data (Gaia x Fu)
+    ta, ts = pickle.load(open('../data/streams/docs/300S_members.pickle','rb'))
+    
+    ra = coord.Longitude(np.concatenate([ta['R.A.'], ts['R.A.']]) * u.deg)
+    dec = coord.Latitude(np.concatenate([ta['Decl.'], ts['Decl.']]) * u.deg)
+    N = np.size(ra)
+    
+    w0 = 1*u.deg
+    w = np.ones(N) * w0
+    
+    d0 = 15*u.kpc
+    derr0 = 3*u.kpc
+    dist = np.ones(N) * d0
+    dist_err = np.ones(N) * derr0
+    
+    pmra = np.concatenate([ta['pmra'], ts['pmra']]) * u.mas/u.yr
+    pmra_err = np.concatenate([ta['pmra_error'], ts['pmra_error']]) * u.mas/u.yr
+    
+    pmdec = np.concatenate([ta['pmdec'], ts['pmdec']]) * u.mas/u.yr
+    pmdec_err = np.concatenate([ta['pmdec_error'], ts['pmdec_error']]) * u.mas/u.yr
+    
+    vr = np.concatenate([ta['V_helio'], ts['V_helio']]) * u.km/u.s
+    vr_err = np.concatenate([ta['sig_vhelio'], ts['sig_vhelio']]) * u.km/u.s
+    
+    # construct the data dictionary
+    data = dict()
+    data['dec'] = (ra, dec, w, dec)
+    data['dist'] = (ra, dist, dist_err, dec)
+    data['pmra'] = (ra, pmra, pmra_err, dec)
+    data['pmdec'] = (ra, pmdec, pmdec_err, dec)
+    data['vr'] = (ra, vr, vr_err, dec)
+    
+    pickle.dump(data, open('../data/streams/data_s300.pkl', 'wb'))
 
 
 def test_oph():
@@ -981,7 +1018,7 @@ def initialize():
 def get_names():
     """Get names of streams in the sample"""
     
-    streams = ['ophiuchus', 'gd1', 'svol', 'leiptr', 'gjoll', 'fjorm', 'fimbulthul', 'ylgr', 'sylgr', 'slidr', 'phlegethon', 'phoenix', 'turranburra', 'indus', 'elqui', 'jhelum', 'atlas', 'aliqa_uma', 'ravi', 'wambelong', 'willka_yaku', 'turbio']
+    streams = ['ophiuchus', 'gd1', 'svol', 'leiptr', 'gjoll', 'fjorm', 'fimbulthul', 'ylgr', 'sylgr', 'slidr', 'phlegethon', 'phoenix', 'turranburra', 'indus', 'elqui', 'jhelum', 'atlas', 'aliqa_uma', 'ravi', 'wambelong', 'willka_yaku', 'turbio', 'triangulum', 's300']
     
     return sorted(streams)
 
@@ -1014,11 +1051,11 @@ def get_properties(name):
     
     props['phoenix'] = dict(label='Phoenix', wangle=360*u.deg, ra0=27.5*u.deg, dec0=-44*u.deg, d0=16*u.kpc, pmra0=2.8*u.mas/u.yr, pmdec0=-0.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=30*u.Myr, fra=True, provenance=[1,2,np.nan])
     
-    props['turranburra'] = dict(label='Turranburra', wangle=360*u.deg, ra0=59*u.deg, dec0=-18*u.deg, d0=10*u.kpc, pmra0=0.35*u.mas/u.yr, pmdec0=-1.2*u.mas/u.yr, vr0=0*u.km/u.s, tstream=60*u.Myr, fra=True, provenance=[1,2,np.nan])
+    props['turranburra'] = dict(label='Turranburra', wangle=360*u.deg, ra0=58*u.deg, dec0=-17*u.deg, d0=27*u.kpc, pmra0=0.6*u.mas/u.yr, pmdec0=-0.9*u.mas/u.yr, vr0=100*u.km/u.s, tstream=100*u.Myr, fra=True, provenance=[1,2,np.nan])
     
     props['indus'] = dict(label='Indus', wangle=360*u.deg, ra0=352*u.deg, dec0=-65*u.deg, d0=16*u.kpc, pmra0=4.5*u.mas/u.yr, pmdec0=-4.5*u.mas/u.yr, vr0=-10*u.km/u.s, tstream=60*u.Myr, fra=True, provenance=[1,2,np.nan])
 
-    props['elqui'] = dict(label='Elqui', wangle=360*u.deg, ra0=10*u.deg, dec0=-36*u.deg, d0=30*u.kpc, pmra0=0.1*u.mas/u.yr, pmdec0=-0.5*u.mas/u.yr, vr0=-150*u.km/u.s, tstream=100*u.Myr, fra=True, provenance=[1,2,np.nan])
+    props['elqui'] = dict(label='Elqui', wangle=360*u.deg, ra0=9.5*u.deg, dec0=-36*u.deg, d0=50*u.kpc, pmra0=0.1*u.mas/u.yr, pmdec0=-0.5*u.mas/u.yr, vr0=50*u.km/u.s, tstream=100*u.Myr, fra=True, provenance=[1,2,np.nan])
     
     props['jhelum'] = dict(label='Jhelum', wangle=180*u.deg, ra0=4*u.deg, dec0=-52*u.deg, d0=10*u.kpc, pmra0=8*u.mas/u.yr, pmdec0=-3*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=30*u.Myr, fra=True, provenance=[1,2,np.nan])
 
@@ -1028,12 +1065,19 @@ def get_properties(name):
     
     props['ravi'] = dict(label='Ravi', wangle=360*u.deg, ra0=344.1*u.deg, dec0=-59*u.deg, d0=25*u.kpc, pmra0=0.9*u.mas/u.yr, pmdec0=-2.5*u.mas/u.yr, vr0=100*u.km/u.s, tstream=130*u.Myr, fra=True, provenance=[1,2,np.nan])
     
-    props['turbio'] = dict(label='Turbio', wangle=360*u.deg, ra0=27.8*u.deg, dec0=-45*u.deg, d0=16*u.kpc, pmra0=2.*u.mas/u.yr, pmdec0=2*u.mas/u.yr, vr0=100*u.km/u.s, tstream=20*u.Myr, fra=False, provenance=[1,2,np.nan])
+    props['turbio'] = dict(label='Turbio', wangle=360*u.deg, ra0=27.8*u.deg, dec0=-45*u.deg, d0=16*u.kpc, pmra0=2.*u.mas/u.yr, pmdec0=2*u.mas/u.yr, vr0=100*u.km/u.s, tstream=40*u.Myr, fra=False, provenance=[1,2,np.nan])
     
     props['wambelong'] = dict(label='Wambelong', wangle=360*u.deg, ra0=91*u.deg, dec0=-46*u.deg, d0=16*u.kpc, pmra0=2*u.mas/u.yr, pmdec0=-1*u.mas/u.yr, vr0=150*u.km/u.s, tstream=100*u.Myr, fra=True, provenance=[1,2,np.nan])
     
-    props['willka_yaku'] = dict(label='Willka Yaku', wangle=360*u.deg, ra0=38.5*u.deg, dec0=-58*u.deg, d0=41*u.kpc, pmra0=1*u.mas/u.yr, pmdec0=0.5*u.mas/u.yr, vr0=-50*u.km/u.s, tstream=40*u.Myr, fra=True, provenance=[1,2,np.nan])
+    props['willka_yaku'] = dict(label='Willka Yaku', wangle=360*u.deg, ra0=38.5*u.deg, dec0=-59*u.deg, d0=36*u.kpc, pmra0=1.2*u.mas/u.yr, pmdec0=0.2*u.mas/u.yr, vr0=210*u.km/u.s, tstream=30*u.Myr, fra=False, provenance=[1,2,np.nan])
+
+    props['triangulum'] = dict(label='Triangulum', wangle=360*u.deg, ra0=21.2*u.deg, dec0=35*u.deg, d0=28*u.kpc, pmra0=0.8*u.mas/u.yr, pmdec0=0.3*u.mas/u.yr, vr0=-68*u.km/u.s, tstream=70*u.Myr, fra=False)
+
+    props['distant'] = dict(label='New', wangle=360*u.deg, ra0=251.6*u.deg, dec0=2*u.deg, d0=87*u.kpc, pmra0=-0.6*u.mas/u.yr, pmdec0=-0.5*u.mas/u.yr, vr0=50*u.km/u.s, tstream=70*u.Myr, fra=True)
     
+    props['s300'] = dict(label='S300', wangle=360*u.deg, ra0=152*u.deg, dec0=16*u.deg, d0=18*u.kpc, pmra0=-2.5*u.mas/u.yr, pmdec0=-2.75*u.mas/u.yr, vr0=300*u.km/u.s, tstream=30*u.Myr, fra=True)
+    #props['distant'] = dict(label='New', wangle=360*u.deg, ra0=253*u.deg, dec0=-3*u.deg, d0=70*u.kpc, pmra0=-0.5*u.mas/u.yr, pmdec0=-0.5*u.mas/u.yr, vr0=-200*u.km/u.s, tstream=300*u.Myr, fra=False)
+
     return props[name]
 
 def test(name, dra=2, best=True):
@@ -1055,6 +1099,9 @@ def test(name, dra=2, best=True):
 
     orbit = stream.ham.integrate_orbit(w0, dt=stream.dt, n_steps=stream.nstep)
     model = orbit.to_coord_frame(coord.ICRS, galactocentric_frame=stream.gc_frame)
+    
+    lo = stream.ham.integrate_orbit(w0, dt=stream.dt, n_steps=5000)
+    print(np.nanmedian(lo.energy()), np.nanmedian(lo.angular_momentum()[2]))
     
     # determine orientation
     if stream.fra:
@@ -1271,13 +1318,23 @@ def save_orbits(flatchain, stream):
     """Save orbits for a sample of points in the pdf"""
     
     nsample = np.shape(flatchain)[0]
-    tout = Table(names=('ecc', 'rperi', 'rapo', 'vcirc'))
+    tout = Table(names=('ecc', 'rperi', 'rapo', 'vcirc', 'lx', 'ly', 'lz', 'etot'))
     
     # calculate orbits for steps in the chain
     for j in range(nsample):
         orbit = stream.orbital_properties(pbest=flatchain[j])
         
-        trow = dict(rperi=orbit.pericenter(), rapo=orbit.apocenter(), ecc=orbit.eccentricity(), vcirc=ham.potential.circular_velocity(np.array([orbit.apocenter().to(u.kpc).value, 0, 0]))[0])
+        l = orbit.angular_momentum()
+        lx = np.nanmedian(l[0])
+        ly = np.nanmedian(l[1])
+        lz = np.nanmedian(l[2])
+        etot = np.nanmedian(orbit.energy())
+        rperi = orbit.pericenter()
+        rapo = orbit.apocenter()
+        ecc = orbit.eccentricity()
+        vcirc = ham.potential.circular_velocity(np.array([rapo.to(u.kpc).value, 0, 0]))[0]
+        
+        trow = dict(rperi=rperi, rapo=rapo, ecc=ecc, vcirc=vcirc, lx=lx, ly=ly, lz=lz, etot=etot)
         tout.add_row(trow)
     
     # add units
@@ -1303,7 +1360,7 @@ def save_samples(flatchain, stream):
 
 def check_orbit_props(name):
     """"""
-    t = Table.read('../data/orbit_props_{:}.fits'.format(name))
+    t = Table.read('../data/output/orbit_props_{:}.fits'.format(name))
     #t.pprint()
     
     for k in t.colnames:
@@ -1364,15 +1421,15 @@ def collate_mcmc_fits():
     names = get_names()
     
     for name in names[:]:
-        tfid = Table.read('../data/orbit_props_{:s}.fits'.format(name))
+        tfid = Table.read('../data/output/orbit_props_{:s}.fits'.format(name))
         tfid['potential'] = 'fiducial'
-        tbovy = Table.read('../data/orbit_props_{:s}_bovy.fits'.format(name))
+        tbovy = Table.read('../data/output/orbit_props_{:s}_bovy.fits'.format(name))
         tbovy['potential'] = 'bovy'
-        theavy = Table.read('../data/orbit_props_{:s}_heavy.fits'.format(name))
+        theavy = Table.read('../data/output/orbit_props_{:s}_heavy.fits'.format(name))
         theavy['potential'] = 'heavy'
         
         tout = vstack([tfid, tbovy, theavy])
-        tout.write('../data/orbit_props_{:s}_combined.fits'.format(name), overwrite=True)
+        tout.write('../data/output/orbit_props_{:s}_combined.fits'.format(name), overwrite=True)
 
 def potential_comparison():
     """"""

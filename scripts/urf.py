@@ -3,6 +3,14 @@ from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 plt.style.use('urf')
 
+
+def get_names():
+    """Get names of streams in the sample"""
+    
+    streams = ['ophiuchus', 'gd1', 'svol', 'leiptr', 'gjoll', 'fjorm', 'fimbulthul', 'ylgr', 'sylgr', 'slidr', 'phlegethon', 'phoenix', 'turranburra', 'indus', 'elqui', 'jhelum', 'atlas', 'aliqa_uma', 'ravi', 'wambelong', 'willka_yaku', 'turbio']
+    
+    return sorted(streams)
+
 def proposal():
     """"""
     
@@ -184,7 +192,7 @@ Galactic bar?'''
     plt.gca().set_aspect('equal', adjustable='datalim')
     plt.gca().set_facecolor('k')
     plt.gca().tick_params(labelbottom=False, labelleft=False, top=False, bottom=False, right=False, left=False)
-    plt.ylabel('THE  URF  PLAN', color=text_color)
+    plt.ylabel('FUTURE RESEARCH PLAN', color=text_color)
     for spine in plt.gca().spines.values():
         spine.set_edgecolor(jhelum_color)
         spine.set_linewidth(4)

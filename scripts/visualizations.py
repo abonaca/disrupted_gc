@@ -591,13 +591,13 @@ def plot_pal5():
     plt.close()
     fig, ax = plt.subplots(1,1,figsize=(8,6), facecolor='k')
     
-    plt.plot(tp['ra'], tp['dec'], 'k.', ms=0.5, alpha=0.3, rasterized=True)
-    plt.text(223.5, -5, 'fan', fontsize='small', bbox=dict(facecolor='w', alpha=0.4, edgecolor='none'))
-    plt.text(228.5, 0.5, 'Pal 5', fontsize='small', bbox=dict(facecolor='w', alpha=0.4, edgecolor='none'))
+    plt.plot(tp['ra'], tp['dec'], 'ko', ms=1.2, mec='none', alpha=0.3, rasterized=True)
+    #plt.text(223.5, -5, 'fan', fontsize='small', bbox=dict(facecolor='w', alpha=0.4, edgecolor='none'))
+    #plt.text(228.5, 0.5, 'Pal 5', fontsize='small', bbox=dict(facecolor='w', alpha=0.4, edgecolor='none'))
     
     plt.xlim(243,223)
     plt.ylim(-10,10)
     plt.gca().set_aspect('equal', adjustable='datalim')
     plt.gca().tick_params(labelbottom=False, labelleft=False, top=False, bottom=False, right=False, left=False)
     
-    plt.savefig('../plots/fancy_pal5.png', facecolor=fig.get_facecolor())
+    plt.savefig('../plots/fancy_pal5_clean.png', facecolor=fig.get_facecolor(), bbox_inches='tight', pad_inches=-0.01)

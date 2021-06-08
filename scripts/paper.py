@@ -2,6 +2,7 @@ from orbit_fits import *
 
 from matplotlib.legend_handler import HandlerBase
 from itertools import cycle
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 #from matplotlib import rc, rcParams
 #rc('font',**{'family':'serif','serif':['Times New Roman'],'size':14})
@@ -81,9 +82,9 @@ def summarize_orbits(pot='fiducial'):
     names = get_names()
     N = len(names)
     
-    #ecc = np.empty((N,5))
-    #rperi = np.empty((N,5))
-    #rapo = np.empty((N,5))
+    ecc = np.empty((N,5))
+    rperi = np.empty((N,5))
+    rapo = np.empty((N,5))
     
     tout = Table([names, ecc, rperi, rapo], names=('name', 'ecc', 'rperi', 'rapo'))
     
@@ -400,10 +401,13 @@ def orbital_precision():
     print(np.median(tin['rperi'][:,3]), np.median(tin['rperi'][:,3]/tin['rperi'][:,0]))
     print(np.median(tin['rapo'][:,3]), np.median(tin['rapo'][:,3]/tin['rapo'][:,0]))
 
-def get_lz(names):
+def get_elz(names):
     """"""
     
+    lx = np.zeros(len(names)) * u.kpc**2 / u.Myr
+    ly = np.zeros(len(names)) * u.kpc**2 / u.Myr
     lz = np.zeros(len(names)) * u.kpc**2 / u.Myr
+    etot = np.zeros(len(names)) * u.kpc**2 * u.Myr**-2
     
     for i, name in enumerate(names[:]):
         stream = Stream(name, ham=ham, save_ext='')
@@ -413,21 +417,42 @@ def get_lz(names):
         orbit = stream.orbital_properties(pbest=res.x, t=stream.tstream)
 
         # long orbit
-        orbit = stream.orbital_properties(pbest=res.x, t=20*stream.tstream)
-        lz[i] = np.median(orbit.angular_momentum()[:,2])
+        orbit = stream.orbital_properties(pbest=res.x, t=5*u.Gyr)
+        l = orbit.angular_momentum()
+        lx[i] = np.nanmedian(l[0])
+        ly[i] = np.nanmedian(l[1])
+        lz[i] = np.nanmedian(l[2])
+        etot[i] = np.nanmedian(orbit.energy())
     
-    return lz
+    return (lx, ly, lz, etot)
 
 def overall_summary():
     """"""
     to = Table.read('../data/orbital_summary_fiducial.fits')
     tm = Table.read('../data/gc_masses.txt', format='ascii.commented_header')
-    lz = get_lz(to['name'])
+    
+    if len(to)>len(tm):
+        tm = Table.read('../data/gc_masses_tri.txt', format='ascii.commented_header')
+    
+    lx, ly, lz, etot = get_elz(to['name'])
     label = [get_properties(name)['label'] for name in to['name']]
     
+    # origin
+    prog_dwarf = ['elqui', 'indus', 'jhelum']
+    prog_gc = ['triangulum', 'gd1', 'gjoll', 'atlas', 'aliqa_uma', 'phoenix']
+    progenitor = ['n/a'] * len(to)
+    
+    for e, name in enumerate(to['name']):
+        if name in prog_dwarf: progenitor[e] = 'dwarf'
+        if name in prog_gc: progenitor[e] = 'gc'
+    
     tout = hstack([to, tm])
-    tout['Lz'] = lz
+    tout['lx'] = lx
+    tout['ly'] = ly
+    tout['lz'] = lz
+    tout['etot'] = etot
     tout['label'] = label
+    tout['progenitor'] = progenitor
     tout.pprint()
     
     tout.write('../data/overall_summary.fits', overwrite=True)
@@ -456,6 +481,7 @@ def gc_orbits():
     
     t = Table.read('../data/baumgardt_positions.fits')
     t.pprint()
+    
     N = len(t)
     
     c = coord.SkyCoord(ra=t['RAJ2000'], dec=t['DEJ2000'], distance=t['Rsun'], pm_ra_cosdec=t['pmRA_'], pm_dec=t['pmDE'], radial_velocity=t['RV'], frame='icrs')
@@ -466,15 +492,23 @@ def gc_orbits():
 
     rperi = np.empty(N)*u.kpc
     rapo = np.empty(N)*u.kpc
+    lx = np.empty(N)*u.kpc**2*u.Myr**-1
+    ly = np.empty(N)*u.kpc**2*u.Myr**-1
     lz = np.empty(N)*u.kpc**2*u.Myr**-1
+    etot = np.empty(N)*u.kpc**2*u.Myr**-2
     
     for i in range(N):
         orbit = ham.integrate_orbit(w0[i], dt=dt, n_steps=nstep)
-        lz[i] = np.nanmedian(orbit.angular_momentum()[:,2])
+        l = orbit.angular_momentum()
+        lx[i] = np.nanmedian(l[0])
+        ly[i] = np.nanmedian(l[1])
+        lz[i] = np.nanmedian(l[2])
+        
         rperi[i] = orbit.pericenter()
         rapo[i] = orbit.apocenter()
+        etot[i] = np.nanmedian(orbit.energy())
     
-    tout = Table([t['Name'], rperi, rapo, lz], names=('name', 'rperi', 'rapo', 'lz'))
+    tout = Table([t['Name'], rperi, rapo, lx, ly, lz, etot], names=('name', 'rperi', 'rapo', 'lx', 'ly', 'lz', 'etot'))
     tout.pprint()
     tout.write('../data/gc_orbits.fits', overwrite=True)
 
@@ -782,3 +816,204 @@ def orbital_phase():
         #print(np.median(orbit.cartesian.pos.norm()))
 
 
+
+# follow up
+
+def elz(labeled=0):
+    """"""
+    t = Table.read('../data/overall_summary.fits')
+    tgc = Table.read('../data/gc_orbits.fits')
+    
+    print(len(t))
+    
+    # add globular clusters
+    gc_sequoia = np.array(['NGC 5466', 'NGC 7006', 'IC 4499'])
+    ind_sequoia = np.array([True if x in gc_sequoia else False for x in tgc['name']])
+    
+    gc_ge = np.array(['NGC 288', 'NGC 362', 'NGC 1261', 'NGC 1851', 'NGC 1904', 'NGC 2298', 'NGC 2808', 'NGC 4147', 'NGC 4833', 'NGC 5286', 'NGC 5897', 'NGC 6205', 'NGC 6235', 'NGC 6284', 'NGC 6341', 'NGC 6779', 'NGC 6864', 'NGC 7089', 'NGC 7099', 'NGC 7492'])
+    ind_ge = np.array([True if x in gc_ge else False for x in tgc['name']])
+    
+    gc_helmi = np.array(['NGC 4590', 'NGC 5024', 'NGC 5053', 'NGC 5272', 'NGC 6981'])
+    ind_helmi = np.array([True if x in gc_helmi else False for x in tgc['name']])
+    
+    gc_sgr = np.array(['NGC 2419', 'NGC 5824', 'NGC 6715', 'Pal 12', 'Ter 7', 'Ter 8', 'Arp 2', 'Whiting 1'])
+    ind_sgr = np.array([True if x in gc_sgr else False for x in tgc['name']])
+
+    gc_kraken = np.array(['NGC 5946', 'NGC 5986', 'NGC 6093', 'NGC 6121', 'NGC 6144', 'NGC 6254', 'NGC 6273', 'NGC 6287', 'NGC 6541', 'NGC 6544', 'NGC 6681', 'NGC 6712', 'NGC 6809'])
+    ind_kraken = np.array([True if x in gc_kraken else False for x in tgc['name']])
+    
+    ind_smooth = ~ind_sequoia & ~ind_ge & ~ind_helmi & ~ind_sgr & ~ind_kraken
+    
+    plt.close()
+    fig, ax = plt.subplots(1,1,figsize=(12,12))
+    
+    labels = ['Sequoia', 'Gaia - Enceladus', 'Helmi', 'Sagittarius', 'Kraken', 'Unassociated']
+    indices = [ind_sequoia, ind_ge, ind_helmi, ind_sgr, ind_kraken, ind_smooth]
+    markers = ['^', 'H', 'p', 'D', 's', 'o']
+    sizes = [60, 80, 80, 40, 60, 20]
+    
+    uscale = (1*u.kpc**2*u.Myr**-2).to(u.km**2*u.s**-2).value * 1e-6
+    #print(uscale)
+    uscale = 1.
+
+    for i in range(6):
+        plt.scatter(tgc['lz'][indices[i]], tgc['etot'][indices[i]]*uscale, c=0*tgc['lz'][indices[i]], vmin=-2, vmax=2, zorder=10, cmap='PuOr', s=1.5*sizes[i], marker=markers[i], edgecolors='k', linewidths=0.5, label='')
+    
+        # legend entries
+        plt.scatter(0, 0, facecolors='w', s=sizes[i], marker=markers[i], edgecolors='k', linewidths=0.5, label=labels[i])
+    
+    # label globular clusters
+    if labeled:
+        for i in range(len(tgc)):
+            if (tgc['lz'][i]>-4) & (tgc['lz'][i]<4) & (tgc['etot'][i]>-0.17) & (tgc['etot'][i]<0):
+                plt.text(tgc['lz'][i], tgc['etot'][i]*uscale, '{:s}'.format(tgc['name'][i]), fontsize='xx-small')
+
+    plt.legend(loc=4, frameon=False, fontsize='small', handlelength=0.6, title='Globular clusters', title_fontsize='small')
+
+    # streams
+    s = 0.15*t['logM0']**5
+    plt.scatter(t['lz'], t['etot'], c=0*t['lz']+0.5, vmin=-2, vmax=2, zorder=1, cmap='PuOr', s=s, edgecolors='k', linewidths=0.5, label='')
+    
+    if labeled:
+        for i in range(len(t)):
+            if t['name'][i]=='willka_yaku':
+                label = 'Willka\nYaku'
+                va = 'top'
+            else:
+                label = t['label'][i]
+                va = 'center'
+            plt.text(t['lz'][i], t['etot'][i], '{:s}'.format(label), va=va, fontsize='x-small')
+    
+    plt.xlim(-4,4)
+    plt.ylim(-0.265, -0.01)
+    
+    plt.xlabel('$L_z$ [kpc$^2$ Myr$^{-1}$]')
+    plt.ylabel('$E_{tot}$ [kpc$^2$ Myr$^{-2}$]')
+    
+    plt.tight_layout()
+    if labeled:
+        plt.savefig('../plots/elz_gc_streams_labeled.png')
+    else:
+        plt.savefig('../plots/elz_gc_streams.png')
+
+def elz_field():
+    """"""
+    t = Table.read('../data/overall_summary.fits')
+    tgc = Table.read('../data/gc_orbits.fits')
+    
+    # add globular clusters
+    gc_sequoia = np.array(['NGC 5466', 'NGC 7006', 'IC 4499'])
+    ind_sequoia = np.array([True if x in gc_sequoia else False for x in tgc['name']])
+    
+    gc_ge = np.array(['NGC 288', 'NGC 362', 'NGC 1261', 'NGC 1851', 'NGC 1904', 'NGC 2298', 'NGC 2808', 'NGC 4147', 'NGC 4833', 'NGC 5286', 'NGC 5897', 'NGC 6205', 'NGC 6235', 'NGC 6284', 'NGC 6341', 'NGC 6779', 'NGC 6864', 'NGC 7089', 'NGC 7099', 'NGC 7492'])
+    ind_ge = np.array([True if x in gc_ge else False for x in tgc['name']])
+    
+    gc_helmi = np.array(['NGC 4590', 'NGC 5024', 'NGC 5053', 'NGC 5272', 'NGC 6981'])
+    ind_helmi = np.array([True if x in gc_helmi else False for x in tgc['name']])
+    
+    gc_sgr = np.array(['NGC 2419', 'NGC 5824', 'NGC 6715', 'Pal 12', 'Ter 7', 'Ter 8', 'Arp 2', 'Whiting 1'])
+    ind_sgr = np.array([True if x in gc_sgr else False for x in tgc['name']])
+
+    gc_kraken = np.array(['NGC 5946', 'NGC 5986', 'NGC 6093', 'NGC 6121', 'NGC 6144', 'NGC 6254', 'NGC 6273', 'NGC 6287', 'NGC 6541', 'NGC 6544', 'NGC 6681', 'NGC 6712', 'NGC 6809'])
+    ind_kraken = np.array([True if x in gc_kraken else False for x in tgc['name']])
+    
+    ind_smooth = ~ind_sequoia & ~ind_ge & ~ind_helmi & ~ind_sgr & ~ind_kraken
+    
+    plt.close()
+    fig, ax = plt.subplots(1,2,figsize=(12,6), sharex=True, sharey=True)
+    
+    labels = ['Sequoia', 'Gaia - Enceladus', 'Helmi', 'Sagittarius', 'Kraken', 'Unassociated']
+    indices = [ind_sequoia, ind_ge, ind_helmi, ind_sgr, ind_kraken, ind_smooth]
+    markers = ['^', 'H', 'p', 'D', 's', 'o']
+    sizes = [60, 80, 80, 40, 60, 20]
+
+    plt.sca(ax[0])
+    for i in range(6):
+        plt.scatter(tgc['lz'][indices[i]], tgc['etot'][indices[i]], c=tgc['lz'][indices[i]], vmin=-2, vmax=2, zorder=10, cmap='PuOr', s=1.5*sizes[i], marker=markers[i], edgecolors='k', linewidths=0.5, label='')
+    
+        # legend entries
+        #if i!=4:
+        plt.scatter(0, 0, facecolors='w', s=sizes[i], marker=markers[i], edgecolors='k', linewidths=0.5, label=labels[i])
+    
+    # label globular clusters
+    for i in range(len(tgc)):
+        if (tgc['lz'][i]>2) & (tgc['lz'][i]<4):
+            plt.text(tgc['lz'][i], tgc['etot'][i], '{:s}'.format(tgc['name'][i]), fontsize='x-small')
+
+    plt.legend(loc=4, frameon=False, fontsize='x-small', handlelength=0.6, title='Globular clusters', title_fontsize='x-small')
+
+    # streams
+    s = 0.15*t['logM0']**5
+    plt.scatter(t['Lz'], t['Etot'], c=t['Lz'], vmin=-2, vmax=2, zorder=1, cmap='PuOr', s=s, edgecolors='k', linewidths=0.5, label='')
+    
+    for i in range(len(t)):
+        if t['name'][i]=='willka_yaku':
+            label = 'Willka\nYaku'
+            va = 'top'
+        else:
+            label = t['label'][i]
+            va = 'center'
+        plt.text(t['Lz'][i], t['Etot'][i], '{:s}'.format(label), va=va, fontsize='x-small')
+    
+    plt.xlim(-4,4)
+    plt.ylim(-0.265, -0.01)
+    plt.ylim(-0.165, -0.01)
+    
+    plt.xlabel('$L_z$ [kpc$^2$ Myr$^{-1}$]')
+    plt.ylabel('$E_{tot}$ [kpc$^2$ Myr$^{-2}$]')
+    
+    # field stars
+    plt.sca(ax[1])
+    
+    th = Table.read('../data/h3_giants.fits')
+    print(len(th))
+    ind_mpoor = (th['FeH']<-1.) #& (th['SNR']>10)
+    th = th[ind_mpoor]
+    plt.scatter(th['Lz'], th['E_tot_pot1'], c=th['FeH'], vmin=-3, cmap='magma', s=10)
+    
+    plt.xlabel('$L_z$ [kpc$^2$ Myr$^{-1}$]')
+    
+    cbaxes = inset_axes(ax[1], width='100%', height='100%', bbox_to_anchor=(1.02,0,0.04,1), bbox_transform=ax[1].transAxes, borderpad=0) 
+    cb = plt.colorbar(cax=cbaxes, orientation='vertical', label='[Fe/H]', ticklocation='right')
+    cb.ax.tick_params(labelsize='small')
+    cb.ax.set_ylabel(cb.ax.get_ylabel(), fontsize='small')
+    
+    plt.tight_layout()
+    plt.savefig('../plots/elz_gc_streams_h3.png')
+
+    
+
+def mdf():
+    """"""
+    th = Table.read('../data/h3_giants.fits')
+    #ind_mpoor = (th['FeH']<-1.5) #& (th['SNR']>10)
+    #th = th[ind_mpoor]
+    
+    plt.close()
+    plt.figure()
+    
+    feh_bins = np.linspace(-3, -1.5, 20)
+    ind_retrograde = (th['Lz']>1.7) & (th['E_tot_pot1']>-0.09)
+    ind_prograde = (th['Lz']<-1.7) & (th['E_tot_pot1']>-0.09)
+    ind_midretrograde = (th['Lz']>1.) & (th['Lz']<1.7) & (th['E_tot_pot1']>-0.11)
+    
+    plt.hist(th['FeH'], bins=feh_bins, histtype='step', density=True, color='0.2')
+    plt.hist(th['FeH'][ind_retrograde], bins=feh_bins, histtype='step', density=True)
+    plt.hist(th['FeH'][ind_prograde], bins=feh_bins, histtype='step', density=True)
+    #plt.hist(th['FeH'][ind_midretrograde], bins=feh_bins, histtype='step', density=True)
+    #plt.hist(th['FeH'][ind_retrograde], bins=feh_bins, histtype='step')
+    #plt.hist(th['FeH'][ind_midretrograde], bins=feh_bins, histtype='step')
+    
+    
+    plt.tight_layout()
+
+def h3_giants():
+    """"""
+    t = Table.read('/home/ana/data/rcat.fits')
+    ind_giant = (t['logg']<3.5) & (t['FLAG']==0)
+    tg = t[ind_giant]
+    
+    tg['Lz'] = (tg['Lz']*u.kpc*u.km/u.s).to(u.kpc**2*u.Myr**-1)
+    tg['E_tot_pot1'] = (tg['E_tot_pot1']*u.km**2*u.s**-2).to(u.kpc**2*u.Myr**-2)
+    
+    tg.write('../data/h3_giants.fits', overwrite=True)
