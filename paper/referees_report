@@ -3,7 +3,7 @@ The authors have made an extraordinary effort in computing the initial progenito
 I am happy to recommend the paper for publication after some moderate changes.
 Also, I look forward to seeing the revised version of the manuscript.
 
-
+===============
 1. INTRODUCTION
 
 ##########
@@ -23,10 +23,14 @@ To clarify this, we added the following sentence to the xxxxxxxx paragraph in th
 
 "
 
+- tidal strength is a conserved quantity
+- add paragraph: works for both types of origin because the above
+- ref: analogous to lammers et al. 2017, kruijssen+2015, pfeffer+2020, renaud+2017 (move reference from 1b -- others reviews on the topic), rieder+2013
+
 
 ##########
 # Referee:
-2b: In the first sentence, please cite Renaud, Agertz & Gieles (2017).
+1b: In the first sentence, please cite Renaud, Agertz & Gieles (2017).
 
 > Response:
 Done.
@@ -39,8 +43,10 @@ Done.
 > Response:
 The normal in this context refers to regular star-forming galaxies. Since we already state the clusters are the outcome of regular star formation, the normal is redundant, so we have removed it. The sentence now reads:
 "
-In recent years, a second interpretation has been gaining traction, which is that globular clusters are the natural outcome of regular star formation in high-redshift galaxies
+In recent years, a second interpretation has been gaining traction, which is that globular clusters are the natural outcome of regular star formation in high-redshift galaxies.
 "
+
+- normal == sf ms
 
 
 ##########
@@ -95,6 +101,10 @@ Done.
 - mass function originally peaked, mass scale == location of the peak? different in different models?
 - describe different examples and what sets the mass scale
 
+- prediction: narrow initial cluster mass range of an order of magnitude, peaked formed an imprint of birth
+- born w 10^6 -> 10^5 today
+- conditions different for each, beyond the scope of our context, all in the same category of following a peaked initial mass function
+
 
 # Referee:
 1j: "......due to early tidal perturbations in the natal galaxy........". Are you referring to the idea of clusters being "accreted" inside their natal galaxies into the host halo? If so, please state this clearly in the text.
@@ -103,19 +113,136 @@ Done.
 - not necessarily, the natal galaxy could also be the main mw progenitor
 
 
+================
 2. STREAM ORBITS
-2a: Currently, three things are not clear in this Section. (1) Since the data you use to compute orbits of streams is heterogenous, it is important to explain for which streams you used which "type" of data. For instance, it is not clear that for which all streams you possessed (a) complete 6D phase-space information for individual stream member, (b) 5D phase-space measurements for the individual members but no radial velocity, (c) 4D phase-space measurement for the individual members with average distance and no radial velocity, and (d) 2D sky positions for the individual members and average distances and proper motions and no RVs. This must be clarified in the text as it directly affects the orbit computation. (2) What is your likelihood function to constrain orbits for streams (in the form of equation). Does the likelihood function change for streams that have different quality of information. Moreover, how does your likelihood function take into account the missing phase-space information (and their associated uncertainties). (3) Is their contamination in your stream sample. If so, what is the level of this contamination? How do you take care of this contamination? Can this contamination affect the orbits of the streams? All of this must be clarified in the text.
+
+##########
+# Referee:
+2a: Currently, three things are not clear in this Section. (1) Since the data you use to compute orbits of streams is heterogenous, it is important to explain for which streams you used which "type" of data. For instance, it is not clear that for which all streams you possessed (a) complete 6D phase-space information for individual stream member, (b) 5D phase-space measurements for the individual members but no radial velocity, (c) 4D phase-space measurement for the individual members with average distance and no radial velocity, and (d) 2D sky positions for the individual members and average distances and proper motions and no RVs. This must be clarified in the text as it directly affects the orbit computation. 
+
+> Response:
+- add table
+
+##########
+# Referee:
+(2) What is your likelihood function to constrain orbits for streams (in the form of equation). Does the likelihood function change for streams that have different quality of information. Moreover, how does your likelihood function take into account the missing phase-space information (and their associated uncertainties). 
+
+> Response:
+- write down the likelihood
+- same for all streams, additive dimensions
+- takes uncertainty into account
+
+##########
+# Referee:
+(3) Is their contamination in your stream sample. If so, what is the level of this contamination? How do you take care of this contamination? Can this contamination affect the orbits of the streams? All of this must be clarified in the text.
+
+> Response:
+- contamination possible, but only fitting stream track, signal strong so little systematic impact expected on the derived orbits
+
+
+##########
+# Referee:
 2b: "Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit". Please cite Dehnen, Odenkirchen et al. (2004).
+
+> Response:
+Done.
+
+
+##########
+# Referee:
 2c: Please explain what you mean by "distribute 20 control points between these streams". In practice, do you generate mock phase-space measurements for the observed streams in cases where only average distance and proper motions are provided. And also, how do you consider uncertainties on these 20 control points. This is important for correct computation of the orbits of the streams. Also, how do you account for the missing radial velocity information.
-2d: It is important to explicitly point out that for which streams you possessed the phase-space measurements of individual stars, and for which streams you only use average distances and proper motions. I leave this upto you if you wish to clarify this in this Section, in Table 2, or elsewhere.
+
+> Response:
+- will be addressed in 2a
+- uncertainty 20% (isochrone distance) or as stated
+
+
+##########
+# Referee:
+2d: It is important to explicitly point out that for which streams you possessed the phase-space measurements of individual stars, and for which streams you only use average distances and proper motions. I leave this up to you if you wish to clarify this in this Section, in Table 2, or elsewhere.
+
+> Response:
+- addressed in 2a
+
+
+##########
+# Referee:
 2e: Briefly state the masses of individual components (bulge, disk, halo) for MWPotential2014 and that used in Price-Whelan & Bonaca (2018). Also, state the total masses of the 3 Galactic potentials (used in this paper) within 25kpc galactic distance. It will be interesting to see whether these mass values are similar or different for the three Galactic potentials.
+
+> Response:
+We separated a discussion of these alternative Milky Way models to a separate paragraph and specified properties of their individual components. We also provide their enclosed masses at 25kpc and 200kpc in the text. 
+
+In addition, we calculated the enclosed masses for these different models in the full radial range, and include a figure of the mass ratio with respect to the fiducial model with this response (enclosed_mass_potentials.png). As the figure shows, the differences in the enclosed mass have little dependence on radius, and remain +-20% different through most of the Galaxy.
+
+
+##########
+# Referee:
 2f: When you start discussing perturbation of the Galactic potential with LMC, it becomes slightly unclear whether you incorporate this pertubed Galactic potential model in your study, or work only with the static potential model. If your study employs only the static potential, please modify this part of the text so it becomes more clear.
+
+> Response:
+We rephrased the last sentence in this paragraph to clarify that we only use static potentials:
+"
+Since the assumption of a static gravitational potential introduces biases in the recovery of orbital apocenters on the order of only ~10% (Garrow et al. 2020), for simplicity we chose to use static potentials in all of our modeling.
+"
+
+
+##########
+# Referee:
 2f: "Individual stellar streams can be well represented by a single orbit". Please also cite Bovy, Bahmanyar et al. (2016), Malhan & Ibata (2019).
+
+> Response:
+We included the reference to Malhan & Ibata (2019), however, citing Bovy et al. (2016) would be inappropriate in this context because they calculate the actual stream track, rather than represent stream with a single orbit. Instead, we included the reference to Bovy et al. among others that do model the stream-orbit misalignment.
+
+
+##########
+# Referee:
 2g: "This orbital misalignment can be forward modeled". Please cite Lux, Read et al. (2013).
+
+> Response:
+Lux et al. (2013) model streams with orbits of single test-particles, and explicitly do not model the stream-orbit misalignment. We included this reference among works that assume streams are well represented by a single orbit.
+
+
+##########
+# Referee:
 2h: Streams in general have distance gradients, and I wonder how you fit the orbits in the distance. This maybe very crucial for your study in the context of computing orbits of these streams. Please explain in the text how you take into account the distance gradient of the streams. For e.g., "Phlegethon" is a close-by stream that has an eccentricity >0.5 (as per your study). If we assume that this stream, in reality, has a distance gradient of even ~1kpc, how do you think it will affect its orbit estimation (and consequentially the computed value of its globular cluster's pre-evaporation mass M_0)? Secondly, I also wonder whether the distances that you use is coming from Gaia parallaxes or photometry? In case you use Gaia parallaxes, do you still use the average distance vaue, or rather fit the orbit to the observed parallaxes for individual stars?
+
+> Response:
+- absorb w uncertainty
+- fits sometimes require a gradient
+- could do w bhb, msto fit distance gradient
+-> improvement for the future, beyond scope here
+
+- phlegethon: test?
+- distances explained in the data section
+
+
+##########
+# Referee:
 2i: Please provide the equation/expression of likelihood for obtaining the best fitted orbits. Also mention the quantities used for constraining the orbit (e.g., RA, Dec, proper motions, etc), and how do you account for the missing information. This latter part is important because most of the stars are missing radial velocities, even though they have the RA, Dec and proper motion measurements. What are the values of radial velocities and uncertainties you use for this missing information?
-2j: What is the value of the Sun's galactic position and the Sun's velocity you use for the transforamtion from one coordinate to the other?
-2k: "These systematic biases are larger than individual uncertainties, underscoring the importance of analyzing all streams self-consistently in the same potential". Don't these systematic biases also highlight the sensitivity of the orbits (and thus, the orbital parameters) on the Galactic potential, which is still unconstrained for our Milky Way? If so, does this mean that atleast the eccentricities and apocentric distances are senstitive to the assumed Galactic mass model. I wonder if the similarity of the pericentre could be indicative of the fact that the total mass of the Galactic model in the inner regions (say <25kpc) is same in all the 3 potentials models. "2e" should be helpful in understanding this.
+
+> Response:
+- addressed in 2a
+- bc forward modeling, can only compare in phase-space coordinates where the data is available
+- see models in rv unconstrained, as expected
+
+
+##########
+# Referee:
+2j: What is the value of the Sun's galactic position and the Sun's velocity you use for the transformation from one coordinate to the other?
+
+> Response:
+We used the Galactocentric reference frame defined in astropy v4.0, and provide the Sun's position and velocity in this system in the text.
+
+
+##########
+# Referee:
+2k: "These systematic biases are larger than individual uncertainties, underscoring the importance of analyzing all streams self-consistently in the same potential". Don't these systematic biases also highlight the sensitivity of the orbits (and thus, the orbital parameters) on the Galactic potential, which is still unconstrained for our Milky Way? If so, does this mean that at least the eccentricities and apocentric distances are senstitive to the assumed Galactic mass model. I wonder if the similarity of the pericentre could be indicative of the fact that the total mass of the Galactic model in the inner regions (say <25kpc) is same in all the 3 potentials models. "2e" should be helpful in understanding this.
+
+> Response:
+- interesting point, check masses
+- actually masses in the inner part also different, same fraction at 25 and 100 kpc
+- pericenters similar likely because streams now are close to it?
+- add figure
 
 
 3. MASSES OF DISRUPTED GLOBULAR CLUSTERS
@@ -161,6 +288,9 @@ itor cluster represented 3.3+5.7 % of its host galaxy". What does this number re
 TABLE
 1. Table 2: Do you think it would be useful to add another column to specify in which cases you used the phase-space measurements of the individual stars to fit the orbit, and in which cases you used the "averaged" values of distances and proper motions?
 
+- yes, we'll do that
+
+
 FIGURES
 1. Fig1: Some of the orange points in the first panel (e.g., those with R.A.>250 degrees) do not seem to show corresponding data in the proper motion space. Why is that? Is it because these data points lie beyond the dynamical range chosen for the plots? If so, please set the Y-axis range of the 3rd and 4th panel so that all the orange points are visible.
 2. I think it would be useful to have a second figure, much like Fig 1, but for one of the streams where you use average distance and proper motions (e.g., Ravi ?). On this figure, also show the "distribution of 20 control points" between the stream's end points. I leave this upto you that which stream you would like to show.
@@ -173,16 +303,42 @@ Below, I am suggesting a few exercises that should be useful to examine various 
 
 Exercise 1: I wonder, how confident are you about the orbits of the streams which lacked radial velocity measurements, and where you only possessed average values of the distances and the proper motions? You could test this by doing the following. Consider GD-1 for which you have complete 6D phase-space measurements. For this stream, compute the orbit without any knowledge of the radial velocity and also use only "average" of proper motion and distance. How does the r_apo, r_peri and eccentricity for this orbit compares with the one that you already have? I think it would be useful to try such an exercise and comment about it in the paper, to show the reader that the orbits depend on the quality and completeness of the phase-space information.
 
+- captured by uncertainties -- see streams that don't have rv -> larger uncertainty in predicted rv and also in the orbital solutions, as shown in the interactive figure
+- could do the gd-1 test, but doesn't seem too informative, since the data on it is so good that even without rvs constraint pretty tight
+- rather, could comment on relative precision in peri, apo, ecc, mass for streams w different amount of data
+- also, this question was explored directly in bonaca & hogg (2018)
+
+
 Exercise 2: In the paper you say that "Assuming that the progenitors are globular clusters that evaporated recently, we integrated the orbit-dependent mass-loss rate to infer their pre-evaporation masses." What do you mean by "recent"? 2 Gyrs, or 5 Gyrs? This can perhaps be tried as follows. For Phlegethon stream, assuming your estimated M_0 value (pre-evaporation mass), construct a globular cluster density model based on King parameters r_core (or r_tidal) and W (please share these values with me). Now simulate this model (assuming your orbit solution) in your assumed Galactic potential for the assumed dynamical time (10Gyr). Comment on the time when the globular cluster got completely "evaporated". Was this time recent (e.g., 2 Gyr ago) or old (e.g., 8 Gyr ago)? This should give us some idea whether the progenitor globular cluster of streams evaporated recently (as you state in the paper) or not. This should also tell us whether your results are somewhat consistent with your assumptions.
+
+- we mean in the last 3 Gyr (that's why we assume evaporation time of 10Gyr)
+- big uncertainty, insufficient numerical work for a more informed decision
+- the suggested experiments done previously: cite baumgardt & makino for appropriate masses
+- mass-loss rates calibrated to these numerical experiments, dissolution times consistent w this body of work
+- real question: how long the debris survives past the cluster dissolution -> depends on the environment, likely small-scale structure, not captured easily w nbody6 bc need cosmological simulation for the host tidal field
+- way beyond this work
+
 
 Exercise 3: My other concern is about the values of M_0 (pre-evaporation mass) that you state for all the streams. How confident are you of these values, and how much do you think they would depend on the various assumptions made through the paper? Do you think the M_0 will stay nearly the same upon varying the underlying assumptions? For this, one may do the following test. Take Phlegethon stream. Integrate its orbit assuming a different potential, than the one used for Figure 4. Assume, for instance, MWPotential2014. Now using the spectroscopic FeH of Phlegethon (~-1.6 dex), choose appropriate a_ev, b_ev, c_ev, and other parameters in equation (1-5) to compute M_0. While doing this, also assume a value smaller than delta_t=10Gyr (say, 5 Gyr? If it is a viable value for this sort of analysis.). Based on your calculation, comment on the revised values for Phlegethon: its eccentricity, apocentre, pericenter, M_0 . How does these values compare with those already provided in the paper?
 
+- we discuss the sources of statistical and systematic uncertainty, and also quote them
+- we literally did test how much ecc, apo, peri, m_0 depend on different potentials
+- comment: how much freedom in parameters of mass-loss (eq 1-4)
+- comment: how much uncertainty in age? and I think we do need the age and not the dynamical time
+
+
 Exercise 4: One of your assumptions is that the dynamical age of all the streams is 10Gyr. If streams freely evolved in the Galactic potential for 10 Gyrs, what should their expected physical lengths be? To test this, you could perhaps run a quick simulation. Assume any stream, say Phlegethon or GD-1. Assume the corresponding M_0 value for the progenitor (that you estimate) and run a quick simulation in your potential model. Please report the approximate physical length of this stream. My guess is that the simulated stream would be much longer than the observed stream. Although, your low value of M_0 may have just enough stars to produce the correct length of the observed stream. Does this length of the simulated stream mimic the real world? Please comment on this.
+
+- run model for gd-1
+- mention megan's paper, weber -- self consistent
+- future: dispersal rates of old debris
+
 
 GENERAL QUESTIONS FOR THE AUTHORS
 (need not be mentioned in the paper)
 
 1. An underlying assumption that is made throughout the paper is that the observed stellar streams of the Milky Way (atleast those 22 discussed here) were accreted inside their natal galaxies. These natal galaxies would also have had their own extended stellar population (like we see in dwarf galaxies). Why do you think we have not yet observed these stars (from the natal galaxies) along these globular cluster streams? If your assumption is really true, then many of these stellar streams should infact be swimming in the stars from their natal galaxies.
+
 2. Among 22 streams used in this work, Fimbulthul is the only one with the surviving globular cluster (omega-centauri). Rest of the streams are progenitor-less. Is there any particular reason for working with only this set of streams, and avoiding those that have progenitors (e.g., Pal 5, or Pal 15, NGC 7099).
 
 Data Editor Review:

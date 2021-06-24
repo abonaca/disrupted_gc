@@ -16,6 +16,7 @@
 \newcommand{\myr}{\ensuremath{\textrm{Myr}}}
 \newcommand{\gyr}{\ensuremath{\textrm{Gyr}}}
 \newcommand{\kpc}{\ensuremath{\textrm{kpc}}}
+\newcommand{\pc}{\ensuremath{\textrm{pc}}}
 \newcommand{\kms}{\ensuremath{\textrm{km}\,\textrm{s}^{-1}}}
 \newcommand{\masyr}{\ensuremath{\textrm{mas}\,\textrm{yr}^{-1}}}
 \newcommand{\feh}{\ensuremath{\textrm{[Fe/H]}}}
@@ -115,7 +116,7 @@ We place this population of disrupted globular clusters in the context of cluste
 Several dozen of thin stellar streams, likely disrupted globular clusters, have been reported in the Milky Way \citep[an up-to-date list is available in the \package{galstreams} package,][]{mateu:2018}.
 Because kinematic information is essential for accurate stream modeling \citep{bh:2018}, here we limit our analysis to 22 stellar streams with published proper motions.
 
-Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{kupper:2012}.
+Tidal debris from evaporating globular clusters nearly delineates the progenitor's orbit \citep[e.g.,][]{dehnen:2004, koposov:2010, kupper:2012}.
 We use the observed sky positions, distances, proper motions, and, where available, radial velocities to find the streams' orbits.
 Member stars have been identified along most streams in our sample, so for those we use their phase-space coordinates directly.
 For the most diffuse streams (Ravi, Turbio, Wambelong, and Willka-Yaku), only average distances and proper motions are available \citep{shipp:2019}, so we distribute 20 control points between these streams' endpoints \citep{riley:2020}, and assume that distance and proper motion are constant along the stream.
@@ -152,15 +153,26 @@ The second set of mass uncertainties are systematic between different Milky Way 
 \label{table:constraints}
 \end{deluxetable}
 
-We fit stream orbits in a three-component model of the Milky Way's gravitational potential implemented in the \package{gala} package \citep{gala} and featuring a \citet{mn:1975} disk (mass: $5.5\times10^{10}\rm\, M_\odot$, scale-length: 3\,kpc, scale-height: 28\,pc), a \citet{hernquist:1990} bulge (mass: $4\times10^9\rm\, M_\odot$, scale-radius: 1\,kpc), and a \citet{nfw:1997} halo (scale-mass: $7\times10^{11}\rm\, M_\odot$, scale-radius: 15.62\,kpc, $z$-axis flattening: 0.95).
-To estimate the systematic uncertainty in derived orbital parameters and initial progenitor masses, we also constrain orbits in the slightly less massive \texttt{MWPotential2014} gravitational potential \citep{bovy:2015} and the somewhat more massive potential used in \citet{pwb}.
-In detail, the Galactic gravitational potential is perturbed by the Large and Small Magellanic Clouds, and the Sagittarius dwarf galaxy \citep{gomez:2015, erkal:2019, vasiliev:2020}.
-However, most of the streams in our sample have been orbiting in the inner Galaxy, where the impact of these massive satellites is less prominent \citep{petersen:2020} and the assumption of a static gravitational potential introduces biases in the recovery of orbital apocenters on the order of only $\approx10\%$ \citep{garrow:2020}.
+We fit stream orbits in a three-component model of the Milky Way's gravitational potential implemented in the \package{gala} package \citep{gala} and featuring a \citet{mn:1975} disk (mass: $M_d = 5.5\times10^{10}\,\msun$, scale-length: $a_d = 3\,\kpc$, scale-height: $b_d = 28\,\pc$), a \citet{hernquist:1990} bulge (mass: $M_b = 4\times10^9\,\msun$, scale-radius: $a_b = 1\,\kpc$), and a \citet{nfw:1997} halo (scale-mass: $M_h = 7\times10^{11}\,\msun$, scale-radius: $r_h = 15.62\,\kpc$, $z$-axis flattening: $q_z = 0.95$).
+\changes{In all our calculations we used the \package{astropy v4.0} reference frame to convert between the sky and Galactocentric coordinates.
+Our coordinate system is right-handed, with the Sun's position $(X,Y,Z)=(-8.122,0,0.0208)\,\kpc$ and velocity $(V_X, V_Y, V_Z) = (12.9, 245.6, 7.78)\,\kms$ in Cartesian Galactocentric coordinates \citep{gravity:2018, bennett:2019, reid:2004, drimmel:2018}.}
 
+\changes{Since the total mass of the Milky Way is still uncertain by a factor of $\approx2$ \citep[e.g.,][]{wang:2020}, we also constrain orbits in the slightly less massive \texttt{MWPotential2014} gravitational potential \citep{bovy:2015} and the somewhat more massive potential used in \citet{pwb} to estimate systematic uncertainties in derived stream orbital parameters and initial progenitor masses.
+As in our fiducial model, \citet{pwb} also represented the Milky Way potential as a combination of a Miyamoto-Nagai disk, a Hernquist bulge, and an NFW halo, with the following parameters: $M_d = 5.5\times10^{10}\,\msun, a_d=3\,\kpc, b_d=28\,\pc, M_b=4\times10^9\,\msun, a_b=1\,\kpc, M_h=7\times10^{11}\,\msun, r_h=15.62\,\kpc, q_z=0.95$.
+On the other hand, \texttt{MWPotential2014} consists of a Miyamoto-Nagai disk ($M_d = 5.5\times10^{10}\,\msun, a_d=3\,\kpc, b_d=28\,\pc$), a spherical NFW halo ($M_h=4.4\times10^{11}\,\msun, r_h=16\,\kpc, q_z=1$), and a bulge modeled as a spherical power-law density profile with an exponential cutoff (total mass: $M_b=4.5\times10^9\,\msun$, power law index: $\alpha_b=1.8$, and cutoff radius: $r_c=1.9\,\kpc$).
+In the fiducial model, the total mass enclosed within 200\,\kpc\ is $1\times10^{12}\,\msun$, while the masses of alternative models within this radius are $8\times10^{11}\,\msun$ and $1.25\times10^{12}\,\msun$, for \texttt{MWPotential2014} and the \citet{pwb} potential, respectively.
+All of these models are well within the range of the Milky Way mass measurements \citep{wang:2020}.
+Differences in the enclosed mass between these models are somewhat smaller in the inner Galaxy, however, they remain significant even at 25\,\kpc\ (the masses of the lower- and higher-mass models are $\approx85\%$ and $\approx115\%$ of the fiducial mass at 25\,\kpc, respectively).
+}
 
-Individual stellar streams can be well represented by a single orbit \citep[e.g.,][]{koposov:2010, pwb, ibata:2019}.
+\changes{There is significant evidence that} the Galactic gravitational potential is perturbed by the Large and Small Magellanic Clouds, and the Sagittarius dwarf galaxy \citep{gomez:2015, erkal:2019, vasiliev:2020}.
+\changes{Complex time-dependent models are required to fully capture the gravitational influence of these satellites \citep[e.g.,][]{garavito-camargo:2020}.}
+However, most streams in our sample are orbiting in the inner Galaxy, where \changes{their} impact is less prominent \citep{petersen:2020}.
+\changes{Since} the assumption of a static gravitational potential introduces biases in the recovery of orbital apocenters on the order of only $\approx10\%$ \citep{garrow:2020}\changes{, for simplicity we chose to use static potentials in all of our modeling.}
+
+Individual stellar streams can be well represented by a single orbit \citep[e.g.,][]{koposov:2010, lux:2013, pwb, malhan:2019b, ibata:2019}.
 However, as stars escape from a globular cluster through its Lagrange points, their orbits differ from the cluster's \citep{eyre:2011}.
-This orbital misalignment can be forward modeled \citep{varghese:2011, bonaca:2014, sanders:2014}, but this is computationally involved, so we leave it to future work and proceed with the more tractable orbit-fitting.
+This orbital misalignment can be forward modeled \citep{varghese:2011, bonaca:2014, sanders:2014, bovy:2016}, but this is computationally involved, so we leave it to future work and proceed with the more tractable orbit-fitting.
 We follow \citet{pwb} and represent the orbit as a 6D location in phase-space, fixing its right ascension, R.A., and solving for the remaining five coordinates (declination, distance, radial velocity, two proper motion components).
 At the R.A. of the stream measurements, we evaluate the orbital declinations, distances, proper motions, and radial velocities (where available) against the observations, assuming Gaussian uncertainties.
 The orbits are initialized close to a stream's endpoint such that the trial orbit passes close to the observed data points.
