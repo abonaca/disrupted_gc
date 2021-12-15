@@ -258,37 +258,124 @@ Comparing orbits derived in alternate Milky Way models, we detect no biases in p
 "
 
 
-
+========================================
 3. MASSES OF DISRUPTED GLOBULAR CLUSTERS
+
+##########
+# Referee:
 3a: "....because tidal evaporation in the host galaxy halo is not the only mass loss mechanism experienced by globular clusters ....". Please briefly mention other mass loss mechanisms.
 
+> Response:
+This is discussed in detail in the following paragraph, but we now also added tidal shocks in parentheses here.
+
+##########
+# Referee:
 3b: "globular clusters were disrupted by tidal shocks due to gravitational perturbations from overdensities in the interstellar medium of their natal galaxy ". Can the gravitational potential of the natal galaxy also tidally disrupt the globular cluster? If so, please comment on this.
 
+> Response:
+Yes, there is regular mass loss driven by two-body relaxation in a static tidal field, but this is vastly sub-dominant relative to tidal shocks even in the comparatively gas-poor environment of the solar neighbourhood (e.g. Lamers & Gieles 2006), and can thus be neglected. We have added a footnote to clarify this.
+
+##########
+# Referee:
 3c: If I understand it correctly, is M_0 the mass of the bound globular cluster at the time it is deposited from the natal galaxy into the Milky Way halo?
 
+> Response:
+This is indeed a point that needs clarification and we thank the referee for bringing it up. We have added the following text:
+"
+At the time that the globular cluster has a mass $M_0$, it may still be residing on a galaxy other than the Milky Way (if it formed ex-situ). The tidal evaporation rate of an ex-situ globular cluster remains approximately constant during the accretion of its host galaxy onto a more massive system, because the cluster is tidally stripped from its natal galaxy when it experiences a tidal field strength from the massive galaxy equal to the tidal field strength  within its original host \citep[e.g.][]{rieder13,lamers17}. This means that the pre-evaporation mass $M_0$ at some time $\Delta t$ ago is defined independently of its host galaxy at the time.
+"
+
+##########
+# Referee:
 3d: " ....so that only the mass loss by tidal shocks is unaccounted for ". Approximately, how much is this mass (say in fraction) that you do not account for?
 
+> Response:
+The mass loss by tidal shocks is estimated to be 50-95% of the integrated mass loss, see e.g. fig.6 of Kruijssen (2015). This is why we reiterate that we are not calculating initial masses, but pre-evaporation masses. We have added this to the text.
+
+##########
+# Referee:
 3f: "We relate M_0 to the orbit of the stellar stream by assuming a present-day globular cluster mass of zero". I wonder if this is true, for instance, for the "Fimbulthul" stream whose progenitor globular cluster still survives in the form of omega-centauri ? Please comment on this. Also, is this a reasonable assumption of the rest of the streams that you use?
 
+> Response:
+Yes, this is an excellent point. We now use the associations of streams with globular clusters from Bonaca et al. (2021), and include the present-day cluster mass as a variable in the equation for estimating the pre-evaporation mass. For cluster-less streams, we still adopt M=0.
+
+##########
+# Referee:
 3g: "μev (t) is the fraction of the initial globular cluster mass lost by stellar evolution" . Here, does the " initial globular cluster mass" refer to the "true initial" mass of the cluster (when it was inside natal galaxy), or does it refer to the pre-evaporation mass M_0?
 
+> Response:
+This is indeed the true initial mass, and the referee is right in suggesting that it technically should be the mass fraction that had been reached before evaporation. However, calculating that number requires assumptions about the absolute time spent within the disc of the natal galaxy, which is not known. For that reason, we simplify and correct for all stellar evolutionary mass loss. As requested, we have specified in the revised text what is meant by "initial" here.
+
+##########
+# Referee:
 3h: For "0.02 Z_sun", please provide the corresponding [Fe/H] value for easy interpretation. Also, are the parameters a_ev,b_ev,c_ev (corresponding to 0.02 Z_sun) fixed at these values for all the streams? If so, does this mean you are assuming that all the streams have the same metallicity value (even though, spectroscopically, the selected sample of 22 streams atleast range from FeH=-3 dex to -1.5 dex)? If this is the case, please comment on this. Also, it should be useful to mention this in the ABSTRACT that you assume "fixed FeH" criteria (along with the "fixed time of 10Gyr") to derive the pre-evaporation mass M_0.
 
+> Response:
+1) We have provided the corresponding [Fe/H] = -1.7.
+2) The dependence on metallicity is so weak, that the uncertainty implied by the assumption of a constant metallicity is negligible compared to that of adopting one fixed time of 10 Gyr (see e.g. Table 1 and Figure 1 of Kruijssen & Lamers 2008). The resulting differences in the fractional stellar evolutionary mass loss are <10%, and this is less than half of the total mass loss. We have therefore added the following sentence to the text:
+"
+The assumption of a constant metallicity introduces an uncertainty on the total stellar evolutionary mass loss of $<10\%$.
+"
+
+##########
+# Referee:
 3i: In equation 4 (Lamers cluster disruption law), what is "M" ? Also, where does "tau_dis" go in the main equation (1)?
 
+> Response:
+1) cluster mass (specified at an earlier point in the paper after revision)
+2) We clarified this by adding the sentence:
+"
+with ${\rm d}M/{\rm d}t=-M/\tau_{\rm dis}$}. Equation~\ref{eq:m0} closely approximates the numerical integration of this differential equation (see \citealt{lamers05} for details).
+"
+
+##########
+# Referee:
 3j: In equation (5), is "8.5 kpc" the Sun's galactic distance? For the sake of consistency, is it the same value you use for transforming your orbits from galactocentric frame to heliocentric frame?
 
+> Response:
+This is a good point. The distance used there is 8.122 kpc, so we have renormalised the equation to that distance. Because the proportionality constant changed accordingly, this does not affect any of the results.
+
+##########
+# Referee:
 3k: "....we assume that the time spent by each globular cluster orbiting the Milky Way prior to dissolving into a fossil stream is ∆t = 10 Gyr...". If I understand this correctly, are you implying that all of the globular cluster progenitors (of these 22 streams) escaped their natal galaxies 10 Gyrs ago? This means that the natal galaxies must have accreted into the Milky Way >10 Gyrs ago? What if you use a value of, say, ∆t = 6 Gyr that is somewhat motivated by the accretion of the Sagittarius dwarf galaxy (that has also brought in a large population of globular clusters). I wonder if you can motivate this dynamical time more strongly. Furthermore, Bonaca et al. (2019) recently modeled GD-1 stream and showed that, in principle, the stream can become progenitor-less within 3 Gyrs. Ofcourse, this depends both on the stream's orbit and the initial mass of the cluster. Nevertheless, is it necessary to assume a time scale of 10 Gyr, or one may even use a smaller dynamical time of, say, <5 Gyr ?
 
+> Response:
+As explained in reply to an earlier comment, this time does not make any assumptions regarding when the natal galaxy accreted (as a reminder, this could only be relevant for ex-situ clusters). So this is exclusively set by the ages of the clusters, combined with the assumption that progenitors of cluster-less fossil streams have disrupted in the last few Gyr, as discussed in the current text.
+
+##########
+# Referee:
 3l: " .....fossil stream phase space density drops precipitously with age" . Please also cite Mestre, Llinares & Carpintero (2020). Moreover, by "age" do you mean the "true-age" of the cluster, or its "dynamical-age" after it is deposited into the host galaxy?
 
+> Response:
+1) We have added the reference.
+2) As explained, this is unrelated to when it was deposited into the host galaxy. Nonetheless, it is indeed worth clarifying that this corresponds to the dynamical age of the stream (not the cluster), so we have rephrased to "its dynamical age".
+
+##########
+# Referee:
 3m: "where we also include the demographics of Galactic globular clusters that have survived till the present day". Are you also including the globular clusters for which streams have been observed (e.g., Pal5, NGC 3201, M92, Pal 13, Pal 15, etc)? Please clarify this point in the text. If this is true, this would mean that you are analysing 3 types of tracer objects: streams lacking progenitors, streams with surviving globular clusters, and intact globular clusters.
 
+> Response:
+The globular cluster sample includes all clusters, irrespectively of whether their associated streams have been detected. This is now clarified in the text. All globular clusters must be experiencing dynamical mass loss, so from a cluster-centric perspective it is not very useful to distinguish between those with and without streams. However, from a stream-centric perspective this is very important, and we have updated the text to account for this.
+
+##########
+# Referee:
 3n: "This result is somewhat counterintuitive, because globular clusters on eccentric orbits are expected to be disrupted more rapidly". Could it be that these globular clusters, with large apocentres, may host tidal streams that are yet undetected? For e.g., Pal15 and Eridanus (globular clusters with large apocentres) were only recently found to be hosting their tidal streams.
 
+> Response:
+This is a very interesting idea that we looked into. We added the following text:
+"
+Alternatively, differences in detectability of streams produced by clusters with large apocenter radii and eccentricities could explain the difference. However, we do not find a that the orbital eccentricities and apocentre radii of streams or globular clusters are strongly covariant (see below).
+"
+
+##########
+# Referee:
 3o: ".......the pre-evaporation mass determines almost entirely whether a cluster survives as a globular cluster or results in a fossil stream." By "fossil stream", do you mean a stream that lacks progenitor? If so, dont you think there is a possibility of a third scenario: where the cluster survives but also has an associated tidal stream (e.g., Pal 5,NGC 3201, M92, Pal 13, Pal 15)? This must be the transient phase, right?
 
+> Response:
+We do not think that is a transient phase, because all clusters lose mass dynamically, but the stream-to-cluster mass ratio will increase with age, so that it peaks at the end of cluster disruption. Therefore, we have just added "cluster-less" to "fossil stream" for clarification.
 
+
+=========================
 4. SUMMARY AND DISCUSSION
 4a: "Assuming that the progenitors are globular clusters that evaporated recently....". Please briefly quantify what you mean by "recently". Moreover, your assumptions must be stated here - for instance the assumption about "fixed time of 10 Gyr" and "fixed [Fe/H] value" (if it is the case, see my comment above).
 
