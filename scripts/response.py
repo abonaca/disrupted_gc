@@ -57,7 +57,7 @@ def plot_enclosed_mass():
     plt.xlim(0,200)
     
     plt.xlabel('r [kpc]')
-    plt.ylabel('M(<r) [with respect to fiducial]')
+    plt.ylabel('M(<r) / M$_{fid}$(<r)')
     
     plt.tight_layout()
     plt.savefig('../plots/response/enclosed_mass_potentials.png')

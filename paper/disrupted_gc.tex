@@ -3,6 +3,7 @@
 % typography
 \usepackage[T1]{fontenc}
 \usepackage{times}
+\usepackage{bm}
 
 \setlength{\parindent}{1.\baselineskip}
 \newcommand{\acronym}[1]{{\small{#1}}}
@@ -109,9 +110,8 @@ In Section~\ref{sec:orbits} we use the observed positions and motions of stream 
 Since the streams are thin and coherent, we assume that the progenitors are globular clusters (and not dwarf galaxies) that disrupted recently \citep{helmi:2003}, and in Section~\ref{sec:disrupted} calculate their pre-evaporation masses.
 We place this population of disrupted globular clusters in the context of cluster formation (\S\,\ref{sec:discuss_gcform}), discuss the implications of the inferred low masses for streams as dynamical tracers in the Milky Way halo (\S\,\ref{sec:discuss_dynamics}), and connect the cluster properties to those of the host galaxies they might have formed in at high redshift (\S\,\ref{sec:discuss_galform}).
 
-
-\section{Stream Orbits}
-\label{sec:orbits}
+\section{Stream Observations}
+\label{sec:obs}
 
 Several dozen of thin stellar streams, likely disrupted globular clusters, have been reported in the Milky Way \citep[an up-to-date list is available in the \package{galstreams} package,][]{mateu:2018}.
 Because kinematic information is essential for accurate stream modeling \citep{bh:2018}, here we limit our analysis to 22 stellar streams with published proper motions.
@@ -136,6 +136,10 @@ Current observations allow for a range of orbital apocenters and eccentricities.
 \label{fig:streams}
 \end{figure*}
 
+
+\section{Stream Orbits}
+\label{sec:orbits}
+
 \begin{deluxetable}{l @{\hspace{0.5cm}} D D D}
 \tablehead{
 Name & \multicolumn2c{$r_{\rm peri}$} & \multicolumn2c{$r_{\rm apo}$} & \multicolumn2c{$\log M_0/\rm\msun$}\\
@@ -153,6 +157,7 @@ The second set of mass uncertainties are systematic between different Milky Way 
 \label{table:constraints}
 \end{deluxetable}
 
+\subsection{Models of the Milky Way gravitational potential}
 We fit stream orbits in a three-component model of the Milky Way's gravitational potential implemented in the \package{gala} package \citep{gala} and featuring a \citet{mn:1975} disk (mass: $M_d = 5.5\times10^{10}\,\msun$, scale-length: $a_d = 3\,\kpc$, scale-height: $b_d = 28\,\pc$), a \citet{hernquist:1990} bulge (mass: $M_b = 4\times10^9\,\msun$, scale-radius: $a_b = 1\,\kpc$), and a \citet{nfw:1997} halo (scale-mass: $M_h = 7\times10^{11}\,\msun$, scale-radius: $r_h = 15.62\,\kpc$, $z$-axis flattening: $q_z = 0.95$).
 \changes{In all our calculations we used the \package{astropy v4.0} reference frame to convert between the sky and Galactocentric coordinates.
 Our coordinate system is right-handed, with the Sun's position $(X,Y,Z)=(-8.122,0,0.0208)\,\kpc$ and velocity $(V_X, V_Y, V_Z) = (12.9, 245.6, 7.78)\,\kms$ in Cartesian Galactocentric coordinates \citep{gravity:2018, bennett:2019, reid:2004, drimmel:2018}.}
@@ -170,11 +175,42 @@ Differences in the enclosed mass between these models are somewhat smaller in th
 However, most streams in our sample are orbiting in the inner Galaxy, where \changes{their} impact is less prominent \citep{petersen:2020}.
 \changes{Since} the assumption of a static gravitational potential introduces biases in the recovery of orbital apocenters on the order of only $\approx10\%$ \citep{garrow:2020}\changes{, for simplicity we chose to use static potentials in all of our modeling.}
 
-Individual stellar streams can be well represented by a single orbit \citep[e.g.,][]{koposov:2010, lux:2013, pwb, malhan:2019b, ibata:2019}.
-However, as stars escape from a globular cluster through its Lagrange points, their orbits differ from the cluster's \citep{eyre:2011}.
-This orbital misalignment can be forward modeled \citep{varghese:2011, bonaca:2014, sanders:2014, bovy:2016}, but this is computationally involved, so we leave it to future work and proceed with the more tractable orbit-fitting.
-We follow \citet{pwb} and represent the orbit as a 6D location in phase-space, fixing its right ascension, R.A., and solving for the remaining five coordinates (declination, distance, radial velocity, two proper motion components).
-At the R.A. of the stream measurements, we evaluate the orbital declinations, distances, proper motions, and radial velocities (where available) against the observations, assuming Gaussian uncertainties.
+
+\subsection{Orbit fitting}
+\changes{To fit their orbits, we represent each stream with a set of member stars identified in Section~\ref{sec:obs}.
+Similarly selected members of the GD-1 stream have been spectroscopically confirmed as members with a 100\% success rate \citep{bonaca:2020b}, so in this work we assumed all of identified stars are confident stream members.
+% We assumed they are all confident members, since they were selected using fairly stringent criteria.
+Some contamination from the field Milky Way stars is possible, and our approach would be refined by estimating a membership probability for each star based on its distance from the mean stream track in each of the observables \citep[e.g.,][]{shipp:2019}.
+However, stream orbits are approximately delineated by the stream tracks, which have been well established for all streams, either in their discovery papers, or in Section~\ref{sec:obs}.
+Therefore, we expect the contamination to both be small and have negligible impact on orbit determination, and thus defer the evaluation of stream membership probabilities to future work.
+}
+
+
+\changes{We fit orbits to stellar stream tracks.
+In general, streams can be misaligned from their progenitor's orbit because} stars escape from a globular cluster through its Lagrange points, \changes{so} their orbits differ from the cluster's \citep{eyre:2011}.
+This orbital misalignment can be forward modeled \citep{varghese:2011, bonaca:2014, sanders:2014, bovy:2016}, but this is computationally involved.
+\changes{As} individual stellar streams can be well represented by a single orbit \citep[e.g.,][]{koposov:2010, lux:2013, pwb, malhan:2019b, ibata:2019}, \changes{, we proceed with the more tractable orbit-fitting and leave stream-track modeling to future work}.
+% We follow \citet{pwb} and represent the orbit as a 6D location in phase-space, fixing its right ascension, R.A., and solving for the remaining five coordinates (declination, distance, radial velocity, two proper motion components).
+At \changes{the locations} of stream observations, we evaluate the orbits assuming Gaussian uncertainties.
+% al \changes{sky position}, distances, proper motions, and radial velocities (where available), assuming Gaussian uncertainties.
+\changes{The likelihood of a trial orbit, $\bm{\theta}$, representing an observed data point $\{\xi_i, k_i\}$ is then:}
+\begin{equation}
+\mathcal{L}_{ki}(\bm{\theta}|\xi_i,k_i,\sigma_{ki}) = \mathcal{N}(y_k(\bm{\theta}, \xi_i) - k_i, \sigma_{ki})
+\end{equation}
+\changes{where $\xi_i$ is the sky position of stream member $i$ along the stream, and $k_i$ one of the remaining five phase-space coordinates (sky position perpendicular to the stream, $\eta$, distance, $d$, radial velocity, $V_r$, proper motions, $\mu_\alpha$ and $\mu_\delta$), $\sigma_{ki}$ is the observational uncertainty of star $i$ in the phase-space coordinate $k$, and $y_k(\bm{\theta}, \xi_i)$ the phase-space coordinate $k$ of the trial orbit $\bm{\theta}$ evaluated at the sky location $\xi_i$.
+This form directly accounts for observational uncertainties.
+We assume that individual data points are independent, so the likelihood of the orbit $\bm{\theta}$ is:
+\begin{equation}
+\mathcal{L}(\bm{\theta}) = \prod_{k \in \{\eta, d, V_r, \mu_\alpha, \mu_\delta\}}\prod_{i=1}^{N_k}\mathcal{L}_{ki}
+\end{equation}
+where $N_k$ is the number of observations in the phase-space coordinate $k$ for this stream.
+Since each phase-space coordinate is decoupled, the likelihood can be evaluated even if the number of data points is different across the coordinates, and can even be zero in case of missing data (many streams have no radial velocity measurements, or distance tracers).
+% In practice, we have sky positions and proper motions for all , while radial velocity and distances are known for only a subset of stream members,
+This flexible likelihood allows us to use the same expression regardless of the amount and quality of data available for a given stream.
+}
+
+
+We follow \citet{pwb} and represent the orbit as a 6D location in phase-space, fixing \changes{one of its equatorial sky coordinates}, and solving for the remaining five coordinates (\changes{$\theta$, the second equatorial sky coordinate}, distance, radial velocity, two proper motion components).
 The orbits are initialized close to a stream's endpoint such that the trial orbit passes close to the observed data points.
 To prefer bound solutions, we employ a weak prior by requiring the absolute radial velocity to be lower than 500\,\kms.
 
@@ -183,6 +219,8 @@ Focusing on this best-fitting solution, we further sample the phase-space parame
 We advance 64 walkers for 512 steps and kept the last 256 steps, which converge to constant median and dispersion values for all model parameters.
 The median, 16th and 84th percentiles of the constrained 5D coordinates are reported for each stream's orbit in the Appendix~\ref{sec:appendix} (Table~\ref{table:phasespace}).
 
+
+\subsection{Orbital parameters of stellar streams}
 To visualize and further explore the streams' orbits, we randomly sample 1,000 points from the posterior distributions of every stream (available at the project repository).
 First, we integrate short orbital segments starting from these initial positions, and plot them as blue lines in the observable coordinates in Figure~\ref{fig:streams} (different shades of blue correspond to different samples from the posterior distribution).
 For all of the streams we recover a class of orbital solutions that fits the observed streams, with the allowed spread set by the observational uncertainties.
@@ -195,8 +233,11 @@ We report the median, 16th and 84th percentiles of the streams' pericenters and 
 The extensive observational data puts strong constraints on the streams' orbits, and the typical uncertainty in the peri- and apocenters is $\lesssim1\,\kpc$.
 Across the board, pericenters are measured more precisely than apocenters, with the typical uncertainty of 3\% compared to 6\%, respectively.
 This is also visible in the top right panel of Figure~\ref{fig:streams}, where different orbital solutions for the  Fj\" orm stream are cospatial at the pericenter, but fanned out at the apocenter.
-Comparing orbits derived in alternate Milky Way models, we detect no biases in pericenters, but apocenters are on average 10\% larger in the light model and 10\% smaller in the heavy model.
-These systematic biases are larger than individual uncertainties, underscoring the importance of analyzing all streams self-consistently in the same potential.
+% Comparing orbits derived in alternate Milky Way models, we detect no biases in pericenters, but apocenters are on average 10\% larger in the light model and 10\% smaller in the heavy model.
+Comparing orbits derived in alternate Milky Way models, we detect no biases in pericenters, \changes{likely reflecting the similarities between different models in the inner Galaxy}.
+\changes{However,} apocenters are on average 10\% larger in the light model and 10\% smaller in the heavy model.
+\changes{We therefore adopt a systematic uncertainty of 10\% in apocenters and 10\% in eccentricities, and take them into account when estimating pre-evaporation masses of stream progenitors.}
+These systematic biases are larger than individual uncertainties, underscoring the importance of analyzing all streams self-consistently in the same potential\changes{, as well as prospects for further constraining the Milky Way potential with a population of stellar streams \citep[e.g.,][]{bh:2018}.}
 In the next section we use these orbital constraints to estimate the initial masses of the progenitor globular clusters.
 
 \section{Masses of disrupted globular clusters}

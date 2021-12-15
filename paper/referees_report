@@ -118,7 +118,7 @@ Done.
 
 ##########
 # Referee:
-2a: Currently, three things are not clear in this Section. (1) Since the data you use to compute orbits of streams is heterogenous, it is important to explain for which streams you used which "type" of data. For instance, it is not clear that for which all streams you possessed (a) complete 6D phase-space information for individual stream member, (b) 5D phase-space measurements for the individual members but no radial velocity, (c) 4D phase-space measurement for the individual members with average distance and no radial velocity, and (d) 2D sky positions for the individual members and average distances and proper motions and no RVs. This must be clarified in the text as it directly affects the orbit computation. 
+2a: Currently, three things are not clear in this Section. (1) Since the data you use to compute orbits of streams is heterogeneous, it is important to explain for which streams you used which "type" of data. For instance, it is not clear that for which all streams you possessed (a) complete 6D phase-space information for individual stream member, (b) 5D phase-space measurements for the individual members but no radial velocity, (c) 4D phase-space measurement for the individual members with average distance and no radial velocity, and (d) 2D sky positions for the individual members and average distances and proper motions and no RVs. This must be clarified in the text as it directly affects the orbit computation. 
 
 > Response:
 - add table
@@ -134,10 +134,13 @@ Done.
 
 ##########
 # Referee:
-(3) Is their contamination in your stream sample. If so, what is the level of this contamination? How do you take care of this contamination? Can this contamination affect the orbits of the streams? All of this must be clarified in the text.
+(3) Is there contamination in your stream sample. If so, what is the level of this contamination? How do you take care of this contamination? Can this contamination affect the orbits of the streams? All of this must be clarified in the text.
 
 > Response:
-- contamination possible, but only fitting stream track, signal strong so little systematic impact expected on the derived orbits
+The referee brings up an important point of contamination by field Milky Way stars. We added this paragraph to Section 3.2 to discuss the implications of contamination for our work:
+"
+To fit their orbits, for each stream we use a set of likely member stars identified in Section 2. We developed fairly stringent selection criteria to identify stream members, so we assumed they are all confident members when fitting orbits. Some contamination from the field Milky Way stars is possible, and our approach would be refined by estimating a membership probability for each star based on its distance from the mean stream track in each of the observables. However, similarly selected members of the GD-1 stream have been spectroscopically confirmed as members with a 100% success rate (Bonaca et al. 2020). Furthermore, stream tracks approximately delineate orbits, and have been well established for all streams, either in their respective discovery papers, or in Section 2. Therefore, we expect the contamination to be both small and have negligible impact on orbit determination, and thus defer the evaluation of detailed membership probabilities to future work.
+"
 
 
 ##########
@@ -204,7 +207,7 @@ Lux et al. (2013) model streams with orbits of single test-particles, and explic
 
 ##########
 # Referee:
-2h: Streams in general have distance gradients, and I wonder how you fit the orbits in the distance. This maybe very crucial for your study in the context of computing orbits of these streams. Please explain in the text how you take into account the distance gradient of the streams. For e.g., "Phlegethon" is a close-by stream that has an eccentricity >0.5 (as per your study). If we assume that this stream, in reality, has a distance gradient of even ~1kpc, how do you think it will affect its orbit estimation (and consequentially the computed value of its globular cluster's pre-evaporation mass M_0)? Secondly, I also wonder whether the distances that you use is coming from Gaia parallaxes or photometry? In case you use Gaia parallaxes, do you still use the average distance vaue, or rather fit the orbit to the observed parallaxes for individual stars?
+2h: Streams in general have distance gradients, and I wonder how you fit the orbits in the distance. This maybe very crucial for your study in the context of computing orbits of these streams. Please explain in the text how you take into account the distance gradient of the streams. For e.g., "Phlegethon" is a close-by stream that has an eccentricity >0.5 (as per your study). If we assume that this stream, in reality, has a distance gradient of even ~1kpc, how do you think it will affect its orbit estimation (and consequentially the computed value of its globular cluster's pre-evaporation mass M_0)? Secondly, I also wonder whether the distances that you use is coming from Gaia parallaxes or photometry? In case you use Gaia parallaxes, do you still use the average distance value, or rather fit the orbit to the observed parallaxes for individual stars?
 
 > Response:
 - absorb w uncertainty
@@ -236,51 +239,90 @@ We used the Galactocentric reference frame defined in astropy v4.0, and provide 
 
 ##########
 # Referee:
-2k: "These systematic biases are larger than individual uncertainties, underscoring the importance of analyzing all streams self-consistently in the same potential". Don't these systematic biases also highlight the sensitivity of the orbits (and thus, the orbital parameters) on the Galactic potential, which is still unconstrained for our Milky Way? If so, does this mean that at least the eccentricities and apocentric distances are senstitive to the assumed Galactic mass model. I wonder if the similarity of the pericentre could be indicative of the fact that the total mass of the Galactic model in the inner regions (say <25kpc) is same in all the 3 potentials models. "2e" should be helpful in understanding this.
+2k: "These systematic biases are larger than individual uncertainties, underscoring the importance of analyzing all streams self-consistently in the same potential". Don't these systematic biases also highlight the sensitivity of the orbits (and thus, the orbital parameters) on the Galactic potential, which is still unconstrained for our Milky Way? If so, does this mean that at least the eccentricities and apocentric distances are sensitive to the assumed Galactic mass model. I wonder if the similarity of the pericentre could be indicative of the fact that the total mass of the Galactic model in the inner regions (say <25kpc) is same in all the 3 potentials models. "2e" should be helpful in understanding this.
 
 > Response:
-- interesting point, check masses
-- actually masses in the inner part also different, same fraction at 25 and 100 kpc
-- pericenters similar likely because streams now are close to it?
-- add figure
+Indeed, stellar streams are sensitive to the global distribution of mass in the Milky Way, and our results indicate that they can be used to further constrain it. This is not the focus of our work, but we modified this sentence to highlight this point:
+"
+These systematic biases are larger than individual uncertainties, underscoring the importance of analyzing all streams self-consistently in the same potential\changes{, as well as prospects for further constraining the Milky Way potential with a population of stellar streams \citep[e.g.,][]{bh:2018}.}
+"
+
+And yes, our experiment demonstrates that the eccentricities and apocentric distances are sensitive to the assumed Galactic model. We performed this test to estimate the systematic uncertainty in the measurement of orbital eccentricities and apocenters when assuming a Milky Way model. We state this now more explicitly in the same paragraph:
+"
+We therefore adopt a systematic uncertainty of 10% in apocenters and 10% in eccentricities, and take them into account when estimating pre-evaporation masses of stream progenitors.
+"
+
+The referee makes an interesting suggestion that perhaps the pericenters are more similar because the underlying gravitational potentials are more similar in the inner regions of the Galaxy. Most streams in our sample have pericenters between 2kpc and 15kpc, and the figure we produced to address the point 2e shows that indeed the enclosed masses of different Milky Way models are most similar in this radial range. We added this observation to the text:
+"
+Comparing orbits derived in alternate Milky Way models, we detect no biases in pericenters, \changes{likely reflecting the similarities between different models in the inner Galaxy}.
+"
+
 
 
 3. MASSES OF DISRUPTED GLOBULAR CLUSTERS
 3a: "....because tidal evaporation in the host galaxy halo is not the only mass loss mechanism experienced by globular clusters ....". Please briefly mention other mass loss mechanisms.
+
 3b: "globular clusters were disrupted by tidal shocks due to gravitational perturbations from overdensities in the interstellar medium of their natal galaxy ". Can the gravitational potential of the natal galaxy also tidally disrupt the globular cluster? If so, please comment on this.
+
 3c: If I understand it correctly, is M_0 the mass of the bound globular cluster at the time it is deposited from the natal galaxy into the Milky Way halo?
+
 3d: " ....so that only the mass loss by tidal shocks is unaccounted for ". Approximately, how much is this mass (say in fraction) that you do not account for?
+
 3f: "We relate M_0 to the orbit of the stellar stream by assuming a present-day globular cluster mass of zero". I wonder if this is true, for instance, for the "Fimbulthul" stream whose progenitor globular cluster still survives in the form of omega-centauri ? Please comment on this. Also, is this a reasonable assumption of the rest of the streams that you use?
+
 3g: "μev (t) is the fraction of the initial globular cluster mass lost by stellar evolution" . Here, does the " initial globular cluster mass" refer to the "true initial" mass of the cluster (when it was inside natal galaxy), or does it refer to the pre-evaporation mass M_0?
+
 3h: For "0.02 Z_sun", please provide the corresponding [Fe/H] value for easy interpretation. Also, are the parameters a_ev,b_ev,c_ev (corresponding to 0.02 Z_sun) fixed at these values for all the streams? If so, does this mean you are assuming that all the streams have the same metallicity value (even though, spectroscopically, the selected sample of 22 streams atleast range from FeH=-3 dex to -1.5 dex)? If this is the case, please comment on this. Also, it should be useful to mention this in the ABSTRACT that you assume "fixed FeH" criteria (along with the "fixed time of 10Gyr") to derive the pre-evaporation mass M_0.
+
 3i: In equation 4 (Lamers cluster disruption law), what is "M" ? Also, where does "tau_dis" go in the main equation (1)?
+
 3j: In equation (5), is "8.5 kpc" the Sun's galactic distance? For the sake of consistency, is it the same value you use for transforming your orbits from galactocentric frame to heliocentric frame?
+
 3k: "....we assume that the time spent by each globular cluster orbiting the Milky Way prior to dissolving into a fossil stream is ∆t = 10 Gyr...". If I understand this correctly, are you implying that all of the globular cluster progenitors (of these 22 streams) escaped their natal galaxies 10 Gyrs ago? This means that the natal galaxies must have accreted into the Milky Way >10 Gyrs ago? What if you use a value of, say, ∆t = 6 Gyr that is somewhat motivated by the accretion of the Sagittarius dwarf galaxy (that has also brought in a large population of globular clusters). I wonder if you can motivate this dynamical time more strongly. Furthermore, Bonaca et al. (2019) recently modeled GD-1 stream and showed that, in principle, the stream can become progenitor-less within 3 Gyrs. Ofcourse, this depends both on the stream's orbit and the initial mass of the cluster. Nevertheless, is it necessary to assume a time scale of 10 Gyr, or one may even use a smaller dynamical time of, say, <5 Gyr ?
+
 3l: " .....fossil stream phase space density drops precipitously with age" . Please also cite Mestre, Llinares & Carpintero (2020). Moreover, by "age" do you mean the "true-age" of the cluster, or its "dynamical-age" after it is deposited into the host galaxy?
+
 3m: "where we also include the demographics of Galactic globular clusters that have survived till the present day". Are you also including the globular clusters for which streams have been observed (e.g., Pal5, NGC 3201, M92, Pal 13, Pal 15, etc)? Please clarify this point in the text. If this is true, this would mean that you are analysing 3 types of tracer objects: streams lacking progenitors, streams with surviving globular clusters, and intact globular clusters.
+
 3n: "This result is somewhat counterintuitive, because globular clusters on eccentric orbits are expected to be disrupted more rapidly". Could it be that these globular clusters, with large apocentres, may host tidal streams that are yet undetected? For e.g., Pal15 and Eridanus (globular clusters with large apocentres) were only recently found to be hosting their tidal streams.
+
 3o: ".......the pre-evaporation mass determines almost entirely whether a cluster survives as a globular cluster or results in a fossil stream." By "fossil stream", do you mean a stream that lacks progenitor? If so, dont you think there is a possibility of a third scenario: where the cluster survives but also has an associated tidal stream (e.g., Pal 5,NGC 3201, M92, Pal 13, Pal 15)? This must be the transient phase, right?
 
 
 4. SUMMARY AND DISCUSSION
 4a: "Assuming that the progenitors are globular clusters that evaporated recently....". Please briefly quantify what you mean by "recently". Moreover, your assumptions must be stated here - for instance the assumption about "fixed time of 10 Gyr" and "fixed [Fe/H] value" (if it is the case, see my comment above).
+
 4b: "Most strikingly, the inferred masses of disrupted globular clusters peak at 8.5 × 10^3 M_sun". Towards the end of Sec 3.1, you mention an expected error in M_0 of 0.4 dex (i.e., a factor of 2.5). Does this mean that "8.5 x 10^3 Msun" could vary between (8.5/2.5) x 10^3 Msun and (2.5*8.5) x 10^3 Msun ? If so, this implies that your mass estimates vary from 10^3 - 10^4 Msun? Please briefly comment on this.
+
 4c: "Specifically, the similarity in distributions of orbital apocenters and eccentricity between present-day
 globular clusters and fossil streams indicates that they have been predominantly accreted.". What do you mean by "they"? Globular clusters or streams or both of them?
+
 4d: "This may indicate that most globular clusters that ever orbited the Milky Way can be associated with
 a handful of its progenitor galaxies". Does this affect the consequence of globular cluster streams? Does the similarity in the results of globular clusters and streams (as found in this study) indicate that the streams were also initially accreted inside their progenitor galaxies?
+
 4e: "The wealth of observational data expected over the next decade.... ". Please briefly cite the sources of these wealth of data so it becomes clear what set of datasets will be useful for studying the evolution of streams.
+
 4f: "Stellar streams are accurate tracers of the underlying gravitational potential ". Please also cite Bovy, Bahmanyar et al. (2016); Malhan & Ibata (2019); Reino, Rossi et al. (2020).
+
 4g: "....indicating that inferring a pre-evaporation mass lower than the observed stream mass means the stream is a disrupted dwarf galaxy....". How can the pre-evaporation mass of the globular cluster be smaller than the observed stream mass? Also, how can it imply that its a dwarf galaxy (and, for instance, not a globular cluster)?
+
 4h: "GD-1, Phoenix, and Ylgr at smaller apocenters, ≈ 20 kpc, and more mildly retrograde orbits. These
 groups are more likely to be evidence of group infall." Are you suggesting that GD-1, Phoenix, Kshir, Ylgr, Hermus likely accreted inside the same natal galaxy into the Milky Way? If so, please state this a bit more clearly. Additionally, please cite Malhan, Ibata et al. (2019) who proposed similar scenario for GD-1 based on its "cocoon" structure. Furthermore, please cite de Boer et al. (2020) who showed that GD-1 has similar action/energy to the globular clusters associated with Sequoia. These mentions should strengthen your case of a group infall of these streams.
+
 4i: One of my concerns is your general comment in the ABSTRACT: " the internal dynamics plausibly had a limited role in sculpting the observed density variations in streams such that external perturbations (e.g., from dark-matter subhalos) are required". First, the density variations of the streams are not dicussed anywhere the paper. Second, I agree that the density variations in streams can arise from dark matter subhalos, but they can also arise from luminous components (e.g., disk shocking, interaction with satellite galaxies, etc). In section 4.2, you comment on the nature of GD-1. While GD-1 may not have suffered any shocks from the luminous components, but the other 21 streams considered here could have suffered perturbations from the disk, or otherwise. I fail to see how you reach that conclusion in the ABSTRACT that reads as if you mean "density variations in all the streams can only be explained from external perturbation (most likely, dark matter subhalos)". Please explain this to me, or if you agree with my concern, modify the abstract accordingly.
+
 4j: ".... ultimately put more stringent limits on the abundance of dark-matter subhalos in the Milky Way". Please cite Bovy, Erkal & Sanders (2017) as an example.
+
 4k: The main and most important assumption of Section 4.3 is that all of these 22 streams were accreted inside their natal galaxies (and are not "in-situ" globular cluster streams). Please state this assumption clearly in the text, and also explain the motivation behind this assumption.
+
 4l: "Metallicities are available for nine of the streams in our sample". Please state whether these are spectroscopic metallcities or photometric metallcities.
+
 4m: From Figure 5 (Natal galaxy mass function), it appears that you find masses of natal galaxies as low as 10^5 M_sun. Can such low-mass galaxies (also hosting globular clusters) form in the Universe? Please comment on this, and also support this with examples (if available) from cosmologial simulations and/or observations of the Milky Way.
+
 4n: Malhan, Ibata et al. (2019) suggested that the natal galaxy of GD-1 had a mass of 10^{8-9}M_sun (based on the metallicity of GD-1 and Kshir). How does your mass value compares with theirs? Please comment on this in the text.
+
 4o: You suggested that Atlas and Aliqa-Uma came inside the same natal galaxy. Lets call this galaxy "A". Similarly, you also propose the idea that GD-1, Phoenix, Kshir, Ylgr, Hermus likely accreted inside the same natal galaxy. Lets call this galaxy "B". Do you think it is only more appropriate to rather combine the metallicities of these member streams (perhaps by taking an average?) to compute the masses of "A" and "B"? It should be interesting to see how the masses of "A" and "B" compare to other data points in Fig 5.
+
 4p: "The recently-measured metallicity of the Phoenix stream (Wan et al. 2020) implies that its progen-
 itor cluster represented 3.3+5.7 % of its host galaxy". What does this number represent? Is it the fraction of the stellar mass of the host galaxy, or the total mass (stars+ dark matter) of the host galaxy?
 
@@ -330,7 +372,7 @@ Exercise 3: My other concern is about the values of M_0 (pre-evaporation mass) t
 Exercise 4: One of your assumptions is that the dynamical age of all the streams is 10Gyr. If streams freely evolved in the Galactic potential for 10 Gyrs, what should their expected physical lengths be? To test this, you could perhaps run a quick simulation. Assume any stream, say Phlegethon or GD-1. Assume the corresponding M_0 value for the progenitor (that you estimate) and run a quick simulation in your potential model. Please report the approximate physical length of this stream. My guess is that the simulated stream would be much longer than the observed stream. Although, your low value of M_0 may have just enough stars to produce the correct length of the observed stream. Does this length of the simulated stream mimic the real world? Please comment on this.
 
 - run model for gd-1
-- mention megan's paper, weber -- self consistent
+- mention megan's paper, webb -- self consistent
 - future: dispersal rates of old debris
 
 

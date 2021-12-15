@@ -250,9 +250,14 @@ def plot_stream_fit_orbit(name):
     # plot models
     for j in range(nplot):
         p0 = [x*y.unit for x, y in zip(flatchain_short[j], stream.p0)]
-        dec, dist, pmra, pmdec, vr = p0
+        if stream.fra:
+            ra = stream.x0*u.deg
+            dec, dist, pmra, pmdec, vr = p0
+        else:
+            dec = stream.x0*u.deg
+            ra, dist, pmra, pmdec, vr = p0
         
-        c = coord.SkyCoord(ra=stream.ra0*u.deg, dec=dec, distance=dist, pm_ra_cosdec=pmra, pm_dec=pmdec, radial_velocity=vr, frame='icrs')
+        c = coord.SkyCoord(ra=ra, dec=dec, distance=dist, pm_ra_cosdec=pmra, pm_dec=pmdec, radial_velocity=vr, frame='icrs')
         w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
 
         orbit = stream.ham.integrate_orbit(w0, dt=stream.dt, n_steps=stream.nstep)
@@ -294,7 +299,7 @@ def plot_stream_fit_orbit(name):
     plt.xlabel(xlabel)
 
     plt.sca(ax[0])
-    plt.ylabel('Dec [deg]')
+    #plt.ylabel('Dec [deg]')
     #plt.xlim(185, 255)
 
     handles, labels = plt.gca().get_legend_handles_labels()
@@ -303,16 +308,16 @@ def plot_stream_fit_orbit(name):
     plt.legend(h_, l_, fontsize='small', frameon=False, loc=0, handler_map={tuple: HandlerTupleVert(ndivide=None, pad=0.5)})
 
     plt.sca(ax[1])
-    plt.ylabel('Distance [kpc]')
+    #plt.ylabel('Distance [kpc]')
     #plt.ylim(3.5, 6.5)
 
     plt.sca(ax[2])
-    plt.ylabel('$\mu_\\alpha$ [mas yr$^{-1}$]')
+    #plt.ylabel('$\mu_\\alpha$ [mas yr$^{-1}$]')
     #plt.ylim(-4.5, 6)
 
     plt.sca(ax[3])
-    plt.xlabel('R.A. [deg]')
-    plt.ylabel('$\mu_\delta$ [mas yr$^{-1}$]')
+    #plt.xlabel(xlabel)
+    #plt.ylabel('$\mu_\delta$ [mas yr$^{-1}$]')
     #plt.ylim(2.1, 8.5)
 
     # Galactocentric coordinates -- long orbits
@@ -323,10 +328,21 @@ def plot_stream_fit_orbit(name):
     
     for j in range(nplot):
         p0 = [x*y.unit for x, y in zip(flatchain_short[j], stream.p0)]
-        dec, dist, pmra, pmdec, vr = p0
+        #dec, dist, pmra, pmdec, vr = p0
         
-        c = coord.SkyCoord(ra=stream.ra0*u.deg, dec=dec, distance=dist, pm_ra_cosdec=pmra, pm_dec=pmdec, radial_velocity=vr, frame='icrs')
+        #c = coord.SkyCoord(ra=stream.ra0*u.deg, dec=dec, distance=dist, pm_ra_cosdec=pmra, pm_dec=pmdec, radial_velocity=vr, frame='icrs')
+        #w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
+
+        if stream.fra:
+            ra = stream.x0*u.deg
+            dec, dist, pmra, pmdec, vr = p0
+        else:
+            dec = stream.x0*u.deg
+            ra, dist, pmra, pmdec, vr = p0
+        
+        c = coord.SkyCoord(ra=ra, dec=dec, distance=dist, pm_ra_cosdec=pmra, pm_dec=pmdec, radial_velocity=vr, frame='icrs')
         w0 = gd.PhaseSpacePosition(c.transform_to(gc_frame).cartesian)
+
 
         orbit = stream.ham.integrate_orbit(w0, dt=stream.dt, n_steps=n_steps_long)
 
@@ -341,7 +357,7 @@ def plot_stream_fit_orbit(name):
     plt.xlabel('x [kpc]')
     plt.ylabel('y [kpc]')
 
-    rmax = 50
+    rmax = 90
     xmin, xmax = plt.gca().get_xlim()
     if xmin<-rmax: xmin = -rmax
     if xmax>rmax: xmax = rmax
