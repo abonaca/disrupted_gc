@@ -57,7 +57,7 @@ We present orbits and masses of 22 thin stellar streams in the Milky Way.
 We constrain the streams' orbits by fitting the combined 5D phase-space of sky positions, distances and proper motions, including radial velocities where available.
 Assuming that the streams are globular clusters that tidally evaporated in 10\,Gyr, we use orbital apocenters and eccentricities to estimate their pre-evaporation masses.
 Beyond a galactocentric radius of $\sim10$~kpc, fossil streams follow a similar distribution of orbital apocenters as the surviving globular clusters, but have somewhat lower orbital eccentricities.
-Strikingly, their pre-evaporation masses are more than an order of magnitude lower, with a median of $8.5\times10^3\,\msun$.
+Strikingly, their pre-evaporation masses are more than an order of magnitude lower, with a median of $8.5\pm0.5\times10^3\,\msun$.
 The progenitors of tidal streams observed at present are a specific, low-mass subset of the initial globular cluster population.
 Building on these findings, we conclude that (1) globular clusters represent the high-mass end of a broader initial cluster population extending into the low-mass regime of clusters observed to form today,
 (2) the internal dynamics plausibly had a limited role in sculpting the observed density variations in streams such that external perturbations (e.g., from dark-matter subhalos) are required, and
@@ -244,6 +244,7 @@ In the next section we use these orbital constraints to estimate the initial mas
 \label{sec:disrupted}
 
 \subsection{Method for inferring pre-evaporation globular cluster masses}
+\label{sec:method}
 We estimate the masses of the globular clusters producing the streams using a simple analytic globular cluster disruption model \citep{lamers05}, which reproduces direct $N$-body simulations of globular clusters undergoing tidal evaporation in a static background potential \citep{baumgardt03}.
 Specifically, we obtain a `pre-evaporation' globular cluster mass $M_0$ by estimating the total mass loss due to stellar evolution and tidal evaporation for a cluster on the inferred orbit over some timescale $\Delta t$.
 We refrain from deriving an `initial' globular cluster mass, because tidal evaporation in the host galaxy halo is not the only mass loss mechanism experienced by globular clusters over the course of their history \changes{(such as tidal shock-driven mass loss)}, yet it is the only mechanism that we can `rewind' using the current orbital information.
@@ -291,7 +292,7 @@ with $t_{0,\odot}=10.2~\myr$ and $R_{\rm a}$, $v_{\rm c}$, and $e$ denoting the 
 
 Finally, we assume that the time spent by each globular cluster orbiting the Milky Way prior to dissolving into a fossil stream is $\Delta t=10~\gyr$, such that the mass fraction remaining after stellar evolutionary mass loss is $\mu_{\rm ev}\approx0.55$.
 This time is motivated by the typical ages of globular clusters in the Galactic halo \citep[$\sim12~\gyr$, e.g.][]{kruijssen19e} and by the fact that the fossil stream phase space density drops precipitously with \changes{its dynamical age} \citep{helmi:1999,mestre:2020}, such that the progenitors of \changes{cluster-less} fossil streams must have disrupted in the past few Gyr.
-Our results are robust to this choice -- a rather generous error of 0.3~dex (i.e.\ a factor of 2) in $\Delta t$ translates into an error of 0.4~dex in the pre-evaporation mass $M_0$. This clearly an extreme case \citep[e.g.][]{marinfranch09,forbes10,dotter10,dotter11,vandenberg13,kruijssen19e} -- in practice, we expect a systematic uncertainty due to globular cluster ages and stream lifetimes of $<0.1$~dex.
+Our results are robust to this choice -- a rather generous \changes{(downward)} error of 0.3~dex (i.e.\ a factor of 2) in $\Delta t$ translates into a \changes{(downward)} error of 0.4~dex in the pre-evaporation mass $M_0$. This clearly an extreme case \citep[e.g.][]{marinfranch09,forbes10,dotter10,dotter11,vandenberg13,kruijssen19e} -- in practice, we expect a systematic uncertainty due to globular cluster ages and stream lifetimes of $<0.1$~dex.
 
 \subsection{Comparison between fossil stream pre-evaporation masses and those of surviving globular clusters}
 \begin{figure*}
@@ -317,7 +318,7 @@ However, we do not find a that the orbital eccentricities and apocentre radii of
 \changes{Therefore,} a strongly decreased lifetime of streams with high eccentricities \changes{is the most natural explanation} for the observed difference.
 
 Finally, and most interestingly, the pre-evaporation masses of fossil streams and globular clusters differ significantly.
-The median pre-evaporation mass of fossil streams is just $8.5\times10^3~\msun$, compared to $5\times10^5~\msun$ for globular clusters (and $1.5\times10^5~\msun$ for the current globular cluster masses).
+The median pre-evaporation mass of fossil streams is just $8.5\pm0.5\times10^3~\msun$ \changes{(where the error bar has been propagated from the expected uncertainty for individual clusters, see Section~\ref{sec:method})}, compared to $5\times10^5~\msun$ for globular clusters (and $1.5\times10^5~\msun$ for the current globular cluster masses).
 This factor-of-60 difference in pre-evaporation mass directly reflects the fundamentally different nature of both classes of objects.
 Globular clusters must have had the right properties to enable their survival over nearly a Hubble time, whereas fossil streams were disrupted by definition.
 Since the orbital distributions only show mild differences when limiting the sample to apocenter radii $>10$~kpc, the pre-evaporation mass determines almost entirely whether a cluster survives as a globular cluster or results in a \changes{cluster-less} fossil stream.
@@ -350,9 +351,9 @@ Finally, the top-left panel of \autoref{fig:kde} shows that the lack of streams 
 \label{sec:discussion}
 
 We determined orbits of 22 disrupted Milky Way satellites by fitting sky positions, distances, and proper motions of the remnant stellar streams.
-Assuming that the progenitors are globular clusters that evaporated recently, we integrated the orbit-dependent mass-loss rate to infer their pre-evaporation masses.
+Assuming that the progenitors are globular clusters that evaporated recently \changes{(in the past few Gyr)}, we integrated the orbit-dependent mass-loss rate to infer their pre-evaporation masses.
 Surprisingly, the orbital distribution of disrupted globular clusters, in particular their apocenters and eccentricities, is similar to the orbital properties of the surviving population, even if there is a deficit of eccentricities $e>0.5$.
-Most strikingly, the inferred masses of disrupted globular clusters peak at $8.5\times10^3\,\msun$ -- over an order of magnitude lower than the mass of a typical globular cluster in the Milky Way today, and a factor of $\sim60$ below the median pre-evaporation mass of surviving globular clusters.
+Most strikingly, the inferred masses of disrupted globular clusters peak at $8.5\pm0.5\times10^3\,\msun$ -- over an order of magnitude lower than the mass of a typical globular cluster in the Milky Way today, and a factor of $\sim60$ below the median pre-evaporation mass of surviving globular clusters.
 In this section we discuss the implications of this population of low-mass, disrupted globular clusters for (globular) cluster formation (\S\,\ref{sec:discuss_gcform}), Galactic dynamics and assembly (\S\,\ref{sec:discuss_dynamics}), and early galaxy formation (\S\,\ref{sec:discuss_galform}).
 
 \subsection{Formation mechanism of globular clusters}

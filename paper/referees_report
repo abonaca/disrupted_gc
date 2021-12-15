@@ -377,43 +377,126 @@ We do not think that is a transient phase, because all clusters lose mass dynami
 
 =========================
 4. SUMMARY AND DISCUSSION
+
+##########
+# Referee:
 4a: "Assuming that the progenitors are globular clusters that evaporated recently....". Please briefly quantify what you mean by "recently". Moreover, your assumptions must be stated here - for instance the assumption about "fixed time of 10 Gyr" and "fixed [Fe/H] value" (if it is the case, see my comment above).
 
+> Response:
+1) We have repeated the statement from the end of section 4.1 that "recently" refers to the last few Gyr.
+2) There is a qualitative difference between the assumption that the progenitors of cluster-less streams evaporated recently and the adopted typical age and metallicity. The latter result in a combined uncertainty of <0.1 dex (as explained in Section 4.1), but the former assumption is of a different nature. If this assumption is violated, we could be overestimating the pre-evaporation masses by a factor of 2-3. So we respectfully disagree with the referee that the assumptions regarding age and metallicity need to be reiterated here. They are negligible compared to the one we mention.
+
+##########
+# Referee:
 4b: "Most strikingly, the inferred masses of disrupted globular clusters peak at 8.5 × 10^3 M_sun". Towards the end of Sec 3.1, you mention an expected error in M_0 of 0.4 dex (i.e., a factor of 2.5). Does this mean that "8.5 x 10^3 Msun" could vary between (8.5/2.5) x 10^3 Msun and (2.5*8.5) x 10^3 Msun ? If so, this implies that your mass estimates vary from 10^3 - 10^4 Msun? Please briefly comment on this.
 
+> Response:
+The ages cannot be much larger than 10 Gyr, but they can be shorter. The 0.4 dex mentioned at the end of (now) Section 4.1 only applies in the downward direction and is an extreme that may apply to an individual cluster, but certainly not to the median. For this reason, we state that in practice we expect the uncertainty on pre-evaporation mass of an individual cluster to be 0.1 dex. So the uncertainty on the median quoted here is smaller by another factor of 4 (note that the MC uncertainties on the individual measurements are already included in Figure 2, as we are showing all MC realisations). The approximate uncertainty on the median is therefore 0.5 x 10^3 Msun. We have added this error bar to the number throughout the paper and briefly explain how it is obtained after the first occurrence in the main text.
+
+
+##########
+# Referee:
 4c: "Specifically, the similarity in distributions of orbital apocenters and eccentricity between present-day
 globular clusters and fossil streams indicates that they have been predominantly accreted.". What do you mean by "they"? Globular clusters or streams or both of them?
 
+> Response:
+
+
+##########
+# Referee:
 4d: "This may indicate that most globular clusters that ever orbited the Milky Way can be associated with
 a handful of its progenitor galaxies". Does this affect the consequence of globular cluster streams? Does the similarity in the results of globular clusters and streams (as found in this study) indicate that the streams were also initially accreted inside their progenitor galaxies?
 
+> Response:
+
+
+##########
+# Referee:
 4e: "The wealth of observational data expected over the next decade.... ". Please briefly cite the sources of these wealth of data so it becomes clear what set of datasets will be useful for studying the evolution of streams.
 
+> Response:
+
+
+##########
+# Referee:
 4f: "Stellar streams are accurate tracers of the underlying gravitational potential ". Please also cite Bovy, Bahmanyar et al. (2016); Malhan & Ibata (2019); Reino, Rossi et al. (2020).
 
+> Response:
+
+
+##########
+# Referee:
 4g: "....indicating that inferring a pre-evaporation mass lower than the observed stream mass means the stream is a disrupted dwarf galaxy....". How can the pre-evaporation mass of the globular cluster be smaller than the observed stream mass? Also, how can it imply that its a dwarf galaxy (and, for instance, not a globular cluster)?
 
+> Response:
+
+
+##########
+# Referee:
 4h: "GD-1, Phoenix, and Ylgr at smaller apocenters, ≈ 20 kpc, and more mildly retrograde orbits. These
 groups are more likely to be evidence of group infall." Are you suggesting that GD-1, Phoenix, Kshir, Ylgr, Hermus likely accreted inside the same natal galaxy into the Milky Way? If so, please state this a bit more clearly. Additionally, please cite Malhan, Ibata et al. (2019) who proposed similar scenario for GD-1 based on its "cocoon" structure. Furthermore, please cite de Boer et al. (2020) who showed that GD-1 has similar action/energy to the globular clusters associated with Sequoia. These mentions should strengthen your case of a group infall of these streams.
 
+> Response:
+
+
+##########
+# Referee:
 4i: One of my concerns is your general comment in the ABSTRACT: " the internal dynamics plausibly had a limited role in sculpting the observed density variations in streams such that external perturbations (e.g., from dark-matter subhalos) are required". First, the density variations of the streams are not dicussed anywhere the paper. Second, I agree that the density variations in streams can arise from dark matter subhalos, but they can also arise from luminous components (e.g., disk shocking, interaction with satellite galaxies, etc). In section 4.2, you comment on the nature of GD-1. While GD-1 may not have suffered any shocks from the luminous components, but the other 21 streams considered here could have suffered perturbations from the disk, or otherwise. I fail to see how you reach that conclusion in the ABSTRACT that reads as if you mean "density variations in all the streams can only be explained from external perturbation (most likely, dark matter subhalos)". Please explain this to me, or if you agree with my concern, modify the abstract accordingly.
 
+> Response:
+
+
+##########
+# Referee:
 4j: ".... ultimately put more stringent limits on the abundance of dark-matter subhalos in the Milky Way". Please cite Bovy, Erkal & Sanders (2017) as an example.
 
+> Response:
+
+
+##########
+# Referee:
 4k: The main and most important assumption of Section 4.3 is that all of these 22 streams were accreted inside their natal galaxies (and are not "in-situ" globular cluster streams). Please state this assumption clearly in the text, and also explain the motivation behind this assumption.
 
+> Response:
+
+
+##########
+# Referee:
 4l: "Metallicities are available for nine of the streams in our sample". Please state whether these are spectroscopic metallcities or photometric metallcities.
 
+> Response:
+
+
+##########
+# Referee:
 4m: From Figure 5 (Natal galaxy mass function), it appears that you find masses of natal galaxies as low as 10^5 M_sun. Can such low-mass galaxies (also hosting globular clusters) form in the Universe? Please comment on this, and also support this with examples (if available) from cosmologial simulations and/or observations of the Milky Way.
 
+> Response:
+
+
+##########
+# Referee:
 4n: Malhan, Ibata et al. (2019) suggested that the natal galaxy of GD-1 had a mass of 10^{8-9}M_sun (based on the metallicity of GD-1 and Kshir). How does your mass value compares with theirs? Please comment on this in the text.
 
+> Response:
+
+
+##########
+# Referee:
 4o: You suggested that Atlas and Aliqa-Uma came inside the same natal galaxy. Lets call this galaxy "A". Similarly, you also propose the idea that GD-1, Phoenix, Kshir, Ylgr, Hermus likely accreted inside the same natal galaxy. Lets call this galaxy "B". Do you think it is only more appropriate to rather combine the metallicities of these member streams (perhaps by taking an average?) to compute the masses of "A" and "B"? It should be interesting to see how the masses of "A" and "B" compare to other data points in Fig 5.
 
+> Response:
+
+
+##########
+# Referee:
 4p: "The recently-measured metallicity of the Phoenix stream (Wan et al. 2020) implies that its progen-
 itor cluster represented 3.3+5.7 % of its host galaxy". What does this number represent? Is it the fraction of the stellar mass of the host galaxy, or the total mass (stars+ dark matter) of the host galaxy?
 
+> Response:
 
+
+=====
 TABLE
 1. Table 2: Do you think it would be useful to add another column to specify in which cases you used the phase-space measurements of the individual stars to fit the orbit, and in which cases you used the "averaged" values of distances and proper motions?
 
